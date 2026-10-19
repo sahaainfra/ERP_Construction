@@ -25,6 +25,7 @@ npm run dev      # http://localhost:3000
 | `npm run lint` | Run ESLint |
 | `npm run build:tokens` | Regenerate `src/design/tokens.css` from `design/design-tokens.json` |
 | `npm run build:program` | Regenerate `src/program/parts.generated.json` from the Annex C index |
+| `npm run build:legacy` | Regenerate `src/program/legacy.generated.json` from the Annex D crosswalk |
 | `npm test` | Run the domain formula and reference-data tests (Vitest) |
 | `npm run check:design` | Design gate: WCAG contrast for every token pairing and a raw-colour lint (DS-4, DS-7) |
 
@@ -54,6 +55,10 @@ Every rate, threshold and index here is a seed or a parameter, not a constant th
 
 `docs/program/annex-c-master-index.md` is the source. `scripts/build-program-index.mjs` generates `src/program/parts.generated.json` (95 Parts, 15 phases). `src/program/` answers the execution questions: which Parts may start (`canStart`, `runnableNow`), which may run in parallel (`canRunInParallel`), and what each Part depends on (`transitiveDependencies`). `src/program/verify.ts` checks the Annex C3 ordering invariants, and the tests run them.
 
+## Legacy crosswalk (Part 00 Annex D)
+
+`src/program/legacy.ts` maps the 167 old prompts (00–166) to the Parts that own them, lists the VERIFY & EXTEND Parts, the consolidations, the legacy module-code aliases, and the uploaded Plant and WorkChat module crosswalks. Tests check that the annex's tables agree with each other and with the Annex C index.
+
 ## Layout
 
 ```
@@ -64,6 +69,6 @@ src/components/ Application shell
 src/design/     Tokens (generated CSS), icons, navigation, status chips, preferences
 src/domain/     Construction formulas and reference seeds (Annex B)
 src/program/    Part index, start rules and ordering checks (Annex C)
-docs/program/   Annex C source document
+docs/program/   Annex C and D source documents
 public/         Static assets
 ```
