@@ -1,0 +1,16 @@
+req_id,requirement,status,evidence,note
+REQ-CICD-F01,Pipeline as code with ordered stages,partial,.github/workflows/ci.yml,Lint; boundaries; typecheck; unit and contract; golden; secret scan; build; database and migrations; coverage floor; volume; browser and accessibility; performance smoke; SBOM. Deploy, approval and rollback stages absent (CF-021)
+REQ-CICD-F02,Quality-gate configuration (maker-checker),partial,docs/erp-program/quality-gates.json; src/program/gates.ts; src/program/quality.test.ts,Thresholds and lowering rule implemented and tested; the approval workflow is not yet enforced in CI
+REQ-CICD-F03,Golden-output harness,partial,scripts/erp-program/baseline.ts; docs/erp-program/GOLDEN_OUTPUTS/baseline.json,Formulas, invariants and prompts. Report and API snapshots wait for Parts 76 and 11
+REQ-CICD-F04,Test-automation framework (clock and fixtures),partial,src/testing/clock.ts; src/db/database.integration.test.ts,Clock done. Factories and the scenario DSL wait for business entities (Parts 06 onward)
+REQ-CICD-F05,Volume dataset generator,partial,src/testing/volume.ts; scripts/testing/volume-rehearsal.ts,Deterministic generator verified for 1,000,000 rows. BOQ, schedule and stock volumes wait for their tables
+REQ-CICD-F06,Generated permission tests,deferred,none,Needs the permission registry (Part 07) - CF-023
+REQ-CICD-F07,Protocol test-matrix harness,deferred,none,Needs the control registry (Part 17) - CF-023
+REQ-CICD-F08,Named regression suites,deferred,none,Suites are filled as Parts go live - CF-023
+REQ-CICD-F09,Feature-flag lifecycle,partial,docs/erp-program/feature-flags.json; src/program/flags.ts; src/program/quality.test.ts,Rules and empty registry. Runtime evaluation waits for Part 05
+REQ-CICD-F10,Release train,partial,src/program/release.ts; src/program/quality.test.ts,State machine and author-cannot-approve rule. No deployment (CF-021)
+REQ-CICD-F11,Environment validation,done,src/program/environment.ts; scripts/erp-program/env-check.ts,Production and staging rules tested; the check runs on demand
+REQ-CICD-F12,Evidence and traceability,partial,scripts/erp-program/audit.ts; scripts/erp-program/traceability-rollup.mjs; docs/erp-program/modules/cicd/audit-map.json,Audit assembly and roll-up done. Screenshot and performance bundles are not published automatically
+REQ-CICD-F13,Branch protection and review,deferred,none,Needs repository administration and code owners (CF-022)
+REQ-CICD-F14,Flaky-test quarantine,partial,docs/erp-program/quarantine.json; src/program/gates.ts,Register and rules in place (empty). Blocking the owning Part's completion is not yet wired
+REQ-CICD-F15,Delivery metrics,deferred,none,No deployment history exists (CF-021)

@@ -38,3 +38,11 @@
 - Conflicts CF-015 to CF-018; decisions D-019 to D-024.
 - Dev database re-initialised by the runner (D-023).
 
+
+## 2026-10-19 — Part 04 quality engineering and CI/CD (drafted and verified locally)
+- Test stack: Vitest with coverage floors (96.4 % lines measured), Playwright end-to-end at 360, 820 and 1440 px (18 tests), axe accessibility (zero violations; a known-bad page is rejected).
+- Gate configuration (`quality-gates.json`), threshold and quarantine rules, release state machine, environment and feature-flag validation, audit assembly, traceability roll-up, secret scan with a reviewed allowlist.
+- Contract diff with known-bad fixtures; health endpoint contract checked against the real route.
+- Deterministic volume generator; 1,000,000-row digest matches. Performance smoke for health (p95 within budget).
+- CI: quality, database, runtime (browser and performance against the production build) and SBOM jobs; design gate and production audit remain non-blocking.
+- Conflicts CF-020 to CF-025; decisions D-028 to D-032.

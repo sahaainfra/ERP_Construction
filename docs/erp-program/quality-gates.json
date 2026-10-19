@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "owner": "technical lead (maker); QA lead (checker)",
+  "source": "Part 04 REQ-CICD-F02. Thresholds may be lowered only through the change record in src/program/gates.ts (two approvers, reason, expiry).",
+  "thresholds": [
+    { "name": "coverage.lines", "value": 80, "direction": "min", "reason": "Part 04 floor for new and changed code; measured over src/db, src/domain and src/program" },
+    { "name": "bundle.firstLoadKb", "value": 250, "direction": "max", "reason": "Initial budget for the shell; measured by the production build" },
+    { "name": "perf.health.p95Ms", "value": 500, "direction": "max", "reason": "Part 00 §10.3 API latency budget, applied to the health endpoint as the smallest API" },
+    { "name": "vulnerabilities.productionCritical", "value": 0, "direction": "max", "reason": "No critical advisory in production dependencies (Part 08 owns the remediation)" }
+  ],
+  "mandatoryGates": ["lint", "arch-boundaries", "typecheck", "unit", "contract", "database", "golden-baseline", "migration-lint", "secret-scan", "build", "e2e-smoke", "accessibility", "performance-smoke"]
+}

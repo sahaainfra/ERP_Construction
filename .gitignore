@@ -46,3 +46,7 @@ next-env.d.ts
 
 # Local database dumps (may contain data). Never committed.
 backups/
+sbom.cdx.json
+test-results/
+playwright-report/
+coverage/

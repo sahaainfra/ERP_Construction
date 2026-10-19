@@ -38,6 +38,7 @@ const progressLines = [
       "01": "APPROVED — owner approved 2026-10-19 (D-025)",
       "02": "APPROVED — document set, owner 2026-10-19; ADR-001,002,004-011 PROPOSED (CF-019)",
       "03": "DRAFTED — dependencies approved; Part approval pending (CF-016)",
+      "04": "DRAFTED — verified locally; depends on Part 03 approval (CF-020); deployment open (CF-021)",
     };
     const status = STATUS[p.id] ?? "NOT_STARTED";
     return row([

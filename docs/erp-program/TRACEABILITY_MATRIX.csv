@@ -1,1 +1,67 @@
-part,req_id,requirement,test_id,evidence,status
+module,req_id,requirement,status,evidence,note
+arch,REQ-ARCH-F01,Architecture views,done,docs/erp-program/ARCHITECTURE.md,Context and container views are targets; only the shell exists today
+arch,REQ-ARCH-F02,Architectural style (ADR-001),done,docs/erp-program/adr/ADR-001.md,PROPOSED
+arch,REQ-ARCH-F03,Module boundary rules enforced in CI,partial,src/program/architecture.ts; scripts/erp-program/architecture-check.ts; .github/workflows/ci.yml,Rules enforced for existing folders; module folder rule applies when the first module exists
+arch,REQ-ARCH-F04,Tenancy and isolation (ADR-002),done,docs/erp-program/adr/ADR-002.md,PROPOSED; isolation test waits for Part 03
+arch,REQ-ARCH-F05,Data architecture (ADR-003),done,docs/erp-program/adr/ADR-003.md,PROPOSED
+arch,REQ-ARCH-F06,Database fitness decisions (ADR-004 and extensions),partial,docs/erp-program/adr/ADR-004.md,Money replacement decided; other fitness items wait for a database
+arch,REQ-ARCH-F07,Integration architecture (ADR-005),done,docs/erp-program/adr/ADR-005.md,PROPOSED
+arch,REQ-ARCH-F08,Event architecture (ADR-006),done,docs/erp-program/adr/ADR-006.md,PROPOSED
+arch,REQ-ARCH-F09,Front-end architecture (ADR-007),done,docs/erp-program/adr/ADR-007.md,PROPOSED
+arch,REQ-ARCH-F10,Mobile and offline architecture (ADR-008),done,docs/erp-program/adr/ADR-008.md,PROPOSED
+arch,REQ-ARCH-F11,Security architecture (ADR-009),done,docs/erp-program/adr/ADR-009.md,PROPOSED; residency open (CF-013)
+arch,REQ-ARCH-F12,Analytics and AI architecture (ADR-010),done,docs/erp-program/adr/ADR-010.md,PROPOSED
+arch,REQ-ARCH-F13,Infrastructure and environments (ADR-011),partial,docs/erp-program/ENVIRONMENTS.md,Blueprint only; IaC blocked by CF-012
+arch,REQ-ARCH-F14,Build-vs-buy register,done,docs/erp-program/BUILD_VS_BUY.md,Licence
+arch,REQ-ARCH-F15,Technology radar,done,docs/erp-program/TECH_RADAR.md,Versions verified against npm; some support windows not verified
+arch,REQ-ARCH-F16,Replacement roadmap,done,docs/erp-program/ARCHITECTURE.md (section 11),Two items
+arch,REQ-ARCH-F17,Architecture conformance,partial,.github/workflows/ci.yml; npm run arch:check,Boundary and dependency gates blocking; API diff
+cicd,REQ-CICD-F01,Pipeline as code with ordered stages,partial,.github/workflows/ci.yml,Lint; boundaries; typecheck; unit and contract; golden; secret scan; build; database and migrations; coverage floor; volume; browser and accessibility; performance smoke; SBOM. Deploy
+cicd,REQ-CICD-F02,Quality-gate configuration (maker-checker),partial,docs/erp-program/quality-gates.json; src/program/gates.ts; src/program/quality.test.ts,Thresholds and lowering rule implemented and tested; the approval workflow is not yet enforced in CI
+cicd,REQ-CICD-F03,Golden-output harness,partial,scripts/erp-program/baseline.ts; docs/erp-program/GOLDEN_OUTPUTS/baseline.json,Formulas
+cicd,REQ-CICD-F04,Test-automation framework (clock and fixtures),partial,src/testing/clock.ts; src/db/database.integration.test.ts,Clock done. Factories and the scenario DSL wait for business entities (Parts 06 onward)
+cicd,REQ-CICD-F05,Volume dataset generator,partial,src/testing/volume.ts; scripts/testing/volume-rehearsal.ts,Deterministic generator verified for 1
+cicd,REQ-CICD-F06,Generated permission tests,deferred,none,Needs the permission registry (Part 07) - CF-023
+cicd,REQ-CICD-F07,Protocol test-matrix harness,deferred,none,Needs the control registry (Part 17) - CF-023
+cicd,REQ-CICD-F08,Named regression suites,deferred,none,Suites are filled as Parts go live - CF-023
+cicd,REQ-CICD-F09,Feature-flag lifecycle,partial,docs/erp-program/feature-flags.json; src/program/flags.ts; src/program/quality.test.ts,Rules and empty registry. Runtime evaluation waits for Part 05
+cicd,REQ-CICD-F10,Release train,partial,src/program/release.ts; src/program/quality.test.ts,State machine and author-cannot-approve rule. No deployment (CF-021)
+cicd,REQ-CICD-F11,Environment validation,done,src/program/environment.ts; scripts/erp-program/env-check.ts,Production and staging rules tested; the check runs on demand
+cicd,REQ-CICD-F12,Evidence and traceability,partial,scripts/erp-program/audit.ts; scripts/erp-program/traceability-rollup.mjs; docs/erp-program/modules/cicd/audit-map.json,Audit assembly and roll-up done. Screenshot and performance bundles are not published automatically
+cicd,REQ-CICD-F13,Branch protection and review,deferred,none,Needs repository administration and code owners (CF-022)
+cicd,REQ-CICD-F14,Flaky-test quarantine,partial,docs/erp-program/quarantine.json; src/program/gates.ts,Register and rules in place (empty). Blocking the owning Part's completion is not yet wired
+cicd,REQ-CICD-F15,Delivery metrics,deferred,none,No deployment history exists (CF-021)
+dbf,REQ-DBF-F01,Schema baseline and review,done,docs/erp-program/modules/dbf/schema-review.md,Eight findings with remedies; no legacy tables to review
+dbf,REQ-DBF-F02,Migration framework,done,src/db/migrations.ts; src/db/migrator.ts; scripts/db/migrate.ts; src/db/migrations.test.ts; database.integration.test.ts,CI rejects destructive and float-money migrations
+dbf,REQ-DBF-F03,Back-fill framework,done,src/db/backfill.ts; scripts/db/backfill-rehearsal.ts,1 M rows reconciled after forced stop
+dbf,REQ-DBF-F04,Expand-migrate-contract toolkit,partial,sys.acp_runs; sys.acp_diffs; src/db/state-machines.ts,Shadow structures and comparator not built (no legacy structure) - CF-016
+dbf,REQ-DBF-F05,Integrity and invariants service,partial,src/db/integrity.ts; database.integration.test.ts,Scheduling waits for Part 05 (F-06); read-only invariant role waits (CF-018)
+dbf,REQ-DBF-F06,Transaction standard (isolation, retries, idempotency, outbox)
+dbf,REQ-DBF-F07,Versioning and effective dating,partial,sys.is_effective; DB_GUIDE.md section 5,Bitemporal option not built
+dbf,REQ-DBF-F08,Partitioning and retention hooks,partial,sys.create_monthly_partitions,Retention registry waits for Part 84
+dbf,REQ-DBF-F09,Tenant isolation groundwork,done,sys.enable_tenant_rls; database.integration.test.ts (tenant isolation),Session context from the server only (Part 07 provides the session)
+dbf,REQ-DBF-F10,Reference and seed data management,deferred,none,Reference UOM and numbering seeds exist as TypeScript constants (Part 00 Annex B); loader waits for Part 21
+dbf,REQ-DBF-F11,Legacy data migration toolkit,partial,sys.legacy_loads; src/db/state-machines.ts,Loader
+dbf,REQ-DBF-F12,Backup, PITR and restore,partial,scripts/db/backup.ts; scripts/db/restore-check.ts; runbooks/database-rollback-and-restore.md
+dbf,REQ-DBF-F13,Masked non-production environments,partial,sys.mask_pan/phone/email/account; masked-copy scanner test,Refresh job waits for production data
+dbf,REQ-DBF-F14,Query performance baseline,deferred,none,pg_stat_statements needs a workload; Part 84 window
+dbf,REQ-DBF-F15,Database security baseline,partial,setup-local.sql; erp_app cannot create objects (test); append-only triggers (tests),TLS and encryption at rest not verified in local development
+dbf,REQ-DBF-F16,Developer guide,done,docs/erp-program/DB_GUIDE.md; DB_EXTENSIONS.md,
+disc,REQ-DISC-F01,Program bootstrap and documentation set,done,docs/erp-program/PROGRAM_RULES.md; docs/erp-program/DECISIONS.md; docs/erp-program/CONFLICTS.md; docs/erp-program/CHANGELOG.md; docs/erp-program/PROGRESS_REGISTER.csv; docs/erp-program/TRACEABILITY_MATRIX.csv,Branch erp-program/main not created (CF-007); tag erp-baseline-v0 created locally
+disc,REQ-DISC-F02,System map,done,docs/erp-program/EXISTING_SYSTEM_MAP.md; modules/disc/inventory.json,Most categories empty by fact (no legacy code)
+disc,REQ-DISC-F03,Database map and data-quality profile,n/a,docs/erp-program/DB_ENTITY_MAP.csv (header only),No database in repository; profiling not applicable
+disc,REQ-DISC-F04,API inventory,n/a,modules/disc/inventory.json → apiRouteHandlers (empty),No API routes exist
+disc,REQ-DISC-F05,UI inventory,partial,modules/disc/inventory.json → appRoutes; componentFiles,One route; responsive and accessibility scans not run (no screens beyond shell)
+disc,REQ-DISC-F06,Calculation registry,done,docs/erp-program/CALCULATION_REGISTRY.md; GOLDEN_OUTPUTS/baseline.json,42 entries; keyword scan incomplete
+disc,REQ-DISC-F07,Item-like masters,done,docs/erp-program/ITEM_LIKE_MASTERS.md,No masters exist; seeds listed
+disc,REQ-DISC-F08,Control inventory,done,docs/erp-program/CONTROL_INVENTORY.md,No controls exist; gaps against §9 listed
+disc,REQ-DISC-F09,Dependency map,done,docs/erp-program/DEPENDENCY_MAP.md; modules/disc/inventory.json → importGraph,0 cycles
+disc,REQ-DISC-F10,Architecture fitness assessment,done,docs/erp-program/ARCHITECTURE_FITNESS.md; src/program/fitness.ts; src/program/fitness.test.ts,4 components scored; 14 absent systems not scored
+disc,REQ-DISC-F11,Load and capacity probe,n/a,docs/erp-program/ARCHITECTURE_FITNESS.md (section Load and capacity probe),No database; build size measured instead
+disc,REQ-DISC-F12,Golden baseline,done,docs/erp-program/GOLDEN_OUTPUTS/baseline.json; GOLDEN_OUTPUTS/README.md; src/program/golden.ts; src/program/baseline.test.ts,Covers formulas
+disc,REQ-DISC-F13,Integrity checker,done,scripts/erp-program/baseline.ts; src/program/baseline.ts,Read-only; classifies destructive and additive; scratch-DB test replaced by classifier tests
+disc,REQ-DISC-F14,Verified backup and rollback runbook,partial,docs/erp-program/runbooks/rollback_to_baseline.md,Repository restore rehearsed; database and storage backup not applicable
+disc,REQ-DISC-F15,Gap matrix,done,docs/erp-program/GAP_MATRIX.csv; PROGRESS_REGISTER.csv,Coverage categories
+disc,REQ-DISC-F16,Risk register and conflicts,done,docs/erp-program/RISK_REGISTER.md; docs/erp-program/CONFLICTS.md,10 risks; CF-007 to CF-010 added
+disc,REQ-DISC-F17,Legacy-pack reconciliation,partial,docs/erp-program/LEGACY_MAPPING.md; CONFLICTS.md CF-001,No legacy evidence found; all 21 VERIFY & EXTEND Parts unevidenced
+disc,REQ-DISC-F18,Communication inventory,done,docs/erp-program/COMMUNICATION_INVENTORY.md,Nothing to reuse; no WorkChat build found

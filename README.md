@@ -32,6 +32,14 @@ See **LOCALHOST.md** for install steps, the verified URL (`http://localhost:3000
 | `npm run build:legacy` | Regenerate `src/program/legacy.generated.json` from the Annex D crosswalk |
 | `npm run build:prompts` | Regenerate the Annex E templates in `src/program/prompts.generated.json` |
 | `npm run prompt -- --part 25A --slice S2` | Print a filled session prompt (E1; also `--template E1-legacy\|E2…E8`, `--template E4 --phase 3`) |
+| `npm run test:coverage` | Full suite with the coverage floors (database tests need `.env.test`) |
+| `npm run e2e` | Browser checks at 360, 820 and 1440 px, with accessibility (Playwright) |
+| `npm run perf:smoke` | Health endpoint latency against the budget in `quality-gates.json` |
+| `npm run test:volume` | 1,000,000-row deterministic volume rehearsal |
+| `npm run secret:scan` | Secret scan over tracked files (reviewed exceptions only) |
+| `npm run erp:audit -- <code>` | Audit assembly for a module (AUD-1 to AUD-18) |
+| `npm run env:check` | Environment validation (production and staging rules) |
+| `npm run sbom` | CycloneDX software bill of materials |
 | `npm test` | Run the unit, characterisation and conformance tests (Vitest) |
 | `npm run arch:check` | Architecture boundaries and dependency allow-list (Part 02) |
 | `npm run check:design` | Design gate: WCAG contrast for every token pairing and a raw-colour lint (DS-4, DS-7) |

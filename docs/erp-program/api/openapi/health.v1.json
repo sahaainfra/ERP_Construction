@@ -1,0 +1,21 @@
+{
+  "openapi": "3.0.3",
+  "info": { "title": "ERP Construction: health", "version": "1.0.0", "description": "Liveness and database reachability. Returns no configuration or error text (U15)." },
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "summary": "Liveness and database check",
+        "responses": {
+          "200": {
+            "description": "The database answered.",
+            "content": { "application/json": { "schema": { "type": "object", "required": ["status", "database"], "properties": { "status": { "type": "string" }, "database": { "type": "string" } } } } }
+          },
+          "503": {
+            "description": "The database did not answer.",
+            "content": { "application/json": { "schema": { "type": "object", "required": ["status", "database"], "properties": { "status": { "type": "string" }, "database": { "type": "string" } } } } }
+          }
+        }
+      }
+    }
+  }
+}

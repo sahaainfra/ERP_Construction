@@ -1,7 +1,8 @@
-# Continuous integration (Part 02 REQ-ARCH-F17; Part 04 owns the pipeline).
-# The quality job blocks. The design and security jobs are non-blocking until their conflicts are decided:
+# Continuous integration (Part 02 REQ-ARCH-F17; Part 04 REQ-CICD-F01 and F02).
+# Blocking jobs: quality, database, runtime. Non-blocking until their conflicts are decided:
 #   design-gate: CF-004 (four contrast pairings fail).
 #   security-audit: R-02 (production advisories; fixes are major upgrades under ADR review).
+# The thresholds and mandatory gates are in docs/erp-program/quality-gates.json.
 name: ci
 
 on:
@@ -14,7 +15,7 @@ permissions:
 
 jobs:
   quality:
-    name: Quality gates
+    name: Quality gates (lint, boundaries, types, unit, contract, golden, secrets, build)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,15 +30,17 @@ jobs:
         run: npm run lint
       - name: Typecheck
         run: npx tsc --noEmit
-      - name: Unit and characterisation tests
+      - name: Unit and contract tests (database tests are skipped in this job)
         run: npm test
       - name: Golden baseline (destructive changes fail)
         run: npm run baseline:check
+      - name: Secret scan over tracked files (reviewed exceptions only)
+        run: npm run secret:scan
       - name: Production build
         run: npm run build
 
   database:
-    name: Database foundation (migrations, RLS, back-fill, idempotency)
+    name: Database (migrations, RLS, back-fill, idempotency, coverage floor, volume)
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -66,14 +69,75 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Create the application role (CI service superuser)
-        run: |
-          psql "$MIGRATOR_DATABASE_URL" -v ON_ERROR_STOP=1 -c "CREATE ROLE erp_app LOGIN PASSWORD 'ci_only_app_password'"
+        run: psql "$MIGRATOR_DATABASE_URL" -v ON_ERROR_STOP=1 -c "CREATE ROLE erp_app LOGIN PASSWORD 'ci_only_app_password'"
       - name: Lint migrations (naming, destructive, float money, NOT NULL)
         run: npm run db:lint
       - name: Apply migrations to the empty database
         run: npm run db:migrate
-      - name: Database tests (round trip, drift, RLS, idempotency, outbox, back-fill, integrity, masking)
-        run: npx vitest run src/db/database.integration.test.ts
+      - name: Full test suite with coverage floor (lines 80, statements 80, functions 80, branches 75)
+        run: npm run test:coverage
+      - name: Volume rehearsal (1,000,000 seeded rows, digest match)
+        run: npm run test:volume
+
+  runtime:
+    name: Runtime (browser smoke at 360, 820 and 1440 px, accessibility, performance smoke)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: erp_migrator
+          POSTGRES_PASSWORD: ci_only_migrator_password
+          POSTGRES_DB: erp_dev
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U erp_migrator -d erp_dev"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      MIGRATOR_DATABASE_URL: postgres://erp_migrator:ci_only_migrator_password@localhost:5432/erp_dev
+      APP_DATABASE_URL: postgres://erp_app:ci_only_app_password@localhost:5432/erp_dev
+      APP_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Create the application role and apply migrations
+        run: |
+          psql "$MIGRATOR_DATABASE_URL" -v ON_ERROR_STOP=1 -c "CREATE ROLE erp_app LOGIN PASSWORD 'ci_only_app_password'"
+          npm run db:migrate
+      - name: Build
+        run: npm run build
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Browser smoke and accessibility (Playwright starts the production server)
+        run: npm run e2e
+      - name: Performance smoke against the production server (health p95 budget)
+        run: |
+          npm run start -- -p 3000 > server.log 2>&1 &
+          curl --retry 30 --retry-connrefused --retry-delay 1 -sS -o /dev/null http://localhost:3000/api/v1/health
+          npm run perf:smoke
+
+  sbom:
+    name: Software bill of materials (CycloneDX)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run sbom
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbom-cyclonedx
+          path: sbom.cdx.json
 
   design-gate:
     name: Design contrast gate (CF-004, non-blocking)

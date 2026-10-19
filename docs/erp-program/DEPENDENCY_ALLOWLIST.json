@@ -1,16 +1,20 @@
 {
   "source": "Part 02 CP-ARCH-01: one ORM, one queue, one cache, one search engine, one PDF engine, one icon family, one charting library, one state manager. Any addition needs an ADR listed in the 'adr' field.",
   "packages": [
+    "@axe-core/playwright",
     "@eslint/eslintrc",
+    "@playwright/test",
     "@types/node",
     "@types/pg",
     "@types/react",
     "@types/react-dom",
+    "@vitest/coverage-v8",
     "eslint",
     "eslint-config-next",
     "lucide-react",
     "next",
     "pg",
+    "playwright-core",
     "react",
     "react-dom",
     "tsx",
@@ -32,6 +36,10 @@
     "typescript": "ADR-000",
     "vitest": "ADR-000 (test runner, Decision D-007)",
     "pg": "ADR-003 (ACCEPTED 2026-10-19; PostgreSQL driver, Part 03)",
-    "@types/pg": "ADR-003 (ACCEPTED 2026-10-19; types for the PostgreSQL driver)"
+    "@types/pg": "ADR-003 (ACCEPTED 2026-10-19; types for the PostgreSQL driver)",
+    "@axe-core/playwright": "Part 04 test automation (PROPOSED; approval recorded with Part 04). Test tooling only; not in the production bundle.",
+    "@playwright/test": "Part 04 test automation (PROPOSED; approval recorded with Part 04). Test tooling only; not in the production bundle.",
+    "@vitest/coverage-v8": "Part 04 test automation (PROPOSED; approval recorded with Part 04). Test tooling only; not in the production bundle.",
+    "playwright-core": "Part 04 test automation (PROPOSED; approval recorded with Part 04). Test tooling only; not in the production bundle."
   }
 }
