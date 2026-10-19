@@ -1,0 +1,63 @@
+# Continuous integration (Part 02 REQ-ARCH-F17; Part 04 owns the pipeline).
+# The quality job blocks. The design and security jobs are non-blocking until their conflicts are decided:
+#   design-gate: CF-004 (four contrast pairings fail).
+#   security-audit: R-02 (production advisories; fixes are major upgrades under ADR review).
+name: ci
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Quality gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Architecture boundaries and dependency allow-list (CP-ARCH-01, CP-ARCH-02)
+        run: npm run arch:check
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Unit and characterisation tests
+        run: npm test
+      - name: Golden baseline (destructive changes fail)
+        run: npm run baseline:check
+      - name: Production build
+        run: npm run build
+
+  design-gate:
+    name: Design contrast gate (CF-004, non-blocking)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run check:design
+
+  security-audit:
+    name: Production dependency audit (R-02, non-blocking)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm audit --omit=dev --audit-level=high

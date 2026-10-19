@@ -15,7 +15,8 @@ Single documentation root for the program (constitution §11). Status of each fi
 | `modules/disc/` | Present (Part 01 evidence: discovery, inventory, traceability) | Part 01 |
 | `EXISTING_SYSTEM_MAP.md`, `CALCULATION_REGISTRY.md`, `ITEM_LIKE_MASTERS.md`, `CONTROL_INVENTORY.md`, `DEPENDENCY_MAP.md`, `COMMUNICATION_INVENTORY.md`, `ARCHITECTURE_FITNESS.md`, `RISK_REGISTER.md`, `BASELINE_REPORT.md`, `GAP_MATRIX.csv`, `GOLDEN_OUTPUTS/`, `runbooks/` | Present (Part 01, repository scope) | Part 01 |
 | `DB_ENTITY_MAP.csv` | Present, header only (no database) | Part 01 |
-| `ARCHITECTURE.md`, `adr/` | Not produced | Part 02 |
+| `LOCALHOST.md` (repository root) | Present | Part 02 |
+| `ARCHITECTURE.md`, `adr/`, `TECH_RADAR.md`, `BUILD_VS_BUY.md`, `ENVIRONMENTS.md`, `DEPENDENCY_ALLOWLIST.json` | Present (Part 02, drafted; ADRs PROPOSED) | Part 02 |
 | `DB_EXTENSIONS.md`, `MIGRATION_LOG.md` | Not produced | Part 03 |
 | `EVENT_CATALOGUE.md` | Not produced | Parts 10, 11 |
 | `PERMISSION_REGISTRY.md` | Not produced | Part 07 |

@@ -1,0 +1,33 @@
+{
+  "source": "Part 02 CP-ARCH-01: one ORM, one queue, one cache, one search engine, one PDF engine, one icon family, one charting library, one state manager. Any addition needs an ADR listed in the 'adr' field.",
+  "packages": [
+    "@eslint/eslintrc",
+    "@types/node",
+    "@types/react",
+    "@types/react-dom",
+    "eslint",
+    "eslint-config-next",
+    "lucide-react",
+    "next",
+    "react",
+    "react-dom",
+    "tsx",
+    "typescript",
+    "vitest"
+  ],
+  "adr": {
+    "@eslint/eslintrc": "ADR-000 (tooling, carried from the create-next-app scaffold)",
+    "@types/node": "ADR-000",
+    "@types/react": "ADR-000",
+    "@types/react-dom": "ADR-000",
+    "eslint": "ADR-000",
+    "eslint-config-next": "ADR-000",
+    "lucide-react": "ADR-000 (icon family, Annex A DS-10)",
+    "next": "ADR-000 (application framework, Decision D-002)",
+    "react": "ADR-000",
+    "react-dom": "ADR-000",
+    "tsx": "ADR-000 (script runner for programme tooling)",
+    "typescript": "ADR-000",
+    "vitest": "ADR-000 (test runner, Decision D-007)"
+  }
+}

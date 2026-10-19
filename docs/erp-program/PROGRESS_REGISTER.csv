@@ -1,7 +1,7 @@
 part,title,module_code,phase,default_mode,start_mode,depends_on,status,legacy_prompts_built,evidence
 00,Program Constitution & Agent Operating System,pgm,1,ADOPT,ADOPT,,ADOPTED — awaiting owner signature (D-001),00,legacy evidence not in repository
 01,"Existing System Audit, Architecture Fitness Assessment & Golden Baseline",disc,1,VERIFY & EXTEND,VERIFY & EXTEND,00,DISCOVERED — technical-lead sign-off pending (CP-DISC-05),00;01,legacy evidence not in repository
-02,"Target Architecture, Technology Stack & Architecture Decision Framework",arch,1,BUILD,BUILD,01,NOT_STARTED,,
+02,"Target Architecture, Technology Stack & Architecture Decision Framework",arch,1,BUILD,BUILD,01,DRAFTED — ADR-001 to ADR-011 PROPOSED; approval pending (CF-011),,
 03,"Database Foundation, Schema Evolution & Data Migration Framework",dbf,1,BUILD or EXTEND,BUILD or EXTEND,01;02,NOT_STARTED,,
 04,"Quality Engineering, CI/CD, Test Automation & Release Management",cicd,1,VERIFY & EXTEND,VERIFY & EXTEND,01;02;03,NOT_STARTED,03,legacy evidence not in repository
 05,Shared Kernel & Core Platform Services,core,2,VERIFY & EXTEND,VERIFY & EXTEND,02;03;04,NOT_STARTED,04,legacy evidence not in repository

@@ -18,3 +18,12 @@
 - Ten conflicts and four decisions recorded (CF-007 to CF-010, D-010 to D-013).
 - Dependency advisories recorded (R-02) and not fixed, per Part 01 scope.
 
+## 2026-10-19 — Part 02 architecture (drafted)
+- Architecture views (`ARCHITECTURE.md`): context, container, component, data flow, trust boundaries, current-to-target table, replacement roadmap.
+- ADR-000 (accepted, interim) and ADR-001 to ADR-011 (PROPOSED), each with options, decision, fitness function and rollback.
+- Technology radar (`TECH_RADAR.md`) with versions verified against the npm registry, and build-versus-buy register.
+- Environment blueprint (`ENVIRONMENTS.md`); infrastructure as code not written (CF-012).
+- Architecture conformance gate (`npm run arch:check`): boundary rules and the dependency allow-list; 0 violations.
+- CI workflow added; Node pinned to 22.
+- Local application verified at http://localhost:3000 (`LOCALHOST.md`).
+

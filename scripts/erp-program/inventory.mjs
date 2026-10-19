@@ -2,7 +2,7 @@
 // It records what exists and where, and records a search as empty when nothing matches. Deterministic: no timestamps.
 // Run with: node scripts/erp-program/inventory.mjs
 import { execSync } from "node:child_process";
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, extname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 

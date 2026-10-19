@@ -2,6 +2,9 @@
   "name": "erp-construction",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22 <23"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -19,7 +22,8 @@
     "gap:matrix": "node scripts/erp-program/gap-matrix.mjs",
     "fitness:report": "tsx scripts/erp-program/fitness-report.ts",
     "baseline:capture": "tsx scripts/erp-program/baseline.ts capture",
-    "baseline:check": "tsx scripts/erp-program/baseline.ts check"
+    "baseline:check": "tsx scripts/erp-program/baseline.ts check",
+    "arch:check": "tsx scripts/erp-program/architecture-check.ts"
   },
   "dependencies": {
     "lucide-react": "^1.59.0",

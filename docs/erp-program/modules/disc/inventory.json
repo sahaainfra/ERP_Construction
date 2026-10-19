@@ -1,16 +1,16 @@
 {
-  "head": "b8189a5c7ec64e5baf885ce98580fbe8d29ce682",
-  "trackedFiles": 66,
+  "head": "22702dede40c971262df0fc9d3ed21808f8d30b4",
+  "trackedFiles": 93,
   "filesByExtension": {
     "(none)": 1,
     ".css": 2,
-    ".csv": 2,
+    ".csv": 6,
     ".ico": 1,
-    ".json": 8,
-    ".md": 10,
-    ".mjs": 7,
+    ".json": 10,
+    ".md": 22,
+    ".mjs": 9,
     ".mts": 1,
-    ".ts": 29,
+    ".ts": 36,
     ".tsx": 5
   },
   "appRoutes": [
@@ -22,35 +22,51 @@
     "src/design/icons.tsx"
   ],
   "apiRouteHandlers": [],
-  "ciConfiguration": [],
+  "ciConfiguration": [
+    ".github"
+  ],
   "searches": {
     "database": {
       "pattern": "prisma|typeorm|sequelize|knex|\\bpg\\b|mysql|mongoose|sqlite|create table|information_schema",
-      "files": []
+      "files": [
+        "scripts/erp-program/inventory.mjs"
+      ]
     },
     "authentication": {
       "pattern": "next-auth|passport|jsonwebtoken|bcrypt|argon2|password|login",
-      "files": []
+      "files": [
+        "scripts/erp-program/inventory.mjs"
+      ]
     },
     "realtimeSockets": {
       "pattern": "socket\\.io|websocket|eventsource|broadcastchannel",
-      "files": []
+      "files": [
+        "scripts/erp-program/inventory.mjs"
+      ]
     },
     "jobsAndSchedules": {
       "pattern": "\\bcron\\b|bullmq|agenda|node-schedule|setinterval",
-      "files": []
+      "files": [
+        "scripts/erp-program/inventory.mjs"
+      ]
     },
     "queuesAndBus": {
       "pattern": "kafka|rabbitmq|amqp|\\bredis\\b",
-      "files": []
+      "files": [
+        "scripts/erp-program/inventory.mjs"
+      ]
     },
     "httpIntegrations": {
       "pattern": "\\bfetch\\(|axios|https?:\\/\\/(?!localhost|127\\.0\\.0\\.1)",
-      "files": []
+      "files": [
+        "scripts/erp-program/inventory.mjs"
+      ]
     },
     "documentsAndPdf": {
       "pattern": "pdfkit|puppeteer|jspdf|react-pdf|exceljs|\\bxlsx\\b",
-      "files": []
+      "files": [
+        "scripts/erp-program/inventory.mjs"
+      ]
     },
     "featureFlags": {
       "pattern": "\\bff\\.[a-z]",
@@ -61,6 +77,7 @@
     "paymentsAndTax": {
       "pattern": "\\bgstin\\b|\\birn\\b|e-?way|\\btds\\b|razorpay|stripe",
       "files": [
+        "scripts/erp-program/inventory.mjs",
         "src/domain/glossary.ts",
         "src/domain/numbering.test.ts",
         "src/domain/numbering.ts",
@@ -376,6 +393,16 @@
       "name": "findUnit"
     },
     {
+      "file": "src/program/baseline.ts",
+      "line": 22,
+      "name": "classify"
+    },
+    {
+      "file": "src/program/baseline.ts",
+      "line": 47,
+      "name": "exitCode"
+    },
+    {
       "file": "src/program/conventions.ts",
       "line": 29,
       "name": "isValid"
@@ -389,6 +416,51 @@
       "file": "src/program/conventions.ts",
       "line": 40,
       "name": "evidenceRoot"
+    },
+    {
+      "file": "src/program/fitness.ts",
+      "line": 5,
+      "name": "DIMENSIONS"
+    },
+    {
+      "file": "src/program/fitness.ts",
+      "line": 35,
+      "name": "weightedScore"
+    },
+    {
+      "file": "src/program/fitness.ts",
+      "line": 48,
+      "name": "recommend"
+    },
+    {
+      "file": "src/program/fitness.ts",
+      "line": 56,
+      "name": "raisesCriticalToPart08"
+    },
+    {
+      "file": "src/program/fitness.ts",
+      "line": 58,
+      "name": "COMPONENTS"
+    },
+    {
+      "file": "src/program/fitness.ts",
+      "line": 111,
+      "name": "NOT_PRESENT"
+    },
+    {
+      "file": "src/program/fitness.ts",
+      "line": 128,
+      "name": "fitnessTable"
+    },
+    {
+      "file": "src/program/golden.ts",
+      "line": 25,
+      "name": "goldenCases"
+    },
+    {
+      "file": "src/program/golden.ts",
+      "line": 118,
+      "name": "ARTIFACTS"
     },
     {
       "file": "src/program/index.ts",
@@ -582,6 +654,14 @@
     {
       "file": "src/domain/structures.ts",
       "line": 4
+    },
+    {
+      "file": "src/program/fitness.ts",
+      "line": 41
+    },
+    {
+      "file": "src/program/fitness.ts",
+      "line": 44
     }
   ],
   "secretPatternMatches": [],
@@ -791,6 +871,13 @@
   "importGraph": {
     "edges": {
       "next.config.ts": [],
+      "scripts/erp-program/baseline.ts": [
+        "src/program/baseline.ts",
+        "src/program/golden.ts"
+      ],
+      "scripts/erp-program/fitness-report.ts": [
+        "src/program/fitness.ts"
+      ],
       "scripts/render-session-prompt.ts": [
         "src/program/prompts.ts"
       ],
@@ -822,7 +909,21 @@
       "src/domain/statutory.ts": [],
       "src/domain/structures.ts": [],
       "src/domain/uom.ts": [],
+      "src/program/baseline.ts": [],
       "src/program/conventions.ts": [],
+      "src/program/fitness.ts": [],
+      "src/program/golden.ts": [
+        "src/domain/commercial.ts",
+        "src/domain/kpi.ts",
+        "src/domain/norms.ts",
+        "src/domain/numbering.ts",
+        "src/domain/reinforcement.ts",
+        "src/program/conventions.ts",
+        "src/program/index.ts",
+        "src/program/legacy.ts",
+        "src/program/prompts.ts",
+        "src/program/verify.ts"
+      ],
       "src/program/index.ts": [],
       "src/program/legacy.ts": [
         "src/program/index.ts"

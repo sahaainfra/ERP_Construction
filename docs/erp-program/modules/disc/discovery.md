@@ -42,3 +42,6 @@ Date 2026-10-19. `git clone --branch erp-baseline-v0` into a new directory outsi
 - CF-007 to CF-010 (added with this Part).
 - Dependency upgrades (R-02) need an ADR (Part 02) before any change.
 - Technical-lead sign-off in DECISIONS.md.
+
+## Part 02 dependency note
+Part 02 was drafted after this Part without its sign-off (CF-011). Its outputs are in `docs/erp-program/ARCHITECTURE.md`, `adr/` and `modules/arch/`.
