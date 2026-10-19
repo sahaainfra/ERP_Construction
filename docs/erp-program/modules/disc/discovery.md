@@ -26,13 +26,16 @@ Module `disc`. Part 01 — Existing System Audit, Architecture Fitness Assessmen
 | CP-DISC-02 Every validation, limit and approval in the control inventory | Pass. None exist; listed | CONTROL_INVENTORY.md |
 | CP-DISC-03 Every statement cites evidence | Pass for the documents in this folder; each claim names a file, a search or a command | this folder |
 | CP-DISC-04 Leakage points and data defects in the risk register | Pass. Leakage points not measurable; recorded as R-07 | RISK_REGISTER.md |
-| CP-DISC-05 Golden baseline reproducible (two runs identical) and restore verified | Partly. Two runs: see "Reproducibility" below. Restore: see "Restore rehearsal" below. Sign-off pending. | below |
+| CP-DISC-05 Golden baseline reproducible (two runs identical) and restore verified | Evidence in place: two-run reproducibility and restore rehearsal (below). Blocking until the technical lead signs. | below |
 
 ## Reproducibility
-Capture and check are run twice; the results are recorded below.
+Run on commit `d1c989d` (baseline tag `erp-baseline-v0`):
+- `baseline:capture` run twice: the two `baseline.json` files are byte-identical (sha256 prefix `ff5048aaa9c4fc55`).
+- `inventory.mjs` run twice: byte-identical `inventory.json`.
+- `baseline:check` run twice: byte-identical output, `0 destructive, 0 changed, 0 additive`.
 
 ## Restore rehearsal
-Recorded below after the baseline tag is cloned into an isolated directory.
+Date 2026-10-19. `git clone --branch erp-baseline-v0` into a new directory outside the working tree; `npm ci` (exit 0); `npm run baseline:check` (exit 0, zero differences); `npm test` (132 pass, 0 fail); the clone's working tree was clean. The clone was then removed.
 
 ## Open items for the owner
 - CF-001 (legacy system location), CF-002, CF-003, CF-004, CF-005, CF-006 (see CONFLICTS.md).

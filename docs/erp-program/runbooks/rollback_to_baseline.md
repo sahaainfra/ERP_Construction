@@ -18,7 +18,7 @@ A change after the baseline breaks a golden output, removes an artefact, or brea
 ## Rehearsal log
 | Date | Action | Result |
 |---|---|---|
-| 2026-10-19 | Clone of `erp-baseline-v0` into an isolated directory; `npm ci`; `npm run baseline:check`; `npm test` | See `modules/disc/discovery.md`, section "Restore rehearsal" |
+| 2026-10-19 | Clone of `erp-baseline-v0` into an isolated directory; `npm ci`; `npm run baseline:check`; `npm test` | Pass: zero differences; 132 tests pass (see `modules/disc/discovery.md`) |
 
 ## Database and storage (to be added by Part 03)
 When a database exists, this runbook gains: a full backup, a restore into an isolated database, and an integrity-check comparison that must match 100 %.
