@@ -33,7 +33,11 @@ const progressLines = [
     const builtPrompts = legacy.crosswalk
       .filter((r) => r.legacyBuilt && r.newParts.includes(p.id))
       .map((r) => r.oldPrompt);
-    const status = p.id === "00" ? "ADOPTED — awaiting owner signature (D-001)" : "NOT_STARTED";
+    const STATUS = {
+      "00": "ADOPTED — awaiting owner signature (D-001)",
+      "01": "DISCOVERED — technical-lead sign-off pending (CP-DISC-05)",
+    };
+    const status = STATUS[p.id] ?? "NOT_STARTED";
     return row([
       p.id,
       p.title,

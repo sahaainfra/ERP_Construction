@@ -1,0 +1,19 @@
+req_id,requirement,status,evidence,note
+REQ-DISC-F01,Program bootstrap and documentation set,done,docs/erp-program/PROGRAM_RULES.md; docs/erp-program/DECISIONS.md; docs/erp-program/CONFLICTS.md; docs/erp-program/CHANGELOG.md; docs/erp-program/PROGRESS_REGISTER.csv; docs/erp-program/TRACEABILITY_MATRIX.csv,Branch erp-program/main not created (CF-007); tag erp-baseline-v0 created locally
+REQ-DISC-F02,System map,done,docs/erp-program/EXISTING_SYSTEM_MAP.md; modules/disc/inventory.json,Most categories empty by fact (no legacy code)
+REQ-DISC-F03,Database map and data-quality profile,n/a,docs/erp-program/DB_ENTITY_MAP.csv (header only),No database in repository; profiling not applicable
+REQ-DISC-F04,API inventory,n/a,modules/disc/inventory.json → apiRouteHandlers (empty),No API routes exist
+REQ-DISC-F05,UI inventory,partial,modules/disc/inventory.json → appRoutes; componentFiles,One route; responsive and accessibility scans not run (no screens beyond shell)
+REQ-DISC-F06,Calculation registry,done,docs/erp-program/CALCULATION_REGISTRY.md; GOLDEN_OUTPUTS/baseline.json,42 entries; keyword scan incomplete, registry built from exported symbols
+REQ-DISC-F07,Item-like masters,done,docs/erp-program/ITEM_LIKE_MASTERS.md,No masters exist; seeds listed
+REQ-DISC-F08,Control inventory,done,docs/erp-program/CONTROL_INVENTORY.md,No controls exist; gaps against §9 listed
+REQ-DISC-F09,Dependency map,done,docs/erp-program/DEPENDENCY_MAP.md; modules/disc/inventory.json → importGraph,0 cycles
+REQ-DISC-F10,Architecture fitness assessment,done,docs/erp-program/ARCHITECTURE_FITNESS.md; src/program/fitness.ts; src/program/fitness.test.ts,4 components scored; 14 absent systems not scored
+REQ-DISC-F11,Load and capacity probe,n/a,docs/erp-program/ARCHITECTURE_FITNESS.md (section Load and capacity probe),No database; build size measured instead
+REQ-DISC-F12,Golden baseline,done,docs/erp-program/GOLDEN_OUTPUTS/baseline.json; GOLDEN_OUTPUTS/README.md; src/program/golden.ts; src/program/baseline.test.ts,Covers formulas, invariants, prompts; not DB, API, reports
+REQ-DISC-F13,Integrity checker,done,scripts/erp-program/baseline.ts; src/program/baseline.ts,Read-only; classifies destructive and additive; scratch-DB test replaced by classifier tests
+REQ-DISC-F14,Verified backup and rollback runbook,partial,docs/erp-program/runbooks/rollback_to_baseline.md,Repository restore rehearsed; database and storage backup not applicable
+REQ-DISC-F15,Gap matrix,done,docs/erp-program/GAP_MATRIX.csv; PROGRESS_REGISTER.csv,Coverage categories, not percentages
+REQ-DISC-F16,Risk register and conflicts,done,docs/erp-program/RISK_REGISTER.md; docs/erp-program/CONFLICTS.md,10 risks; CF-007 to CF-010 added
+REQ-DISC-F17,Legacy-pack reconciliation,partial,docs/erp-program/LEGACY_MAPPING.md; CONFLICTS.md CF-001,No legacy evidence found; all 21 VERIFY & EXTEND Parts unevidenced
+REQ-DISC-F18,Communication inventory,done,docs/erp-program/COMMUNICATION_INVENTORY.md,Nothing to reuse; no WorkChat build found

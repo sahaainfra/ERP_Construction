@@ -1,0 +1,840 @@
+{
+  "head": "b8189a5c7ec64e5baf885ce98580fbe8d29ce682",
+  "trackedFiles": 66,
+  "filesByExtension": {
+    "(none)": 1,
+    ".css": 2,
+    ".csv": 2,
+    ".ico": 1,
+    ".json": 8,
+    ".md": 10,
+    ".mjs": 7,
+    ".mts": 1,
+    ".ts": 29,
+    ".tsx": 5
+  },
+  "appRoutes": [
+    "src/app/page.tsx"
+  ],
+  "componentFiles": [
+    "src/components/shell/AppShell.tsx",
+    "src/design/StatusChip.tsx",
+    "src/design/icons.tsx"
+  ],
+  "apiRouteHandlers": [],
+  "ciConfiguration": [],
+  "searches": {
+    "database": {
+      "pattern": "prisma|typeorm|sequelize|knex|\\bpg\\b|mysql|mongoose|sqlite|create table|information_schema",
+      "files": []
+    },
+    "authentication": {
+      "pattern": "next-auth|passport|jsonwebtoken|bcrypt|argon2|password|login",
+      "files": []
+    },
+    "realtimeSockets": {
+      "pattern": "socket\\.io|websocket|eventsource|broadcastchannel",
+      "files": []
+    },
+    "jobsAndSchedules": {
+      "pattern": "\\bcron\\b|bullmq|agenda|node-schedule|setinterval",
+      "files": []
+    },
+    "queuesAndBus": {
+      "pattern": "kafka|rabbitmq|amqp|\\bredis\\b",
+      "files": []
+    },
+    "httpIntegrations": {
+      "pattern": "\\bfetch\\(|axios|https?:\\/\\/(?!localhost|127\\.0\\.0\\.1)",
+      "files": []
+    },
+    "documentsAndPdf": {
+      "pattern": "pdfkit|puppeteer|jspdf|react-pdf|exceljs|\\bxlsx\\b",
+      "files": []
+    },
+    "featureFlags": {
+      "pattern": "\\bff\\.[a-z]",
+      "files": [
+        "src/program/conventions.test.ts"
+      ]
+    },
+    "paymentsAndTax": {
+      "pattern": "\\bgstin\\b|\\birn\\b|e-?way|\\btds\\b|razorpay|stripe",
+      "files": [
+        "src/domain/glossary.ts",
+        "src/domain/numbering.test.ts",
+        "src/domain/numbering.ts",
+        "src/domain/reference.test.ts",
+        "src/domain/statutory.ts"
+      ]
+    }
+  },
+  "exportedSymbols": [
+    {
+      "file": "src/domain/commercial.ts",
+      "line": 16,
+      "name": "mobilisationAdvanceRecovery"
+    },
+    {
+      "file": "src/domain/commercial.ts",
+      "line": 35,
+      "name": "securedAdvanceLimit"
+    },
+    {
+      "file": "src/domain/commercial.ts",
+      "line": 50,
+      "name": "securedAdvanceRecovery"
+    },
+    {
+      "file": "src/domain/commercial.ts",
+      "line": 65,
+      "name": "retentionDeduction"
+    },
+    {
+      "file": "src/domain/commercial.ts",
+      "line": 87,
+      "name": "priceVariation"
+    },
+    {
+      "file": "src/domain/commercial.ts",
+      "line": 103,
+      "name": "netDelay"
+    },
+    {
+      "file": "src/domain/commercial.ts",
+      "line": 110,
+      "name": "liquidatedDamages"
+    },
+    {
+      "file": "src/domain/commercial.ts",
+      "line": 121,
+      "name": "earlyCompletionBonus"
+    },
+    {
+      "file": "src/domain/commercial.ts",
+      "line": 131,
+      "name": "deviationSplit"
+    },
+    {
+      "file": "src/domain/glossary.ts",
+      "line": 10,
+      "name": "GLOSSARY"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 8,
+      "name": "physicalProgress"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 15,
+      "name": "spi"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 17,
+      "name": "cpi"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 19,
+      "name": "scheduleVariance"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 21,
+      "name": "costVariance"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 24,
+      "name": "eacCpi"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 28,
+      "name": "etc"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 30,
+      "name": "vac"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 32,
+      "name": "tcpi"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 35,
+      "name": "grossMargin"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 43,
+      "name": "cvrMargin"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 59,
+      "name": "underOverBilling"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 65,
+      "name": "materialVariance"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 76,
+      "name": "plantUtilisation"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 81,
+      "name": "plantAvailability"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 85,
+      "name": "mtbf"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 87,
+      "name": "mttr"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 90,
+      "name": "labourProductivityIndex"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 96,
+      "name": "dso"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 99,
+      "name": "dpo"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 103,
+      "name": "certificationLagDays"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 115,
+      "name": "workingDaysBetween"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 130,
+      "name": "rfiTurnaroundDays"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 134,
+      "name": "ltifr"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 137,
+      "name": "trifr"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 141,
+      "name": "firstTimeInspectionPass"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 145,
+      "name": "costOfQuality"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 149,
+      "name": "vendorOtif"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 153,
+      "name": "procurementCycleDays"
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 158,
+      "name": "KPI_DICTIONARY"
+    },
+    {
+      "file": "src/domain/norms.ts",
+      "line": 5,
+      "name": "SEED_WASTAGE"
+    },
+    {
+      "file": "src/domain/norms.ts",
+      "line": 21,
+      "name": "FORMWORK_REPETITIONS"
+    },
+    {
+      "file": "src/domain/norms.ts",
+      "line": 32,
+      "name": "formworkWearPerUse"
+    },
+    {
+      "file": "src/domain/numbering.ts",
+      "line": 15,
+      "name": "DOCUMENT_NUMBERING"
+    },
+    {
+      "file": "src/domain/numbering.ts",
+      "line": 64,
+      "name": "templateTokens"
+    },
+    {
+      "file": "src/domain/numbering.ts",
+      "line": 76,
+      "name": "formatDocumentNumber"
+    },
+    {
+      "file": "src/domain/numbering.ts",
+      "line": 85,
+      "name": "findNumbering"
+    },
+    {
+      "file": "src/domain/reinforcement.ts",
+      "line": 5,
+      "name": "SEED_BEND_DEDUCTION_FACTORS"
+    },
+    {
+      "file": "src/domain/reinforcement.ts",
+      "line": 13,
+      "name": "unitWeightKgPerM"
+    },
+    {
+      "file": "src/domain/reinforcement.ts",
+      "line": 22,
+      "name": "cutLengthMm"
+    },
+    {
+      "file": "src/domain/reinforcement.ts",
+      "line": 41,
+      "name": "barWeightKg"
+    },
+    {
+      "file": "src/domain/roles.ts",
+      "line": 11,
+      "name": "EXPERT_PANEL"
+    },
+    {
+      "file": "src/domain/roles.ts",
+      "line": 81,
+      "name": "PERSONA_CATALOGUE"
+    },
+    {
+      "file": "src/domain/statutory.ts",
+      "line": 18,
+      "name": "STATUTORY_OBLIGATIONS"
+    },
+    {
+      "file": "src/domain/structures.ts",
+      "line": 3,
+      "name": "CONTRACT_MODELS"
+    },
+    {
+      "file": "src/domain/structures.ts",
+      "line": 24,
+      "name": "STANDARD_CONDITIONS"
+    },
+    {
+      "file": "src/domain/structures.ts",
+      "line": 39,
+      "name": "PROJECT_STRUCTURES"
+    },
+    {
+      "file": "src/domain/structures.ts",
+      "line": 73,
+      "name": "LOCATION_RULE"
+    },
+    {
+      "file": "src/domain/uom.ts",
+      "line": 22,
+      "name": "UNITS_OF_MEASURE"
+    },
+    {
+      "file": "src/domain/uom.ts",
+      "line": 50,
+      "name": "BRASS_TO_CFT"
+    },
+    {
+      "file": "src/domain/uom.ts",
+      "line": 52,
+      "name": "findUnit"
+    },
+    {
+      "file": "src/program/conventions.ts",
+      "line": 29,
+      "name": "isValid"
+    },
+    {
+      "file": "src/program/conventions.ts",
+      "line": 34,
+      "name": "assertValid"
+    },
+    {
+      "file": "src/program/conventions.ts",
+      "line": 40,
+      "name": "evidenceRoot"
+    },
+    {
+      "file": "src/program/index.ts",
+      "line": 28,
+      "name": "PHASES"
+    },
+    {
+      "file": "src/program/index.ts",
+      "line": 29,
+      "name": "PARTS"
+    },
+    {
+      "file": "src/program/index.ts",
+      "line": 34,
+      "name": "partKey"
+    },
+    {
+      "file": "src/program/index.ts",
+      "line": 41,
+      "name": "getPart"
+    },
+    {
+      "file": "src/program/index.ts",
+      "line": 48,
+      "name": "transitiveDependencies"
+    },
+    {
+      "file": "src/program/index.ts",
+      "line": 61,
+      "name": "canStart"
+    },
+    {
+      "file": "src/program/index.ts",
+      "line": 66,
+      "name": "runnableNow"
+    },
+    {
+      "file": "src/program/index.ts",
+      "line": 76,
+      "name": "canRunInParallel"
+    },
+    {
+      "file": "src/program/index.ts",
+      "line": 82,
+      "name": "phaseOf"
+    },
+    {
+      "file": "src/program/legacy.ts",
+      "line": 37,
+      "name": "CROSSWALK"
+    },
+    {
+      "file": "src/program/legacy.ts",
+      "line": 38,
+      "name": "VERIFY_EXTEND"
+    },
+    {
+      "file": "src/program/legacy.ts",
+      "line": 39,
+      "name": "CONSOLIDATIONS"
+    },
+    {
+      "file": "src/program/legacy.ts",
+      "line": 40,
+      "name": "ALIASES"
+    },
+    {
+      "file": "src/program/legacy.ts",
+      "line": 41,
+      "name": "PLANT_MODULE"
+    },
+    {
+      "file": "src/program/legacy.ts",
+      "line": 42,
+      "name": "WORKCHAT_MODULE"
+    },
+    {
+      "file": "src/program/legacy.ts",
+      "line": 45,
+      "name": "partsForLegacyPrompt"
+    },
+    {
+      "file": "src/program/legacy.ts",
+      "line": 52,
+      "name": "legacyPromptsForPart"
+    },
+    {
+      "file": "src/program/legacy.ts",
+      "line": 60,
+      "name": "startMode"
+    },
+    {
+      "file": "src/program/legacy.ts",
+      "line": 65,
+      "name": "aliasesFor"
+    },
+    {
+      "file": "src/program/legacy.ts",
+      "line": 70,
+      "name": "legacyIdsFor"
+    },
+    {
+      "file": "src/program/prompts.ts",
+      "line": 14,
+      "name": "TEMPLATES"
+    },
+    {
+      "file": "src/program/prompts.ts",
+      "line": 32,
+      "name": "getTemplate"
+    },
+    {
+      "file": "src/program/prompts.ts",
+      "line": 39,
+      "name": "findPlaceholders"
+    },
+    {
+      "file": "src/program/prompts.ts",
+      "line": 52,
+      "name": "renderPartPrompt"
+    },
+    {
+      "file": "src/program/prompts.ts",
+      "line": 83,
+      "name": "renderPhaseGate"
+    },
+    {
+      "file": "src/program/prompts.ts",
+      "line": 92,
+      "name": "PART_IDS"
+    },
+    {
+      "file": "src/program/verify.ts",
+      "line": 9,
+      "name": "verifyProgram"
+    }
+  ],
+  "arithmeticOnMoneyOrQuantity": [
+    {
+      "file": "src/domain/commercial.ts",
+      "line": 31
+    },
+    {
+      "file": "src/domain/commercial.ts",
+      "line": 43
+    },
+    {
+      "file": "src/domain/commercial.ts",
+      "line": 57
+    },
+    {
+      "file": "src/domain/commercial.ts",
+      "line": 91
+    },
+    {
+      "file": "src/domain/commercial.ts",
+      "line": 116
+    },
+    {
+      "file": "src/domain/commercial.ts",
+      "line": 122
+    },
+    {
+      "file": "src/domain/glossary.ts",
+      "line": 37
+    },
+    {
+      "file": "src/domain/glossary.ts",
+      "line": 38
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 9
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 21
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 54
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 55
+    },
+    {
+      "file": "src/domain/kpi.ts",
+      "line": 184
+    },
+    {
+      "file": "src/domain/structures.ts",
+      "line": 4
+    }
+  ],
+  "secretPatternMatches": [],
+  "dependencies": [
+    {
+      "name": "lucide-react",
+      "scope": "production",
+      "declared": "^1.59.0",
+      "installed": "1.59.0",
+      "license": "ISC"
+    },
+    {
+      "name": "next",
+      "scope": "production",
+      "declared": "15.5.28",
+      "installed": "15.5.28",
+      "license": "MIT"
+    },
+    {
+      "name": "react",
+      "scope": "production",
+      "declared": "19.1.0",
+      "installed": "19.1.0",
+      "license": "MIT"
+    },
+    {
+      "name": "react-dom",
+      "scope": "production",
+      "declared": "19.1.0",
+      "installed": "19.1.0",
+      "license": "MIT"
+    },
+    {
+      "name": "@eslint/eslintrc",
+      "scope": "development",
+      "declared": "^3",
+      "installed": "3.3.7",
+      "license": "MIT"
+    },
+    {
+      "name": "@types/node",
+      "scope": "development",
+      "declared": "^20",
+      "installed": "20.19.43",
+      "license": "MIT"
+    },
+    {
+      "name": "@types/react",
+      "scope": "development",
+      "declared": "^19",
+      "installed": "19.3.0",
+      "license": "MIT"
+    },
+    {
+      "name": "@types/react-dom",
+      "scope": "development",
+      "declared": "^19",
+      "installed": "19.3.0",
+      "license": "MIT"
+    },
+    {
+      "name": "eslint",
+      "scope": "development",
+      "declared": "^9",
+      "installed": "9.39.5",
+      "license": "MIT"
+    },
+    {
+      "name": "eslint-config-next",
+      "scope": "development",
+      "declared": "15.5.28",
+      "installed": "15.5.28",
+      "license": "MIT"
+    },
+    {
+      "name": "tsx",
+      "scope": "development",
+      "declared": "^4.23.15",
+      "installed": "4.23.15",
+      "license": "MIT"
+    },
+    {
+      "name": "typescript",
+      "scope": "development",
+      "declared": "^5",
+      "installed": "5.9.3",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "vitest",
+      "scope": "development",
+      "declared": "^3.2.7",
+      "installed": "3.2.7",
+      "license": "MIT"
+    }
+  ],
+  "audit": {
+    "production": {
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 1,
+        "high": 1,
+        "critical": 0,
+        "total": 2
+      },
+      "findings": [
+        {
+          "package": "next",
+          "severity": "moderate",
+          "relation": "direct",
+          "range": "9.3.4-canary.0 - 16.3.0-preview.10",
+          "fixAvailable": "next@16.4.2"
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "relation": "transitive",
+          "range": "<=8.5.22",
+          "fixAvailable": "next@16.4.2"
+        }
+      ]
+    },
+    "all": {
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 2,
+        "high": 6,
+        "critical": 2,
+        "total": 10
+      },
+      "findings": [
+        {
+          "package": "@next/eslint-plugin-next",
+          "severity": "high",
+          "relation": "transitive",
+          "range": ">=14.3.0-canary.0",
+          "fixAvailable": "eslint-config-next@14.2.35"
+        },
+        {
+          "package": "@vitest/mocker",
+          "severity": "moderate",
+          "relation": "transitive",
+          "range": "2.1.0 - 4.1.10",
+          "fixAvailable": "vitest@5.0.5"
+        },
+        {
+          "package": "braces",
+          "severity": "high",
+          "relation": "transitive",
+          "range": "*",
+          "fixAvailable": "eslint-config-next@14.2.35"
+        },
+        {
+          "package": "eslint-config-next",
+          "severity": "high",
+          "relation": "direct",
+          "range": ">=14.3.0-canary.0",
+          "fixAvailable": "eslint-config-next@14.2.35"
+        },
+        {
+          "package": "fast-glob",
+          "severity": "high",
+          "relation": "transitive",
+          "range": "*",
+          "fixAvailable": "eslint-config-next@14.2.35"
+        },
+        {
+          "package": "micromatch",
+          "severity": "high",
+          "relation": "transitive",
+          "range": ">=0.2.0",
+          "fixAvailable": "eslint-config-next@14.2.35"
+        },
+        {
+          "package": "next",
+          "severity": "moderate",
+          "relation": "direct",
+          "range": "9.3.4-canary.0 - 16.3.0-preview.10",
+          "fixAvailable": "next@16.4.2"
+        },
+        {
+          "package": "postcss",
+          "severity": "high",
+          "relation": "transitive",
+          "range": "<=8.5.22",
+          "fixAvailable": "next@16.4.2"
+        },
+        {
+          "package": "tinypool",
+          "severity": "critical",
+          "relation": "transitive",
+          "range": "<=2.1.1",
+          "fixAvailable": "vitest@5.0.5"
+        },
+        {
+          "package": "vitest",
+          "severity": "critical",
+          "relation": "direct",
+          "range": "0.0.95 - 4.1.10",
+          "fixAvailable": "vitest@5.0.5"
+        }
+      ]
+    }
+  },
+  "importGraph": {
+    "edges": {
+      "next.config.ts": [],
+      "scripts/render-session-prompt.ts": [
+        "src/program/prompts.ts"
+      ],
+      "src/app/layout.tsx": [
+        "src/components/shell/AppShell.tsx",
+        "src/design/preferences.ts"
+      ],
+      "src/app/page.tsx": [],
+      "src/components/shell/AppShell.tsx": [
+        "src/design/icons.tsx",
+        "src/design/navigation.ts",
+        "src/design/preferences.ts"
+      ],
+      "src/design/StatusChip.tsx": [
+        "src/design/icons.tsx"
+      ],
+      "src/design/icons.tsx": [],
+      "src/design/navigation.ts": [
+        "src/design/icons.tsx"
+      ],
+      "src/design/preferences.ts": [],
+      "src/domain/commercial.ts": [],
+      "src/domain/glossary.ts": [],
+      "src/domain/kpi.ts": [],
+      "src/domain/norms.ts": [],
+      "src/domain/numbering.ts": [],
+      "src/domain/reinforcement.ts": [],
+      "src/domain/roles.ts": [],
+      "src/domain/statutory.ts": [],
+      "src/domain/structures.ts": [],
+      "src/domain/uom.ts": [],
+      "src/program/conventions.ts": [],
+      "src/program/index.ts": [],
+      "src/program/legacy.ts": [
+        "src/program/index.ts"
+      ],
+      "src/program/prompts.ts": [
+        "src/program/index.ts",
+        "src/program/legacy.ts"
+      ],
+      "src/program/verify.ts": [
+        "src/program/index.ts"
+      ]
+    },
+    "cycles": []
+  }
+}

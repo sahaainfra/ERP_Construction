@@ -1,0 +1,96 @@
+part,title,phase,risk,default_mode,start_mode,coverage,existing_artefacts,note
+00,Program Constitution & Agent Operating System,1,High,ADOPT,ADOPT,adopted,docs/erp-program/PROGRAM_RULES.md,Owner signature pending (D-001)
+01,"Existing System Audit, Architecture Fitness Assessment & Golden Baseline",1,High,VERIFY & EXTEND,VERIFY & EXTEND,partial,docs/erp-program/modules/disc/; scripts/erp-program/,Discovery and baseline in progress
+02,"Target Architecture, Technology Stack & Architecture Decision Framework",1,High,BUILD,BUILD,none,,
+03,"Database Foundation, Schema Evolution & Data Migration Framework",1,High,BUILD or EXTEND,BUILD or EXTEND,reference-only,src/program/baseline.ts,Classifier only; no database
+04,"Quality Engineering, CI/CD, Test Automation & Release Management",1,High,VERIFY & EXTEND,VERIFY & EXTEND,partial,src/**/*.test.ts; scripts/erp-program/baseline.ts,111 unit tests and baseline check; no CI
+05,Shared Kernel & Core Platform Services,2,High,VERIFY & EXTEND,VERIFY & EXTEND,reference-only,src/domain/numbering.ts,Numbering seeds and template formatter; no service
+06,"Enterprise Structure: Organisation, Company, Project & Site",2,High,VERIFY & EXTEND,VERIFY & EXTEND,none,,
+07,"Identity, Access Control, Segregation of Duties & Zero-Trust",2,High,VERIFY & EXTEND,VERIFY & EXTEND,none,,
+08,"Audit Trail, Secure SDLC & Security Governance",2,High,VERIFY & EXTEND,VERIFY & EXTEND,none,,
+08A,"Secure Login, Admin User Provisioning, Credentials & Session Lifecycle",2,High,VERIFY & EXTEND,VERIFY & EXTEND,none,,
+09,"Observability, Reliability, Performance & Error Handling",2,High,VERIFY & EXTEND,VERIFY & EXTEND,none,,
+10,"Event Bus, Real-time & Notification Engine",2,High,VERIFY & EXTEND,VERIFY & EXTEND,none,,
+11,"Integration Platform, API Gateway & Developer Portal",2,High,VERIFY & EXTEND,VERIFY & EXTEND,none,,
+12,"Enterprise Design System, App Shell & Navigation",3,Medium,VERIFY & EXTEND,VERIFY & EXTEND,partial,src/app/; src/components/shell/; src/design/; design/; scripts/build-tokens.mjs; scripts/check-design.mjs,"Shell, tokens, nav registry, icons, status chip; no authentication"
+13,"Dashboard Engine, Launchpad, Global Search & Drill-down",3,Medium,VERIFY & EXTEND,VERIFY & EXTEND,partial,design/navigation-registry.json; src/app/page.tsx,Launchpad empty state; no widgets or search
+14,Responsive Field App & Offline-First Engine,3,High,VERIFY & EXTEND,VERIFY & EXTEND,none,,
+15,Existing Application Redesign & Screen Migration,3,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+16,"Workflow, Business Rules & Delegation of Authority",4,High,VERIFY & EXTEND,VERIFY & EXTEND,none,,
+17,"Protocol & Control Engine, RACI, Action Ledger & Policy-to-Protocol",4,High,VERIFY & EXTEND,VERIFY & EXTEND,reference-only,src/program/conventions.ts,Control point identifier validator; no protocol engine
+18,"Tasks, Alerts, Escalations, Meetings & Automation",4,Medium,VERIFY & EXTEND,VERIFY & EXTEND,none,,
+19,"Document Control, Correspondence & Common Data Environment",4,Medium,VERIFY & EXTEND,VERIFY & EXTEND,none,,
+20,"Document Generation, Templates, e-Signature & Verification",4,Medium,VERIFY & EXTEND,VERIFY & EXTEND,none,,
+21,Master Data Governance,4,High,BUILD or EXTEND,BUILD or EXTEND,reference-only,src/domain/uom.ts; src/domain/roles.ts; src/domain/structures.ts,Seed data; no master governance
+22,Central Calculation Engine & Formula Registry,4,High,BUILD or EXTEND,BUILD or EXTEND,reference-only,src/domain/kpi.ts; src/domain/commercial.ts; src/domain/reinforcement.ts; src/domain/norms.ts,"42 formulas, not an engine; float money (CF-003)"
+23,"Item Master, Resource Catalogue & Item Selector",4,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+24,Data-Entry Framework & Excel Data Exchange,4,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+25,"Unified Communication Platform: Gateway, WorkChat Architecture, Data Model & Real-time Core",4,High,VERIFY & EXTEND,VERIFY & EXTEND,none,,
+25A,"WorkChat Conversations & Messaging Experience: Direct, Groups, Channels, Composer, Attachments, Search, Receipts, Notifications & Unified Inbox",4,High,VERIFY & EXTEND,VERIFY & EXTEND,none,,
+25B,"WorkChat ERP Integration: Communication Center, Record Discussions, Instructions, Conversions & Workflow Cards",4,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+25C,"WorkChat Security, Privacy & Governance: Licences, Encryption Decision, Calls, Administration, Retention, Legal Hold & Pilot Release",4,High,VERIFY & EXTEND,VERIFY & EXTEND,none,,
+26,"Financial Backbone: Chart of Accounts, General Ledger, Posting Engine & Period Control",4,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+27,"Tax & e-Compliance Engine: GST, TDS, e-Invoice & e-Way Bill",4,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+28,"CRM, Business Development & Bid/No-Bid",5,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+29,Rate Analysis Engine & Schedule-of-Rates Library,5,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+30,"Tender Management, Estimation & Bid Pricing",5,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+31,Contract Lifecycle Management & Tender-to-Execution Handover,5,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+32,"Project Setup, Project 360 & Statutory Approvals Register",5,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+33,"WBS, CBS, BOQ & Work Packages",5,High,BUILD or EXTEND,BUILD or EXTEND,reference-only,src/domain/commercial.ts,BOQ deviation band split
+34,"Engineering & Design Management: Drawings, Submittals & RFIs",5,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+35,"Quantity Take-off (MTO), Bar Bending Schedules & Quantity Derivation",5,Medium,BUILD or EXTEND,BUILD or EXTEND,reference-only,src/domain/reinforcement.ts,Bar weight and cut length
+36,Risk & Opportunity Management,5,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+37,"GIS, Survey, Land / Right-of-Way & Reality Capture",5,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+38,Planning & Scheduling,6,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+39,Budgeting & Cost Control,6,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+40,Resource & Capacity Planning,6,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+41,Work Authorisation & Daily Work Planning,6,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+42,"Site Execution, DPR, Hindrance & Weather",6,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+43,"Progress Measurement, EVM & Planned-vs-Budgeted-vs-Actual",6,High,BUILD or EXTEND,BUILD or EXTEND,reference-only,src/domain/kpi.ts,Earned value indices
+44,Supplier Management & Material Rate Intelligence,7,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+45,Material Demand Planning (MRP),7,Medium,BUILD or EXTEND,BUILD or EXTEND,reference-only,src/domain/norms.ts,Wastage seeds
+46,Procurement & Purchase Management,7,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+47,Stores & Inventory Management,7,High,BUILD or EXTEND,BUILD or EXTEND,reference-only,src/domain/norms.ts,Wastage seeds
+48,"Site Logistics, Gate, Weighbridge & Vehicle Control",7,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+49,"Formwork, Scaffolding, Tools & Returnable Assets",7,Medium,BUILD or EXTEND,BUILD or EXTEND,reference-only,src/domain/norms.ts,Formwork wear formula (interpretation)
+50,"Plant, Machinery & Fleet Management",8,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+50A,"Daily Equipment Logbook, Operator Readings, Photo Evidence & Senior Authorisation",8,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+50B,"Maintenance, Workshop, Spare Parts & Reliability",8,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+51,"Fuel Management, Calibrated Daily Consumption Verification & Anti-Leakage Control",8,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+52,"RMC & Batching Plant Operations, Mix Design and Costing",8,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+52A,"RMC Orders, Production Scheduling, Dispatch, Transit Mixers & Concrete Pumps",8,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+53,"Production Units: Crusher, Hot-Mix, Precast & Fabrication Yards",8,Medium,BUILD,BUILD,none,,
+54,HR Core & Human Capital Management,9,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+55,"Labour Management, Geofenced Attendance, Timekeeping & Attendance Approval",9,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+56,Payroll & Labour Statutory Compliance,9,High,BUILD or EXTEND,BUILD or EXTEND,reference-only,src/domain/statutory.ts,"Labour statutory seeds, unconfirmed"
+57,"Site Facilities: Labour Camps, Welfare & Security Guards",9,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+58,Workforce Productivity & Performance Management,9,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+59,Subcontract & Work-Order Management,10,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+60,"Quantity Surveying, Measurement Book & Certification",10,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+61,"Client Billing, Price Variation, Retention & Collections",10,High,BUILD or EXTEND,BUILD or EXTEND,reference-only,src/domain/commercial.ts,"Advances, retention, price variation"
+62,Change & Variation Management,10,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+63,"Claims, Extension of Time & Dispute Management",10,Medium,BUILD or EXTEND,BUILD or EXTEND,reference-only,src/domain/commercial.ts,"Liquidated damages, bonus"
+64,"Accounts Payable, Multi-way Matching, Site Imprest & Expenses",11,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+65,"Receivables, Cash Flow, Treasury, Bank Guarantees & Banking",11,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+66,"Fixed Assets, Joint Ventures & Inter-company Accounting",11,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+67,Cost Forecasting (EAC/ETC) & Cost-Value Reconciliation,11,High,BUILD or EXTEND,BUILD or EXTEND,reference-only,src/domain/kpi.ts,"EAC, ETC, VAC, TCPI"
+68,"Project P&L, Profitability & Monthly Close",11,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+69,"Quality Management (QA/QC), Inspections & Lab Testing",12,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+70,HSE Management & Permit-to-Work,12,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+71,"Testing, Commissioning, Handover, Closeout & Defect Liability",12,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+72,"ESG, Sustainability & Environmental Compliance",12,Low,BUILD or EXTEND,BUILD or EXTEND,none,,
+73,"External Portals: Supplier, Subcontractor, Client & Consultant",13,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+74,Real Estate Sales & Customer Management (optional developer edition),13,Medium,BUILD,BUILD,none,,
+75,"Enterprise Data Platform, Metric Catalogue & Data Lineage",14,High,BUILD or EXTEND,BUILD or EXTEND,reference-only,src/domain/kpi.ts,KPI dictionary; no metric catalogue
+76,"Reporting, MIS & Report Builder",14,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+77,"Control Towers, Early Warning & Wastage/Leakage Detection",14,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+78,"Analytics, Forecasting, Scenario Simulation & Explainability",14,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+79,"AI Platform: Copilot, Agents, Document Intelligence, Vision & Governance",14,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+80,Super Admin Control Center & Configuration Studio,15,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+80A,"WorkChat Enterprise Activation: Cross-Module Coverage, Scale & Resilience Certification and Staged Roll-out",15,High,BUILD,BUILD,none,,
+81,"Simulation Sandbox, UAT & Training",15,Medium,BUILD or EXTEND,BUILD or EXTEND,none,,
+82,End-to-End Integration & Cross-Module Reconciliation Testing,15,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+83,"Security, Performance & Accessibility Certification",15,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+84,"Backup, Disaster Recovery, Data Retention & Archival",15,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+85,"Data Cutover, Go-Live & Hypercare",15,High,BUILD or EXTEND,BUILD or EXTEND,none,,
+86,"Continuous Improvement, Lessons Learned & Knowledge Management",15,Low,BUILD or EXTEND,BUILD or EXTEND,none,,

@@ -69,16 +69,24 @@ Every rate, threshold and index here is a seed or a parameter, not a constant th
 
 `docs/erp-program/` is the program's documentation root (constitution §11). `PROGRAM_RULES.md` is the adopted constitution. `DECISIONS.md`, `CONFLICTS.md`, `LEGACY_MAPPING.md`, `PROGRESS_REGISTER.csv` and `LEGACY_CROSSWALK.csv` record adoption. `docs/erp-program/README.md` lists every §11 file and the Part that produces it. Run `npm run adopt:program` to regenerate the two CSVs.
 
+## Discovery and baseline (Part 01)
+
+Run from the repository root:
+
+- `npm run inventory` regenerates `docs/erp-program/modules/disc/inventory.json` (read-only).
+- `npm run baseline:capture` records the golden baseline; `npm run baseline:check` compares the repository with it and exits 1 on a destructive change.
+- `npm run fitness:report` prints the scorecard table; `npm run gap:matrix` regenerates `GAP_MATRIX.csv`.
+
 ## Layout
 
 ```
 design/         Token and navigation sources (JSON)
-scripts/        Token generator and design gate
+scripts/        Token generator, design gate, programme generators and Part 01 tooling (scripts/erp-program)
 src/app/        App Router pages, layout and global styles
 src/components/ Application shell
 src/design/     Tokens (generated CSS), icons, navigation, status chips, preferences
 src/domain/     Construction formulas and reference seeds (Annex B)
-src/program/    Part index, start rules and ordering checks (Annex C)
+src/program/    Part index, start rules, ordering checks (Annex C), legacy crosswalk (D), prompts (E), conventions, golden baseline and fitness rubric (Part 01)
 docs/erp-program/   Program documentation and annex sources
 public/         Static assets
 ```
