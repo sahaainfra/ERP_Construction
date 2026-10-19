@@ -34,3 +34,9 @@ Note on the baseline down script: it drops `sys.migration_runs`, so the revert o
 | 202610191300_core_shared_kernel | core_jobs | table, RLS | Job queue | Yes | No | core |
 | 202610191300_core_shared_kernel | core_holidays, core_financial_periods | table, RLS | Calendar data (API deferred, CF-028) | Yes | No | core |
 | 202610191300_core_shared_kernel | core_sample_records | table, RLS | Reference table for the hidden sample module (deferred, CF-028) | Yes | No | core |
+| 202610191400_org_structure | org_legal_entities | table, RLS | Legal entities (PAN, TAN, approval) | Yes | No | org |
+| 202610191400_org_structure | org_legal_entity_registrations | table, RLS | GSTIN and other registrations, effective-dated | Yes | No | org |
+| 202610191400_org_structure | org_units | table, RLS | Hierarchy units (group to department) | Yes | No | org |
+| 202610191400_org_structure | org_unit_history | table, RLS | Hierarchy change history, append-only | Yes | No | org |
+| 202610191400_org_structure | org_cost_centres | table, RLS | Cost centres | Yes | No | org |
+| 202610191400_org_structure | org_profit_centres | table, RLS | Profit centres | Yes | No | org |

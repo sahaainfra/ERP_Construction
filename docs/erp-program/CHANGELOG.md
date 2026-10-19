@@ -5,6 +5,12 @@
 - CF-009: commercial money formulas use decimal.js 10.6.0 (ADR-004), rounded to paise at output. `commercial.priceVariation` golden changes from 999.9999999999995 to 1000 (re-captured; N4 change). Quantities are unchanged.
 - CF-005, CF-006, CF-012, CF-013, CF-016 remain open: each needs the named input.
 
+## 2026-10-19 — Part 06 slice S1 (D-042)
+- Added migration `202610191400_org_structure`: legal entities and registrations, hierarchy units with history, cost and profit centres. RLS on every table; no delete right for the application role.
+- Added `src/org/`: validation (PAN, GSTIN check character and consistency, state codes, coordinates, dates) and services (create, approve with maker-checker, register, reparent with cycle check and history, deactivate, centres).
+- 37 tests (11 pure, 26 database). Plan, phases and reporting format in `modules/org/discovery.md`.
+- Not built: slices S2–S5, routes and screens (need Part 07).
+
 ## 2026-10-19 — Part 05 remaining code (D-041)
 - Added `hooks.ts` (controlled-method declarations; authorisation and protocol check required), `client.ts` (headers, idempotency keys, permission check, error messages, scope store), `storage.ts` (local adapter with allow-listed keys and SHA-256 check), `sample.ts` (reference module behind `ff.core.sample`, off everywhere), `error-docs.ts` (generates `ERROR_CODES.md`).
 - Added `modules/core/DEV_GUIDE.md`. Updated `traceability.csv` and CF-028.

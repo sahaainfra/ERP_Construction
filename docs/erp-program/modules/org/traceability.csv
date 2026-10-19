@@ -1,0 +1,13 @@
+req_id,requirement,status,evidence,note
+REQ-ORG-F01,Hierarchy masters with maker-checker,partial,db/migrations/202610191400_org_structure.up.sql; src/org/structure.ts; src/org/validation.ts; src/org/org.integration.test.ts,"Legal entities, registrations, units, cost and profit centres built. Not modelled: group-level fields beyond the basics, Hindi labels"
+REQ-ORG-F02,Organisation explorer and drag-to-reparent,partial,src/org/structure.ts (reparentUnit); src/org/org.integration.test.ts,Reparent with validation and history built. Explorer UI waits for Part 07 (P5)
+REQ-ORG-F03,Project master,deferred,,Slice S2
+REQ-ORG-F04,Project lifecycle,deferred,,Slice S2
+REQ-ORG-F05,Site master,deferred,,Slice S2
+REQ-ORG-F06,Location breakdown structure,deferred,,Slice S3
+REQ-ORG-F07,Geofences,deferred,,Slice S4
+REQ-ORG-F08,Allocations,deferred,,Slice S4
+REQ-ORG-F09,Context switcher data,deferred,,Slice S4 (needs allocations)
+REQ-ORG-F10,Department catalogue and senior-to-junior hierarchy,partial,src/org/structure.ts (ALLOWED_PARENTS),Hierarchy types and parent rules built; routing consumers wait for Part 18
+REQ-ORG-F11,Project templates,deferred,,Slice S2
+REQ-ORG-F12,Closure checklist,deferred,,Slice S5
