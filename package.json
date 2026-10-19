@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "build:tokens": "node scripts/build-tokens.mjs",
-    "check:design": "node scripts/check-design.mjs"
+    "check:design": "node scripts/check-design.mjs",
+    "test": "vitest run"
   },
   "dependencies": {
     "lucide-react": "^1.59.0",
@@ -23,6 +24,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.28",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.7"
   }
 }

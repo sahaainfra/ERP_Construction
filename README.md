@@ -24,6 +24,7 @@ npm run dev      # http://localhost:3000
 | `npm start` | Serve the production build |
 | `npm run lint` | Run ESLint |
 | `npm run build:tokens` | Regenerate `src/design/tokens.css` from `design/design-tokens.json` |
+| `npm test` | Run the domain formula and reference-data tests (Vitest) |
 | `npm run check:design` | Design gate: WCAG contrast for every token pairing and a raw-colour lint (DS-4, DS-7) |
 
 ## Design system (Part 00 Annex A)
@@ -35,6 +36,19 @@ npm run dev      # http://localhost:3000
 - Icons are referenced by semantic key (`src/design/icons.tsx`), never by glyph file.
 - `StatusChip` (`src/design/StatusChip.tsx`) renders the DS-6 workflow states as icon plus text.
 
+## Construction domain (Part 00 Annex B)
+
+`src/domain/` holds the reference formulas and seeds from Annex B, as pure TypeScript with no UI dependency:
+
+- `kpi.ts`: KPI formulas (B7), each returning `null` when the denominator is zero.
+- `commercial.ts`: advance recovery, retention, price variation, liquidated damages, BOQ deviation (B3).
+- `reinforcement.ts`: unit weight, bend deduction and cut length (B4).
+- `numbering.ts`: document number templates (B8), refusing any missing segment.
+- `uom.ts`, `norms.ts`, `roles.ts`, `structures.ts`, `glossary.ts`: seed reference data (B1, B2, B6, B9, B10, B11, B12).
+- `statutory.ts`: B5 obligations, all marked `seed-unconfirmed` until their owner confirms them.
+
+Every rate, threshold and index here is a seed or a parameter, not a constant the ERP applies.
+
 ## Layout
 
 ```
@@ -43,5 +57,6 @@ scripts/        Token generator and design gate
 src/app/        App Router pages, layout and global styles
 src/components/ Application shell
 src/design/     Tokens (generated CSS), icons, navigation, status chips, preferences
+src/domain/     Construction formulas and reference seeds (Annex B)
 public/         Static assets
 ```
