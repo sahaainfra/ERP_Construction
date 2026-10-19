@@ -25,3 +25,12 @@ Part 03 §7.5. One row per object created by a migration. Columns: migration, ob
 | 202610191230_dbf_sys_operations | sys.is_effective(timestamptz, timestamptz, timestamptz) | function | Effective dating | Yes | No | dbf |
 
 Note on the baseline down script: it drops `sys.migration_runs`, so the revert of the baseline itself cannot be recorded in the register. Revert the baseline only with `resetForTests` on a disposable database, or by a reviewed manual step recorded in CHANGELOG.md.
+
+| 202610191300_core_shared_kernel | core_settings | table, append-only, RLS | Configuration versions with maker-checker | Yes | No | core |
+| 202610191300_core_shared_kernel | core_number_series, core_number_allocations | table, RLS | Numbering counters and allocations | Yes | No | core |
+| 202610191300_core_shared_kernel | core_audit_entries | table, append-only, RLS | Interim audit adapter; replaced by Part 08 | Yes | No | core |
+| 202610191300_core_shared_kernel | core_action_ledger | table, append-only, RLS | Interim lifecycle ledger adapter; replaced by Part 17 | Yes | No | core |
+| 202610191300_core_shared_kernel | core_protocol_evaluations | table, append-only, RLS | Interim protocol evaluation adapter; replaced by Part 17 | Yes | No | core |
+| 202610191300_core_shared_kernel | core_jobs | table, RLS | Job queue | Yes | No | core |
+| 202610191300_core_shared_kernel | core_holidays, core_financial_periods | table, RLS | Calendar data (API deferred, CF-028) | Yes | No | core |
+| 202610191300_core_shared_kernel | core_sample_records | table, RLS | Reference table for the hidden sample module (deferred, CF-028) | Yes | No | core |

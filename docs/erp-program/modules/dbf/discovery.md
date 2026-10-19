@@ -1,6 +1,6 @@
 # Part 03 discovery and delivery record
 
-Module `dbf`. Part 03 — Database Foundation, Schema Evolution & Data Migration Framework. Status: **drafted and verified locally; technical-lead and DBA sign-off pending**. The dependencies (Parts 01 and 02) are not yet APPROVED (CF-011), so this Part runs under the same caveat as Part 02.
+Module `dbf`. Part 03 — Database Foundation, Schema Evolution & Data Migration Framework. Status: **APPROVED by the owner 2026-10-19 (D-033)**. Open items CF-016 and CF-018 are deferred, not delivered. The dependencies (Parts 01 and 02) are not yet APPROVED (CF-011), so this Part runs under the same caveat as Part 02.
 
 ## Discovery (REQ-DBF-F01 input)
 - Keywords and legacy aliases searched: migrations folder, ORM migration tool, seeders, `schema_migrations`, triggers, stored procedures, sequences, backup scripts, replication, `pg_stat_statements`. Result: none exist in the repository. The Part 01 inventory recorded the database searches as empty.

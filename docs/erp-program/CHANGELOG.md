@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-10-19 — Part 05 shared kernel (in progress; Part 04 not yet approved)
+- Added migration `202610191300_core_shared_kernel` (settings, number series and allocations, interim audit, ledger and evaluation tables, jobs, holidays, financial periods, reference table), with row-level security on every table.
+- Added `src/core/`: request context, error envelope and catalogue, logger, feature flags, calendar rules, i18n formatting, unit of work, numbering, settings with maker-checker, idempotency wrapper, job queue, rate limiter and cache.
+- Added `GET /health/live` and `GET /health/ready`. Readiness reports only the database as checked.
+- Added 39 tests (17 database, 22 pure). Coverage of `src/core` 91.9% lines. Secret-scan allowlist extended with reviewed fixture entries.
+- Deferred: CF-027 (Redis, object storage) and CF-028 (service hook decorator, storage, reference module, frontend helpers, developer guide, calendar API).
+
 ## 2026-10-19 — Program adoption (Part 00)
 - Adopted the constitution as `PROGRAM_RULES.md` (D-001, pending owner signature).
 - Annex sources moved to `docs/erp-program/annexes/`.
