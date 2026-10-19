@@ -10,7 +10,7 @@ REQ-DBF-F08,Partitioning and retention hooks,partial,sys.create_monthly_partitio
 REQ-DBF-F09,Tenant isolation groundwork,done,sys.enable_tenant_rls; database.integration.test.ts (tenant isolation),Session context from the server only (Part 07 provides the session)
 REQ-DBF-F10,Reference and seed data management,deferred,none,Reference UOM and numbering seeds exist as TypeScript constants (Part 00 Annex B); loader waits for Part 21
 REQ-DBF-F11,Legacy data migration toolkit,partial,sys.legacy_loads; src/db/state-machines.ts,Loader, staging and quarantine not built (no legacy data) - CF-016
-REQ-DBF-F12,Backup, PITR and restore,partial,scripts/db/backup.ts; scripts/db/restore-check.ts; runbooks/database-rollback-and-restore.md,Dump restore verified; PITR not configured - CF-016
+REQ-DBF-F12,Backup, PITR and restore,partial,scripts/db/backup.ts; scripts/db/restore-check.ts; scripts/db/pitr-rehearsal.sh; runbooks/database-rollback-and-restore.md,Dump restore verified; PITR mechanics rehearsed on a throwaway cluster (WAL archive and restore to a target time); production archive target not configured (CF-016, assumption A-04)
 REQ-DBF-F13,Masked non-production environments,partial,sys.mask_pan/phone/email/account; masked-copy scanner test,Refresh job waits for production data
 REQ-DBF-F14,Query performance baseline,deferred,none,pg_stat_statements needs a workload; Part 84 window
 REQ-DBF-F15,Database security baseline,partial,setup-local.sql; erp_app cannot create objects (test); append-only triggers (tests),TLS and encryption at rest not verified in local development
