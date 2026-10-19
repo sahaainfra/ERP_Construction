@@ -14,6 +14,8 @@ import { claimJobs, completeJob, enqueueJob, failJob } from "./jobs";
 import { allocateNumber, createSeries, previewNext, voidNumber } from "./numbering";
 import { resolveSetting, setSetting } from "./settings";
 import { runUnitOfWork } from "./uow";
+import { createSample, getSample, SAMPLE_FLAG_KEY } from "./sample";
+import type { FlagDefinition } from "./flags";
 
 const TEST_URL = process.env.TEST_DATABASE_URL;
 const APP_URL = process.env.TEST_APP_DATABASE_URL;
@@ -246,6 +248,58 @@ describe.skipIf(!TEST_URL || !APP_URL)("shared kernel (Part 05)", () => {
           randomUUID(),
         ),
       ).toThrow(RangeError);
+    });
+  });
+});
+
+describe.skipIf(!TEST_URL || !APP_URL)("reference module behind ff.core.sample (REQ-CORE-F17)", () => {
+  let owner: Pool;
+  let app: Pool;
+  beforeAll(async () => {
+    owner = createPool(TEST_URL!, { application_name: "erp-sampletest" });
+    app = createPool(APP_URL!, { application_name: "erp-sampletest-app" });
+  });
+  afterAll(async () => {
+    await app?.end();
+    await owner?.end();
+  });
+
+  const onFor = (tenantId: string): FlagDefinition[] => [
+    { key: SAMPLE_FLAG_KEY, owner: "tech-lead", module_code: "core", defaults_by_env: { test: false }, kill_switch: true, targeting: { tenants: [tenantId] } },
+  ];
+
+  it("is absent when the flag is off, in every environment", async () => {
+    const ctx = contextFor(randomUUID());
+    await expect(createSample({ pool: app, flags: [], env: "test" }, ctx, { title: "Hidden", amountPaise: 1, idempotencyKey: `k-${randomUUID()}` })).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+
+  it("creates a record with a number, an audit entry, a ledger row, an evaluation and an event, and enqueues its job", async () => {
+    const ctx = contextFor(randomUUID());
+    const result = await createSample({ pool: app, flags: onFor(ctx.tenantId), env: "test" }, ctx, { title: "Pilot", amountPaise: 2500, idempotencyKey: `k-${randomUUID()}` });
+    expect(result).toMatchObject({ replayed: false, number: "SMP/00001" });
+    const record = await getSample(app, ctx, result.id);
+    expect(record).toEqual({ id: result.id, title: "Pilot", number: "SMP/00001" });
+    expect(await withTransaction(app, (c) => c.query("SELECT 1 FROM core_action_ledger WHERE entity_id = $1 AND entity_type = 'sample'", [String(result.id)]), { tenantId: ctx.tenantId }).then((r) => r.rowCount)).toBe(1);
+    const jobs = await withTransaction(app, (c) => c.query<{ n: string }>("SELECT count(*) AS n FROM core_jobs WHERE job_type = 'core.sample.index'"), { tenantId: ctx.tenantId });
+    expect(Number(jobs.rows[0].n)).toBe(1);
+  });
+
+  it("returns the first result for a repeated call and writes nothing new", async () => {
+    const ctx = contextFor(randomUUID());
+    const key = `k-${randomUUID()}`;
+    const flags = onFor(ctx.tenantId);
+    const first = await createSample({ pool: app, flags, env: "test" }, ctx, { title: "Retry", amountPaise: 10, idempotencyKey: key });
+    const second = await createSample({ pool: app, flags, env: "test" }, ctx, { title: "Retry", amountPaise: 10, idempotencyKey: key });
+    expect(second).toEqual({ ...first, replayed: true });
+    const count = await withTransaction(app, (c) => c.query<{ n: string }>("SELECT count(*) AS n FROM core_sample_records"), { tenantId: ctx.tenantId });
+    expect(Number(count.rows[0].n)).toBe(1);
+  });
+
+  it("refuses invalid input with field errors and writes nothing", async () => {
+    const ctx = contextFor(randomUUID());
+    await expect(createSample({ pool: app, flags: onFor(ctx.tenantId), env: "test" }, ctx, { title: "x", amountPaise: 1.5, idempotencyKey: `k-${randomUUID()}` })).rejects.toMatchObject({
+      code: "VALIDATION_FAILED",
+      fieldErrors: [{ field: "title" }, { field: "amountPaise" }],
     });
   });
 });

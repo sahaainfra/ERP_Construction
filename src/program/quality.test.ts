@@ -277,10 +277,13 @@ describe("volume generator and clock (REQ-CICD-F04, F05)", () => {
 });
 
 describe("gate configuration files", () => {
-  it("feature-flag registry starts empty and every entry passes the flag rules", () => {
+  it("feature-flag registry holds only the reference flag, off everywhere, and every entry passes the flag rules", () => {
     const flags = JSON.parse(readFileSync(join(root, "docs/erp-program/feature-flags.json"), "utf8")) as FlagRecord[];
-    expect(flags).toEqual([]);
-    for (const f of flags) expect(flagProblems(f, TODAY)).toEqual([]);
+    expect(flags.map((f) => f.key)).toEqual(["ff.core.sample"]);
+    for (const f of flags) {
+      expect(Object.values(f.defaults_by_env).every((v) => v === false)).toBe(true);
+      expect(flagProblems(f, TODAY)).toEqual([]);
+    }
   });
 
   it("are present and valid JSON", () => {

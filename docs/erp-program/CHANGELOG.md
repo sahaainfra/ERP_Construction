@@ -5,6 +5,12 @@
 - CF-009: commercial money formulas use decimal.js 10.6.0 (ADR-004), rounded to paise at output. `commercial.priceVariation` golden changes from 999.9999999999995 to 1000 (re-captured; N4 change). Quantities are unchanged.
 - CF-005, CF-006, CF-012, CF-013, CF-016 remain open: each needs the named input.
 
+## 2026-10-19 — Part 05 remaining code (D-041)
+- Added `hooks.ts` (controlled-method declarations; authorisation and protocol check required), `client.ts` (headers, idempotency keys, permission check, error messages, scope store), `storage.ts` (local adapter with allow-listed keys and SHA-256 check), `sample.ts` (reference module behind `ff.core.sample`, off everywhere), `error-docs.ts` (generates `ERROR_CODES.md`).
+- Added `modules/core/DEV_GUIDE.md`. Updated `traceability.csv` and CF-028.
+- Changed the flag-registry test: the registry holds only `ff.core.sample`, off in every environment.
+- 298 tests pass; core coverage 96.8% lines.
+
 ## 2026-10-19 — Part 05 shared kernel (in progress; Part 04 not yet approved)
 - Added migration `202610191300_core_shared_kernel` (settings, number series and allocations, interim audit, ledger and evaluation tables, jobs, holidays, financial periods, reference table), with row-level security on every table.
 - Added `src/core/`: request context, error envelope and catalogue, logger, feature flags, calendar rules, i18n formatting, unit of work, numbering, settings with maker-checker, idempotency wrapper, job queue, rate limiter and cache.
