@@ -9,7 +9,8 @@
     "lint": "eslint",
     "build:tokens": "node scripts/build-tokens.mjs",
     "check:design": "node scripts/check-design.mjs",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build:program": "node scripts/build-program-index.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.59.0",
