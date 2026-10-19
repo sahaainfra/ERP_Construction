@@ -26,6 +26,8 @@ npm run dev      # http://localhost:3000
 | `npm run build:tokens` | Regenerate `src/design/tokens.css` from `design/design-tokens.json` |
 | `npm run build:program` | Regenerate `src/program/parts.generated.json` from the Annex C index |
 | `npm run build:legacy` | Regenerate `src/program/legacy.generated.json` from the Annex D crosswalk |
+| `npm run build:prompts` | Regenerate the Annex E templates in `src/program/prompts.generated.json` |
+| `npm run prompt -- --part 25A --slice S2` | Print a filled session prompt (E1; also `--template E1-legacy\|E2…E8`, `--template E4 --phase 3`) |
 | `npm test` | Run the domain formula and reference-data tests (Vitest) |
 | `npm run check:design` | Design gate: WCAG contrast for every token pairing and a raw-colour lint (DS-4, DS-7) |
 
@@ -59,6 +61,10 @@ Every rate, threshold and index here is a seed or a parameter, not a constant th
 
 `src/program/legacy.ts` maps the 167 old prompts (00–166) to the Parts that own them, lists the VERIFY & EXTEND Parts, the consolidations, the legacy module-code aliases, and the uploaded Plant and WorkChat module crosswalks. Tests check that the annex's tables agree with each other and with the Annex C index.
 
+## Session prompts (Part 00 Annex E)
+
+`npm run prompt` fills the Annex E templates from the program index and the legacy crosswalk: Part title, module code, start mode, dependencies, legacy prompt IDs and the phase name. Anything the session owner must supply, such as attached documents or a test name, stays as a visible placeholder, and the CLI lists those.
+
 ## Layout
 
 ```
@@ -69,6 +75,6 @@ src/components/ Application shell
 src/design/     Tokens (generated CSS), icons, navigation, status chips, preferences
 src/domain/     Construction formulas and reference seeds (Annex B)
 src/program/    Part index, start rules and ordering checks (Annex C)
-docs/program/   Annex C and D source documents
+docs/program/   Annex C, D and E source documents
 public/         Static assets
 ```

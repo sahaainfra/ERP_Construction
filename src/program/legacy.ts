@@ -65,3 +65,8 @@ export function startMode(part: string): PartRecord["defaultMode"] | "VERIFY & E
 export function aliasesFor(part: string): string[] {
   return ALIASES.find((a) => a.part === part)?.legacyCodes ?? [];
 }
+
+/** Every legacy prompt number a VERIFY & EXTEND Part consolidates: those already built and those still to build. */
+export function legacyIdsFor(row: VerifyExtendRow): string[] {
+  return [...row.legacyBuiltPrompts, ...row.stillToBuildPrompts];
+}
