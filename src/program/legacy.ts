@@ -1,6 +1,6 @@
 // Legacy crosswalk from Part 00 Annex D: old prompts (00–166) to the Parts that now own them,
 // plus the VERIFY & EXTEND list, consolidations, module-code aliases and the uploaded module crosswalks.
-// Data is generated from docs/program/annex-d-legacy-mapping.md by scripts/build-legacy-crosswalk.mjs.
+// Data is generated from docs/erp-program/annexes/annex-d-legacy-mapping.md by scripts/build-legacy-crosswalk.mjs.
 
 import data from "./legacy.generated.json";
 import { getPart, type PartRecord } from "./index";

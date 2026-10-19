@@ -1,0 +1,96 @@
+part,title,module_code,phase,default_mode,start_mode,depends_on,status,legacy_prompts_built,evidence
+00,Program Constitution & Agent Operating System,pgm,1,ADOPT,ADOPT,,ADOPTED — awaiting owner signature (D-001),00,legacy evidence not in repository
+01,"Existing System Audit, Architecture Fitness Assessment & Golden Baseline",disc,1,VERIFY & EXTEND,VERIFY & EXTEND,00,NOT_STARTED,00;01,legacy evidence not in repository
+02,"Target Architecture, Technology Stack & Architecture Decision Framework",arch,1,BUILD,BUILD,01,NOT_STARTED,,
+03,"Database Foundation, Schema Evolution & Data Migration Framework",dbf,1,BUILD or EXTEND,BUILD or EXTEND,01;02,NOT_STARTED,,
+04,"Quality Engineering, CI/CD, Test Automation & Release Management",cicd,1,VERIFY & EXTEND,VERIFY & EXTEND,01;02;03,NOT_STARTED,03,legacy evidence not in repository
+05,Shared Kernel & Core Platform Services,core,2,VERIFY & EXTEND,VERIFY & EXTEND,02;03;04,NOT_STARTED,04,legacy evidence not in repository
+06,"Enterprise Structure: Organisation, Company, Project & Site",org,2,VERIFY & EXTEND,VERIFY & EXTEND,05,NOT_STARTED,05,legacy evidence not in repository
+07,"Identity, Access Control, Segregation of Duties & Zero-Trust",iam,2,VERIFY & EXTEND,VERIFY & EXTEND,05;06,NOT_STARTED,06;13;14,legacy evidence not in repository
+08,"Audit Trail, Secure SDLC & Security Governance",secgov,2,VERIFY & EXTEND,VERIFY & EXTEND,04;05;07,NOT_STARTED,12;13,legacy evidence not in repository
+08A,"Secure Login, Admin User Provisioning, Credentials & Session Lifecycle",auth,2,VERIFY & EXTEND,VERIFY & EXTEND,06;07;08,NOT_STARTED,06,legacy evidence not in repository
+09,"Observability, Reliability, Performance & Error Handling",obs,2,VERIFY & EXTEND,VERIFY & EXTEND,04;05;08,NOT_STARTED,15,legacy evidence not in repository
+10,"Event Bus, Real-time & Notification Engine",evbus,2,VERIFY & EXTEND,VERIFY & EXTEND,05;07;08,NOT_STARTED,16;17,legacy evidence not in repository
+11,"Integration Platform, API Gateway & Developer Portal",intg,2,VERIFY & EXTEND,VERIFY & EXTEND,07;08;10,NOT_STARTED,18;19,legacy evidence not in repository
+12,"Enterprise Design System, App Shell & Navigation",ds,3,VERIFY & EXTEND,VERIFY & EXTEND,05;07,NOT_STARTED,00;02;07,legacy evidence not in repository
+13,"Dashboard Engine, Launchpad, Global Search & Drill-down",dash,3,VERIFY & EXTEND,VERIFY & EXTEND,10;12,NOT_STARTED,08;09,legacy evidence not in repository
+14,Responsive Field App & Offline-First Engine,field,3,VERIFY & EXTEND,VERIFY & EXTEND,07;10;12,NOT_STARTED,10;24,legacy evidence not in repository
+15,Existing Application Redesign & Screen Migration,uxmig,3,BUILD or EXTEND,BUILD or EXTEND,01;12;13;14,NOT_STARTED,,
+16,"Workflow, Business Rules & Delegation of Authority",wf,4,VERIFY & EXTEND,VERIFY & EXTEND,06;07;08;10,NOT_STARTED,20;21,legacy evidence not in repository
+17,"Protocol & Control Engine, RACI, Action Ledger & Policy-to-Protocol",protocol,4,VERIFY & EXTEND,VERIFY & EXTEND,06;07;16,NOT_STARTED,22;23,legacy evidence not in repository
+18,"Tasks, Alerts, Escalations, Meetings & Automation",task,4,VERIFY & EXTEND,VERIFY & EXTEND,10;16;17,NOT_STARTED,26;33;34,legacy evidence not in repository
+19,"Document Control, Correspondence & Common Data Environment",doc,4,VERIFY & EXTEND,VERIFY & EXTEND,07;08;16,NOT_STARTED,25,legacy evidence not in repository
+20,"Document Generation, Templates, e-Signature & Verification",docgen,4,VERIFY & EXTEND,VERIFY & EXTEND,19,NOT_STARTED,31;32,legacy evidence not in repository
+21,Master Data Governance,mdm,4,BUILD or EXTEND,BUILD or EXTEND,06;16;17,NOT_STARTED,,
+22,Central Calculation Engine & Formula Registry,calc,4,BUILD or EXTEND,BUILD or EXTEND,05;21,NOT_STARTED,,
+23,"Item Master, Resource Catalogue & Item Selector",item,4,BUILD or EXTEND,BUILD or EXTEND,21;22,NOT_STARTED,,
+24,Data-Entry Framework & Excel Data Exchange,dex,4,BUILD or EXTEND,BUILD or EXTEND,12;21;23,NOT_STARTED,,
+25,"Unified Communication Platform: Gateway, WorkChat Architecture, Data Model & Real-time Core",msg,4,VERIFY & EXTEND,VERIFY & EXTEND,08A;10;11;19,NOT_STARTED,27;28,legacy evidence not in repository
+25A,"WorkChat Conversations & Messaging Experience: Direct, Groups, Channels, Composer, Attachments, Search, Receipts, Notifications & Unified Inbox",wchat,4,VERIFY & EXTEND,VERIFY & EXTEND,12;13;14;19;25,NOT_STARTED,28,legacy evidence not in repository
+25B,"WorkChat ERP Integration: Communication Center, Record Discussions, Instructions, Conversions & Workflow Cards",wcerp,4,BUILD or EXTEND,BUILD or EXTEND,16;18;24;25A,NOT_STARTED,,
+25C,"WorkChat Security, Privacy & Governance: Licences, Encryption Decision, Calls, Administration, Retention, Legal Hold & Pilot Release",wcgov,4,VERIFY & EXTEND,VERIFY & EXTEND,08A;17;25B,NOT_STARTED,29,legacy evidence not in repository
+26,"Financial Backbone: Chart of Accounts, General Ledger, Posting Engine & Period Control",fin,4,BUILD or EXTEND,BUILD or EXTEND,16;17;21;22,NOT_STARTED,,
+27,"Tax & e-Compliance Engine: GST, TDS, e-Invoice & e-Way Bill",tax,4,BUILD or EXTEND,BUILD or EXTEND,11;21;22;26,NOT_STARTED,,
+28,"CRM, Business Development & Bid/No-Bid",crm,5,BUILD or EXTEND,BUILD or EXTEND,16;21,NOT_STARTED,,
+29,Rate Analysis Engine & Schedule-of-Rates Library,ratean,5,BUILD or EXTEND,BUILD or EXTEND,22;23,NOT_STARTED,,
+30,"Tender Management, Estimation & Bid Pricing",tnd,5,BUILD or EXTEND,BUILD or EXTEND,19;28;29,NOT_STARTED,,
+31,Contract Lifecycle Management & Tender-to-Execution Handover,ctr,5,BUILD or EXTEND,BUILD or EXTEND,20;30,NOT_STARTED,,
+32,"Project Setup, Project 360 & Statutory Approvals Register",prj,5,BUILD or EXTEND,BUILD or EXTEND,06;31,NOT_STARTED,,
+33,"WBS, CBS, BOQ & Work Packages",boq,5,BUILD or EXTEND,BUILD or EXTEND,23;29;32,NOT_STARTED,,
+34,"Engineering & Design Management: Drawings, Submittals & RFIs",eng,5,BUILD or EXTEND,BUILD or EXTEND,19;32;33,NOT_STARTED,,
+35,"Quantity Take-off (MTO), Bar Bending Schedules & Quantity Derivation",mto,5,BUILD or EXTEND,BUILD or EXTEND,23;33;34,NOT_STARTED,,
+36,Risk & Opportunity Management,risk,5,BUILD or EXTEND,BUILD or EXTEND,32;33,NOT_STARTED,,
+37,"GIS, Survey, Land / Right-of-Way & Reality Capture",gis,5,BUILD or EXTEND,BUILD or EXTEND,19;32,NOT_STARTED,,
+38,Planning & Scheduling,plan,6,BUILD or EXTEND,BUILD or EXTEND,32;33;36,NOT_STARTED,,
+39,Budgeting & Cost Control,bud,6,BUILD or EXTEND,BUILD or EXTEND,26;29;33;38,NOT_STARTED,,
+40,Resource & Capacity Planning,rescap,6,BUILD or EXTEND,BUILD or EXTEND,23;38;39,NOT_STARTED,,
+41,Work Authorisation & Daily Work Planning,wa,6,BUILD or EXTEND,BUILD or EXTEND,17;38;39;40,NOT_STARTED,,
+42,"Site Execution, DPR, Hindrance & Weather",site,6,BUILD or EXTEND,BUILD or EXTEND,14;41,NOT_STARTED,,
+43,"Progress Measurement, EVM & Planned-vs-Budgeted-vs-Actual",prog,6,BUILD or EXTEND,BUILD or EXTEND,39;42,NOT_STARTED,,
+44,Supplier Management & Material Rate Intelligence,srm,7,BUILD or EXTEND,BUILD or EXTEND,21;23,NOT_STARTED,,
+45,Material Demand Planning (MRP),mrp,7,BUILD or EXTEND,BUILD or EXTEND,35;38;40,NOT_STARTED,,
+46,Procurement & Purchase Management,proc,7,BUILD or EXTEND,BUILD or EXTEND,16;17;27;39;44;45,NOT_STARTED,,
+47,Stores & Inventory Management,stores,7,BUILD or EXTEND,BUILD or EXTEND,26;41;46,NOT_STARTED,,
+48,"Site Logistics, Gate, Weighbridge & Vehicle Control",logistics,7,BUILD or EXTEND,BUILD or EXTEND,46;47,NOT_STARTED,,
+49,"Formwork, Scaffolding, Tools & Returnable Assets",tools,7,BUILD or EXTEND,BUILD or EXTEND,41;47,NOT_STARTED,,
+50,"Plant, Machinery & Fleet Management",plant,8,BUILD or EXTEND,BUILD or EXTEND,23;40;41;47,NOT_STARTED,,
+50A,"Daily Equipment Logbook, Operator Readings, Photo Evidence & Senior Authorisation",plog,8,BUILD or EXTEND,BUILD or EXTEND,14;16;17;50,NOT_STARTED,,
+50B,"Maintenance, Workshop, Spare Parts & Reliability",maint,8,BUILD or EXTEND,BUILD or EXTEND,47;50;50A,NOT_STARTED,,
+51,"Fuel Management, Calibrated Daily Consumption Verification & Anti-Leakage Control",fuel,8,BUILD or EXTEND,BUILD or EXTEND,47;50A;50B,NOT_STARTED,,
+52,"RMC & Batching Plant Operations, Mix Design and Costing",rmc,8,BUILD or EXTEND,BUILD or EXTEND,26;47;50;50B,NOT_STARTED,,
+52A,"RMC Orders, Production Scheduling, Dispatch, Transit Mixers & Concrete Pumps",rmcdisp,8,BUILD or EXTEND,BUILD or EXTEND,27;50B;52,NOT_STARTED,,
+53,"Production Units: Crusher, Hot-Mix, Precast & Fabrication Yards",prod,8,BUILD,BUILD,50;52,NOT_STARTED,,
+54,HR Core & Human Capital Management,hr,9,BUILD or EXTEND,BUILD or EXTEND,06;07;21,NOT_STARTED,,
+55,"Labour Management, Geofenced Attendance, Timekeeping & Attendance Approval",att,9,BUILD or EXTEND,BUILD or EXTEND,14;37;41;50A;52A;54,NOT_STARTED,,
+56,Payroll & Labour Statutory Compliance,pay,9,BUILD or EXTEND,BUILD or EXTEND,26;27;55,NOT_STARTED,,
+57,"Site Facilities: Labour Camps, Welfare & Security Guards",fac,9,BUILD or EXTEND,BUILD or EXTEND,48;54,NOT_STARTED,,
+58,Workforce Productivity & Performance Management,empperf,9,BUILD or EXTEND,BUILD or EXTEND,18;42;55,NOT_STARTED,,
+59,Subcontract & Work-Order Management,subcon,10,BUILD or EXTEND,BUILD or EXTEND,26;31;33;41,NOT_STARTED,,
+60,"Quantity Surveying, Measurement Book & Certification",qs,10,BUILD or EXTEND,BUILD or EXTEND,33;42;59,NOT_STARTED,,
+61,"Client Billing, Price Variation, Retention & Collections",bill,10,BUILD or EXTEND,BUILD or EXTEND,26;27;60,NOT_STARTED,,
+62,Change & Variation Management,chg,10,BUILD or EXTEND,BUILD or EXTEND,31;33;61,NOT_STARTED,,
+63,"Claims, Extension of Time & Dispute Management",claims,10,BUILD or EXTEND,BUILD or EXTEND,19;38;62,NOT_STARTED,,
+64,"Accounts Payable, Multi-way Matching, Site Imprest & Expenses",ap,11,BUILD or EXTEND,BUILD or EXTEND,26;27;46;47;59,NOT_STARTED,,
+65,"Receivables, Cash Flow, Treasury, Bank Guarantees & Banking",treasury,11,BUILD or EXTEND,BUILD or EXTEND,61;64,NOT_STARTED,,
+66,"Fixed Assets, Joint Ventures & Inter-company Accounting",fa,11,BUILD or EXTEND,BUILD or EXTEND,26;50,NOT_STARTED,,
+67,Cost Forecasting (EAC/ETC) & Cost-Value Reconciliation,eac,11,BUILD or EXTEND,BUILD or EXTEND,36;43;46;60;61,NOT_STARTED,,
+68,"Project P&L, Profitability & Monthly Close",pnl,11,BUILD or EXTEND,BUILD or EXTEND,65;67,NOT_STARTED,,
+69,"Quality Management (QA/QC), Inspections & Lab Testing",qa,12,BUILD or EXTEND,BUILD or EXTEND,34;41;42,NOT_STARTED,,
+70,HSE Management & Permit-to-Work,hse,12,BUILD or EXTEND,BUILD or EXTEND,54;69,NOT_STARTED,,
+71,"Testing, Commissioning, Handover, Closeout & Defect Liability",tnc,12,BUILD or EXTEND,BUILD or EXTEND,61;69,NOT_STARTED,,
+72,"ESG, Sustainability & Environmental Compliance",esg,12,BUILD or EXTEND,BUILD or EXTEND,47;50;70,NOT_STARTED,,
+73,"External Portals: Supplier, Subcontractor, Client & Consultant",portal,13,BUILD or EXTEND,BUILD or EXTEND,34;46;59;61,NOT_STARTED,,
+74,Real Estate Sales & Customer Management (optional developer edition),resale,13,BUILD,BUILD,26;27;32,NOT_STARTED,,
+75,"Enterprise Data Platform, Metric Catalogue & Data Lineage",dwh,14,BUILD or EXTEND,BUILD or EXTEND,10;22;68,NOT_STARTED,,
+76,"Reporting, MIS & Report Builder",mis,14,BUILD or EXTEND,BUILD or EXTEND,20;75,NOT_STARTED,,
+77,"Control Towers, Early Warning & Wastage/Leakage Detection",tower,14,BUILD or EXTEND,BUILD or EXTEND,17;75;76,NOT_STARTED,,
+78,"Analytics, Forecasting, Scenario Simulation & Explainability",fcst,14,BUILD or EXTEND,BUILD or EXTEND,75;77,NOT_STARTED,,
+79,"AI Platform: Copilot, Agents, Document Intelligence, Vision & Governance",ai,14,BUILD or EXTEND,BUILD or EXTEND,07;08;75;78,NOT_STARTED,,
+80,Super Admin Control Center & Configuration Studio,admin,15,BUILD or EXTEND,BUILD or EXTEND,08A;17;79,NOT_STARTED,,
+80A,"WorkChat Enterprise Activation: Cross-Module Coverage, Scale & Resilience Certification and Staged Roll-out",wcops,15,BUILD,BUILD,25C;42;46;50B;51;52A;55;64;70;73;79;80,NOT_STARTED,,
+81,"Simulation Sandbox, UAT & Training",sandbox,15,BUILD or EXTEND,BUILD or EXTEND,80;80A,NOT_STARTED,,
+82,End-to-End Integration & Cross-Module Reconciliation Testing,xint,15,BUILD or EXTEND,BUILD or EXTEND,81,NOT_STARTED,,
+83,"Security, Performance & Accessibility Certification",cert,15,BUILD or EXTEND,BUILD or EXTEND,82,NOT_STARTED,,
+84,"Backup, Disaster Recovery, Data Retention & Archival",dr,15,BUILD or EXTEND,BUILD or EXTEND,83,NOT_STARTED,,
+85,"Data Cutover, Go-Live & Hypercare",golive,15,BUILD or EXTEND,BUILD or EXTEND,84,NOT_STARTED,,
+86,"Continuous Improvement, Lessons Learned & Knowledge Management",kaizen,15,BUILD or EXTEND,BUILD or EXTEND,85,NOT_STARTED,,

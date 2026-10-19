@@ -55,7 +55,7 @@ Every rate, threshold and index here is a seed or a parameter, not a constant th
 
 ## Program index (Part 00 Annex C)
 
-`docs/program/annex-c-master-index.md` is the source. `scripts/build-program-index.mjs` generates `src/program/parts.generated.json` (95 Parts, 15 phases). `src/program/` answers the execution questions: which Parts may start (`canStart`, `runnableNow`), which may run in parallel (`canRunInParallel`), and what each Part depends on (`transitiveDependencies`). `src/program/verify.ts` checks the Annex C3 ordering invariants, and the tests run them.
+`docs/erp-program/annexes/annex-c-master-index.md` is the source. `scripts/build-program-index.mjs` generates `src/program/parts.generated.json` (95 Parts, 15 phases). `src/program/` answers the execution questions: which Parts may start (`canStart`, `runnableNow`), which may run in parallel (`canRunInParallel`), and what each Part depends on (`transitiveDependencies`). `src/program/verify.ts` checks the Annex C3 ordering invariants, and the tests run them.
 
 ## Legacy crosswalk (Part 00 Annex D)
 
@@ -64,6 +64,10 @@ Every rate, threshold and index here is a seed or a parameter, not a constant th
 ## Session prompts (Part 00 Annex E)
 
 `npm run prompt` fills the Annex E templates from the program index and the legacy crosswalk: Part title, module code, start mode, dependencies, legacy prompt IDs and the phase name. Anything the session owner must supply, such as attached documents or a test name, stays as a visible placeholder, and the CLI lists those.
+
+## Program documentation (Part 00)
+
+`docs/erp-program/` is the program's documentation root (constitution §11). `PROGRAM_RULES.md` is the adopted constitution. `DECISIONS.md`, `CONFLICTS.md`, `LEGACY_MAPPING.md`, `PROGRESS_REGISTER.csv` and `LEGACY_CROSSWALK.csv` record adoption. `docs/erp-program/README.md` lists every §11 file and the Part that produces it. Run `npm run adopt:program` to regenerate the two CSVs.
 
 ## Layout
 
@@ -75,6 +79,6 @@ src/components/ Application shell
 src/design/     Tokens (generated CSS), icons, navigation, status chips, preferences
 src/domain/     Construction formulas and reference seeds (Annex B)
 src/program/    Part index, start rules and ordering checks (Annex C)
-docs/program/   Annex C, D and E source documents
+docs/erp-program/   Program documentation and annex sources
 public/         Static assets
 ```

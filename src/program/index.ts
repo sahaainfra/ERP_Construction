@@ -1,5 +1,5 @@
 // Program index and execution order from Part 00 Annex C.
-// Data is generated from docs/program/annex-c-master-index.md by scripts/build-program-index.mjs.
+// Data is generated from docs/erp-program/annexes/annex-c-master-index.md by scripts/build-program-index.mjs.
 
 import data from "./parts.generated.json";
 

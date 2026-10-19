@@ -1,5 +1,5 @@
 // Session prompts from Part 00 Annex E, filled from the program index (Annex C) and the legacy crosswalk (Annex D).
-// Templates are generated from docs/program/annex-e-session-prompts.md by scripts/build-session-prompts.mjs.
+// Templates are generated from docs/erp-program/annexes/annex-e-session-prompts.md by scripts/build-session-prompts.mjs.
 
 import data from "./prompts.generated.json";
 import { getPart, PHASES, PARTS } from "./index";
