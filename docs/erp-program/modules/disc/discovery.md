@@ -26,7 +26,7 @@ Module `disc`. Part 01 — Existing System Audit, Architecture Fitness Assessmen
 | CP-DISC-02 Every validation, limit and approval in the control inventory | Pass. None exist; listed | CONTROL_INVENTORY.md |
 | CP-DISC-03 Every statement cites evidence | Pass for the documents in this folder; each claim names a file, a search or a command | this folder |
 | CP-DISC-04 Leakage points and data defects in the risk register | Pass. Leakage points not measurable; recorded as R-07 | RISK_REGISTER.md |
-| CP-DISC-05 Golden baseline reproducible (two runs identical) and restore verified | Evidence in place: two-run reproducibility and restore rehearsal (below). Blocking until the technical lead signs. | below |
+| CP-DISC-05 Golden baseline reproducible (two runs identical) and restore verified | Evidence in place: two-run reproducibility and restore rehearsal (below). Technical-lead signature recorded by the owner 2026-10-19. | below |
 
 ## Reproducibility
 Run on commit `d1c989d` (baseline tag `erp-baseline-v0`):
