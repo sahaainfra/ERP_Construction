@@ -37,6 +37,7 @@ const progressLines = [
       "00": "ADOPTED — awaiting owner signature (D-001)",
       "01": "DISCOVERED — technical-lead sign-off pending (CP-DISC-05)",
       "02": "DRAFTED — ADR-001 to ADR-011 PROPOSED; approval pending (CF-011)",
+      "03": "DRAFTED — verified locally; PITR, ACP and legacy evidence open (CF-016); approval pending",
     };
     const status = STATUS[p.id] ?? "NOT_STARTED";
     return row([

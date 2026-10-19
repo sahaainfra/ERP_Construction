@@ -3,12 +3,14 @@
   "packages": [
     "@eslint/eslintrc",
     "@types/node",
+    "@types/pg",
     "@types/react",
     "@types/react-dom",
     "eslint",
     "eslint-config-next",
     "lucide-react",
     "next",
+    "pg",
     "react",
     "react-dom",
     "tsx",
@@ -28,6 +30,8 @@
     "react-dom": "ADR-000",
     "tsx": "ADR-000 (script runner for programme tooling)",
     "typescript": "ADR-000",
-    "vitest": "ADR-000 (test runner, Decision D-007)"
+    "vitest": "ADR-000 (test runner, Decision D-007)",
+    "pg": "ADR-003 (PROPOSED; PostgreSQL driver, Part 03)",
+    "@types/pg": "ADR-003 (PROPOSED; types for the PostgreSQL driver)"
   }
 }

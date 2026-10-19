@@ -23,17 +23,27 @@
     "fitness:report": "tsx scripts/erp-program/fitness-report.ts",
     "baseline:capture": "tsx scripts/erp-program/baseline.ts capture",
     "baseline:check": "tsx scripts/erp-program/baseline.ts check",
-    "arch:check": "tsx scripts/erp-program/architecture-check.ts"
+    "arch:check": "tsx scripts/erp-program/architecture-check.ts",
+    "db:lint": "tsx scripts/db/migrate.ts lint",
+    "db:status": "tsx scripts/db/migrate.ts status",
+    "db:dry-run": "tsx scripts/db/migrate.ts dry-run",
+    "db:migrate": "tsx scripts/db/migrate.ts up",
+    "db:down": "tsx scripts/db/migrate.ts down",
+    "db:backup": "tsx scripts/db/backup.ts",
+    "db:restore-check": "tsx scripts/db/restore-check.ts",
+    "db:backfill-rehearsal": "tsx scripts/db/backfill-rehearsal.ts"
   },
   "dependencies": {
     "lucide-react": "^1.59.0",
     "next": "15.5.28",
+    "pg": "^8.23.1",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

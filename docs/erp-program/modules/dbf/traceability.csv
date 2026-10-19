@@ -1,0 +1,17 @@
+req_id,requirement,status,evidence,note
+REQ-DBF-F01,Schema baseline and review,done,docs/erp-program/modules/dbf/schema-review.md,Eight findings with remedies; no legacy tables to review
+REQ-DBF-F02,Migration framework,done,src/db/migrations.ts; src/db/migrator.ts; scripts/db/migrate.ts; src/db/migrations.test.ts; database.integration.test.ts,CI rejects destructive and float-money migrations
+REQ-DBF-F03,Back-fill framework,done,src/db/backfill.ts; scripts/db/backfill-rehearsal.ts,1 M rows reconciled after forced stop
+REQ-DBF-F04,Expand-migrate-contract toolkit,partial,sys.acp_runs; sys.acp_diffs; src/db/state-machines.ts,Shadow structures and comparator not built (no legacy structure) - CF-016
+REQ-DBF-F05,Integrity and invariants service,partial,src/db/integrity.ts; database.integration.test.ts,Scheduling waits for Part 05 (F-06); read-only invariant role waits (CF-018)
+REQ-DBF-F06,Transaction standard (isolation, retries, idempotency, outbox),done,src/db/transactions.ts; src/db/idempotency.ts; src/db/outbox.ts,Maximum transaction duration is the statement timeout; no separate limit
+REQ-DBF-F07,Versioning and effective dating,partial,sys.is_effective; DB_GUIDE.md section 5,Bitemporal option not built
+REQ-DBF-F08,Partitioning and retention hooks,partial,sys.create_monthly_partitions,Retention registry waits for Part 84
+REQ-DBF-F09,Tenant isolation groundwork,done,sys.enable_tenant_rls; database.integration.test.ts (tenant isolation),Session context from the server only (Part 07 provides the session)
+REQ-DBF-F10,Reference and seed data management,deferred,none,Reference UOM and numbering seeds exist as TypeScript constants (Part 00 Annex B); loader waits for Part 21
+REQ-DBF-F11,Legacy data migration toolkit,partial,sys.legacy_loads; src/db/state-machines.ts,Loader, staging and quarantine not built (no legacy data) - CF-016
+REQ-DBF-F12,Backup, PITR and restore,partial,scripts/db/backup.ts; scripts/db/restore-check.ts; runbooks/database-rollback-and-restore.md,Dump restore verified; PITR not configured - CF-016
+REQ-DBF-F13,Masked non-production environments,partial,sys.mask_pan/phone/email/account; masked-copy scanner test,Refresh job waits for production data
+REQ-DBF-F14,Query performance baseline,deferred,none,pg_stat_statements needs a workload; Part 84 window
+REQ-DBF-F15,Database security baseline,partial,setup-local.sql; erp_app cannot create objects (test); append-only triggers (tests),TLS and encryption at rest not verified in local development
+REQ-DBF-F16,Developer guide,done,docs/erp-program/DB_GUIDE.md; DB_EXTENSIONS.md,

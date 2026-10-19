@@ -36,6 +36,45 @@ jobs:
       - name: Production build
         run: npm run build
 
+  database:
+    name: Database foundation (migrations, RLS, back-fill, idempotency)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: erp_migrator
+          POSTGRES_PASSWORD: ci_only_migrator_password
+          POSTGRES_DB: erp_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U erp_migrator -d erp_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      MIGRATOR_DATABASE_URL: postgres://erp_migrator:ci_only_migrator_password@localhost:5432/erp_test
+      TEST_DATABASE_URL: postgres://erp_migrator:ci_only_migrator_password@localhost:5432/erp_test
+      TEST_APP_DATABASE_URL: postgres://erp_app:ci_only_app_password@localhost:5432/erp_test
+      APP_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Create the application role (CI service superuser)
+        run: |
+          psql "$MIGRATOR_DATABASE_URL" -v ON_ERROR_STOP=1 -c "CREATE ROLE erp_app LOGIN PASSWORD 'ci_only_app_password'"
+      - name: Lint migrations (naming, destructive, float money, NOT NULL)
+        run: npm run db:lint
+      - name: Apply migrations to the empty database
+        run: npm run db:migrate
+      - name: Database tests (round trip, drift, RLS, idempotency, outbox, back-fill, integrity, masking)
+        run: npx vitest run src/db/database.integration.test.ts
+
   design-gate:
     name: Design contrast gate (CF-004, non-blocking)
     runs-on: ubuntu-latest

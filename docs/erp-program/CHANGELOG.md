@@ -27,3 +27,14 @@
 - CI workflow added; Node pinned to 22.
 - Local application verified at http://localhost:3000 (`LOCALHOST.md`).
 
+## 2026-10-19 — Part 03 database foundation (drafted and verified locally)
+- Local PostgreSQL 16 cluster with least-privilege roles (`scripts/db/setup-local.sql`).
+- Migrations `202610191200_dbf_sys_foundation` and `202610191230_dbf_sys_operations` (`sys` schema: register, idempotency, outbox, back-fill checkpoints, invariants, snapshots, findings, ACP, legacy loads, tenant context, RLS template, append-only guard, partitions, effective dating, masking).
+- Migration runner with checksum guard, single-runner lock, dry run, down, status; migration linter (naming, module code, destructive statements, float money, NOT NULL without default).
+- Transaction helper (isolation, timeouts, retries with jitter, tenant context), idempotency store, transactional outbox, keyset back-fill with per-batch reconciliation, integrity snapshots and invariants.
+- Verified: 1,000,000-row back-fill with a forced stop and resume reconciles exactly; up, down, up keeps the schema fingerprint; dump and restore compare equal; RLS isolates tenants; masking refuses without a salt and keeps formats; health endpoint returns 200 and 503 without details.
+- CI database job on PostgreSQL 16.
+- Schema review with eight findings, each with a remedy (`modules/dbf/schema-review.md`).
+- Conflicts CF-015 to CF-018; decisions D-019 to D-024.
+- Dev database re-initialised by the runner (D-023).
+
