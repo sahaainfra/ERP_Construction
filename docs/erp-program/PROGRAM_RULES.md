@@ -1,4 +1,16 @@
-# PART 00 — PROGRAM CONSTITUTION & AGENT OPERATING SYSTEM
+# PROGRAM_RULES — Adopted Program Constitution
+
+| Field | Value |
+|---|---|
+| Adopted as | Part 00 — Program Constitution & Agent Operating System (§11 `PROGRAM_RULES.md`) |
+| Source | Uploaded file `ffcc8c61-P00_PROGRAM_CONSTITUTION.md`, copied below with its title line replaced by this header. The version is not stated in the source. |
+| Adoption date | 2026-10-19 |
+| Adopted in | Repository `sahaainfra/ERP_Construction`, branch `claude/bold-allen-rj3t08` |
+| Status | ADOPTED, awaiting owner signature (§14 step 5). Part 00 is not APPROVED until the owner signs `DECISIONS.md` entry D-001. |
+
+Governing document: every agent session loads this file together with the Part being executed (§0 Nature). The text below is the constitution as uploaded. Adoption adds this header and removes the uploaded title line, which this header replaces. No other text is changed.
+
+---
 
 | Field | Value |
 |---|---|
@@ -275,7 +287,6 @@ Convenience, preference or "a cleaner design" are **not** criteria.
 | 4 Parallel run | Reads served from old and new; outputs compared (golden outputs, reports, balances) for an agreed period (≥ one month-end close for financial data) | Difference report = zero unexplained differences, signed |
 | 5 Cut-over | Switch reads/writes to new behind a flag; old kept read-only and synchronised back where feasible | Cut-over runbook executed; smoke tests green; rollback rehearsed within RTO |
 | 6 Contract | Remove dependency on the old structure (old objects archived, then retired) only after the stability window and written approval | Archive verified and restorable; approval recorded |
-
 Every step is reversible until step 6; rollback triggers and owners are defined in the ADR. Verified backup + restore test before steps 2, 3 and 5. No step runs during a financial period close.
 
 ### 7.5 Migration rules (every migration)

@@ -1,0 +1,41 @@
+{
+  "name": "erp-construction",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "build:tokens": "node scripts/build-tokens.mjs",
+    "check:design": "node scripts/check-design.mjs",
+    "test": "vitest run",
+    "build:program": "node scripts/build-program-index.mjs",
+    "build:legacy": "node scripts/build-legacy-crosswalk.mjs",
+    "build:prompts": "node scripts/build-session-prompts.mjs",
+    "prompt": "tsx scripts/render-session-prompt.ts",
+    "adopt:program": "node scripts/adopt-program.mjs",
+    "inventory": "node scripts/erp-program/inventory.mjs",
+    "gap:matrix": "node scripts/erp-program/gap-matrix.mjs",
+    "fitness:report": "tsx scripts/erp-program/fitness-report.ts",
+    "baseline:capture": "tsx scripts/erp-program/baseline.ts capture",
+    "baseline:check": "tsx scripts/erp-program/baseline.ts check"
+  },
+  "dependencies": {
+    "lucide-react": "^1.59.0",
+    "next": "15.5.28",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.28",
+    "tsx": "^4.23.15",
+    "typescript": "^5",
+    "vitest": "^3.2.7"
+  }
+}

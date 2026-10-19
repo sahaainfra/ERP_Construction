@@ -1,0 +1,168 @@
+old_prompt,old_title,former_id,legacy_built,new_parts
+00,"Master Development Directive, Program Baseline & Enterprise Design Foundation",part-000,yes,00;01;12
+01,Existing System Audit & Architecture Discovery,part-001,yes,01
+02,Live Dashboard Preview & Walking Skeleton (Preview From Day One),part-002,yes,12
+03,"Quality Gates, Ci/Cd & Release Engineering",part-003,yes,04
+04,Core Enterprise Erp Foundation (Shared Services),part-004,yes,05
+05,"Organization, Company, Project & Site Master",part-005,yes,06
+06,"User, Role & Permission Architecture (Enterprise Rbac)",part-006,yes,07;08A
+07,Unified Enterprise Ui/Ux — Component Library & Design-System Completion,part-019,yes,12
+08,Advanced Responsive Dashboard Architecture,part-020,yes,13
+09,Global Search & Command Center,part-023,yes,13
+10,Mobile + Tablet + Desktop Experience (Responsive Shell),part-021,yes,14
+11,Existing Application Redesign & Screen Migration,,no,15
+12,"Audit, Security & Governance Foundation",part-007,yes,08
+13,"Secure-By-Design Foundation — Secure Sdlc, Ci/Cd Security Gates, Zero-Trust Request Pipeline & Secrets",part-008,yes,07;08
+14,"Security, Identity & Segregation Of Duties",part-009,yes,07
+15,"Observability, Performance & Reliability",part-010,yes,09
+16,Real-Time Event Bus & Integration Platform,part-011,yes,10
+17,Real-Time Notification & Collaboration Foundation,part-016,yes,10
+18,Integration Architecture,part-017,yes,11
+19,"Api, Integration & Developer Platform",part-018,yes,11
+20,Workflow & Approval Engine,part-012,yes,16
+21,"Workflow, Rules & Approval Engine",part-013,yes,16
+22,Protocol & Control Engine (Plan → Verify → Approve → Execute → Record → Monitor → Reconcile → Close),part-014,yes,17
+23,"Accountability, Responsibility Assignment & Action Ledger",part-015,yes,17
+24,Offline-First Field Mobile Engine,part-022,yes,14
+25,Advanced Document Control,part-024,yes,19
+26,Task & Action Management,part-027,yes,18
+27,Enterprise Communication Gateway (Whatsapp / Email / Sms / Push / Api),part-030,yes,25
+28,Advanced Team Chat / Workchat,part-031,yes,25;25A
+29,"Secure Communication Platform — Signal Open-Source Foundation, License Compliance & End-To-End Security",part-032,yes,25C
+30,"Unified Secure Messaging — Communication Channel & Team Chat Consolidation (Signal-Inspired, Fully Responsive)",part-032a,no,25A
+31,Digital Signature & Trust Verification,part-025,yes,20
+32,Document Template & Format Management Center,part-026,yes,20
+33,Automation & Alert Engine,part-028,yes,18
+34,Management Escalation Engine,part-029,yes,18
+35,Master Data Governance,part-033,no,21
+36,"Enterprise Excel Data Exchange Engine — Templates, Validation & Controlled Import/Export",part-034,no,24
+37,Central Calculation Engine & Authoritative Formula Registry,part-035,no,22
+38,Item Master & Resource Catalogue Engine (With Reusable Item Selector),part-036,no,23
+39,"Rate Analysis Engine (Versioned, Effective-Dated)",part-037,no,29
+40,"Advanced Data-Entry Framework (Enter Once, Reuse Everywhere)",part-038,no,24
+41,Advanced Accounting & Finance,part-039,no,26
+42,"Database Foundation, Migration Framework & Data Integrity",,no,03
+43,Project Management & Project 360,part-040,no,32
+44,Crm & Business Development Management,part-041,no,28
+45,"Wbs, Boq & Work Package Management",part-042,no,33
+46,Advanced Project Planning & Scheduling,part-048,no,38
+47,Advanced Site Execution,part-055,no,42
+48,Material Take-Off (Mto) & Quantity Derivation Engine,part-043,no,35
+49,Tender Management,part-044,no,30
+50,Advanced Estimation,part-045,no,30
+51,Advanced Qs / Quantity Surveying,part-046,no,60
+52,Advanced Budgeting & Cost Control,part-049,no,39
+53,Project Risk & Opportunity Management,part-050,no,36
+54,Advanced Progress Management,part-054,no,43
+55,Work Authorisation & Plan-Before-Execute Control,part-056,no,41
+56,Dpr / Field Execution,part-057,no,42
+57,Weather & Site Condition Management,part-058,no,42
+58,"Gis, Survey & Site Location Intelligence",part-059,no,37
+59,Planned Vs Budgeted Vs Actual Engine (Project Control Engine),part-061,no,43
+60,Advanced Procurement,part-062,no,46
+61,Advanced Stores & Inventory,part-063,no,47
+62,"Material Demand, Mrp & Procurement Forecasting",part-064,no,45
+63,Advanced Contracts Management / Clm,part-047,no,31
+64,Tender-To-Execution Commercial Baseline Handover,part-051,no,31
+65,Change & Variation Management,part-080,no,62
+66,Advanced Commercial Management,part-081,no,67
+67,Advanced Billing & Ra Bill Management,part-082,no,61
+68,Advanced Hr & Human Capital Management,part-068,no,54
+69,Advanced Geo-Attendance,part-069,no,55
+70,Subcontractor Management,part-083,no,59
+71,Mobile Field Erp (Offline-Capable),part-111,no,14
+72,Tool & Small-Asset Tracking,part-065,no,49
+73,Advanced Plant & Machinery,part-066,no,50;50A
+74,Fuel Management & Anti-Leakage Control,part-067,no,51
+75,Resource Planning & Capacity Management,part-070,no,40
+76,"Resource Capacity, Workforce & Plant Planning",part-071,no,40
+77,Finance Integration (Posting Rules Across Modules),part-084,no,26
+78,Three-Way / Multi-Way Matching,part-085,no,64
+79,Cash Flow Management,part-086,no,65
+80,Advanced Accounting & Finance (Financial Backbone Extension),part-089,no,26;66
+81,"Gst Compliance Service — Gst Masters, Gstin Validation, Tax Engine, E-Invoice & Irn Management",part-090,no,27
+82,Treasury & Corporate Cash Management,part-091,no,65
+83,India Construction Statutory Payroll & Labour Compliance,part-092,no,56
+84,"Project Cost Forecast, Etc & Eac Engine",part-093,no,67
+85,Project P&L & Profitability Engine,part-094,no,68
+86,Advanced Plant & Machinery Management (Fleet Extension),part-122,no,50
+87,"Equipment, Plant, Fleet Maintenance & Telematics Engine",part-123,no,50B
+88,"Construction Client Billing, Ra/Mb, Certification & Collections",part-087,no,61
+89,"Cashflow, Treasury & Project Finance Forecast",part-095,no,65
+90,"Drawing, Design Coordination & Rfi Management",part-052,no,34
+91,"Epc Engineering Management — Deliverable Register, Engineering Progress & Vendor Document Review",part-053,no,34
+92,"Rfi Management System — Strict Approval, Monitoring & Execution Control",part-060,no,34
+93,Advanced Contract Document & Claim Evidence Control,part-088,no,63
+94,Document Intelligence,part-108,no,79
+95,Advanced Project Documentation & Document Control (Digital Thread),part-135,no,19
+96,Advanced Construction Contracts Management (Clm Extension),part-136,no,31
+97,Advanced Quality Management / Qa-Qc,part-073,no,69
+98,Site Inspection & Checklist Engine,part-074,no,69
+99,Rmc Management (Batching Plant To Pour),part-075,no,52;52A
+100,Advanced Hse / Safety Management,part-076,no,70
+101,"Procurement Expediting, Vendor Inspection & Long-Lead Logistics",part-077,no,46
+102,"Site Logistics, Gate, Material & Vehicle Control",part-078,no,48
+103,"Testing, Pre-Commissioning & Commissioning (System Completion)",part-079,no,71
+104,Material Supplier Portal,part-112,no,73
+105,Vendor & Subcontractor Portal,part-113,no,73
+106,Client & Consultant Portal,part-114,no,73
+107,"Document Generation, Pdf/Print, Signature, Verification & Delivery Engine",part-115,no,20
+108,"Advanced Procurement, Stores & Inventory (Material Lifecycle Extension)",part-117,no,46;47
+109,"Construction Material Rate Intelligence — Historical Rate Database, Rate Index & Project Cost Impact",part-118,no,44
+110,"Supplier Prequalification, Vendor Scorecards & Procurement Intelligence",part-119,no,44
+111,"Batching Plant Operations — Plant Master, Recipes, Production, Consumption, Dispatch, Quality & Maintenance",part-124,no,52
+112,"Batching Plant Costing — Cost Per M³, Accounting Posting, Budget Control, Profitability & Management Dashboard",part-125,no,52
+113,Advanced Hr & Human Capital Management (Hcm Extension),part-129,no,54
+114,Advanced Construction Quality Control & Qms (Qms Extension),part-130,no,69
+115,"Project Handover, Closeout & Asset O&M",part-138,no,71
+116,Defect Liability Period (Dlp) & Warranty Management,part-139,no,71
+117,Digital Twin Foundation,part-140,no,77
+118,Productivity Intelligence,part-072,no,58
+119,Advanced Management Mis & Reporting,part-096,no,76
+120,Advanced Report Builder,part-097,no,76
+121,Enterprise Project Control Tower,part-098,no,77
+122,Daily Execution Intelligence & Work-Done / Wip Valuation,part-099,no,77
+123,"""Why?"" Explainability Engine",part-100,no,78
+124,Advanced Analytics & Forecasting,part-102,no,78
+125,Enterprise Scenario / What-If Simulation Engine,part-103,no,78
+126,"Wastage, Leakage & Duplication Detection + Protocol Control Tower",part-104,no,77
+127,Executive Construction Control Tower & Early Warning,part-105,no,77
+128,Ai & Intelligent Erp,part-106,no,79
+129,Ai Governance,part-107,no,79
+130,Computer Vision (Decision Support),part-109,no,79
+131,"Performance, Scalability & Reliability",part-116,no,09;83
+132,Mandatory Monthly Material Reconciliation & Qs Cost-Control Workspace,part-120,no,68
+133,"Monthly Closing Protocol, Project Mis, Budget Master & Management Cost-Control Dashboard",part-121,no,68
+134,"Advanced Enterprise Reporting, Ai Analytics & Governance",part-126,no,76
+135,Enterprise Data Warehouse & Historical Analytics,part-127,no,75
+136,"Data Warehouse, Bi & Metrics Governance",part-128,no,75
+137,Esg & Sustainability Management,part-131,no,72
+138,"Hse Management System Extension — Ppe, Contractor Safety, Inspection Registers, Fire & Environment, Audits & Scorecards",part-132,no,70
+139,"Security Guard Management — Deployment, Rosters, Gate Control, Visitors, Patrols & Security Incidents",part-133,no,57
+140,"Construction Labour Camp, Welfare & Facilities",part-134,no,57
+141,"Claims, Eot, Disputes & Evidence Management",part-137,no,63
+142,Standard Business Format Library & Report Design Engine,part-142,no,20
+143,"Ai Material Rate Intelligence, Forecasting & Erp-Wide Ai Management Reporting",part-144,no,44
+144,Advanced Enterprise Dashboard & Responsive Ux System (Consolidation),part-145,no,13
+145,Advanced Super Admin Enterprise Control Center,part-146,no,80
+146,Decision & Approval Intelligence,part-101,no,16
+147,"Ai Copilot & Agent Platform (Governed, Advisory)",part-110,no,79
+148,Senior-Initiated Task Assignment & Automatic Department Routing,part-147,no,18
+149,Company Policy Management & Policy-To-Protocol Engine,part-148,no,17
+150,"Employee Performance, Daily Task Productivity & Continuous Development",part-149,no,58
+151,"Erp-Native Communication Center — Auto Groups, Record Linking, Task Instructions & Message-To-Action",part-150,no,25B
+152,Excel Bulk Data Entry Workspace & Module Template Packs,part-141,no,24
+153,"E-Way Bill, Transport Integration, Gst Reconciliation & Compliance Dashboard",part-143,no,27
+154,Enterprise Business-Process Simulation & Demo Sandbox,part-161,no,81
+155,Enterprise Security,part-156,no,83
+156,Enterprise Cross-Module Integration,part-151,no,82
+157,Cross-Module Real-Time Control,part-152,no,10;82
+158,Enterprise Data Traceability,part-153,no,75
+159,Global Activity Timeline,part-154,no,13
+160,Enterprise Search & Drill-Down,part-155,no,13
+161,Error Handling & Resilience,part-159,no,09
+162,Data Backup & Disaster Recovery,part-157,no,84
+163,Enterprise Data Retention & Archival,part-158,no,84
+164,Testing & Quality Assurance,part-162,no,04;82
+165,"Construction Closeout, Lessons Learned & Knowledge Base",part-160,no,86
+166,Acceptance & Production Readiness,part-163,no,85
