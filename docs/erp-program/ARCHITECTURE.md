@@ -1,6 +1,6 @@
 # ARCHITECTURE
 
-Part 02, REQ-ARCH-F01. Current and target views of the Construction ERP. Status: **PROPOSED** until the ADRs in `adr/` are approved. Part 02 depends on Part 01 (sign-off pending); see CF-011.
+Part 02, REQ-ARCH-F01. Current and target views of the Construction ERP. Status: **APPROVED by the owner on 2026-10-19** for this document set. ADR-000 and ADR-003 are accepted. ADR-001, ADR-002 and ADR-004 to ADR-011 remain **PROPOSED**; Part 02's acceptance criterion requires them approved or marked not applicable (see CF-019).
 
 Decisions are recorded in `adr/ADR-000` to `ADR-011`. This document shows how they fit together.
 

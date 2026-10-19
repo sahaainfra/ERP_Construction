@@ -31,7 +31,7 @@
     "tsx": "ADR-000 (script runner for programme tooling)",
     "typescript": "ADR-000",
     "vitest": "ADR-000 (test runner, Decision D-007)",
-    "pg": "ADR-003 (PROPOSED; PostgreSQL driver, Part 03)",
-    "@types/pg": "ADR-003 (PROPOSED; types for the PostgreSQL driver)"
+    "pg": "ADR-003 (ACCEPTED 2026-10-19; PostgreSQL driver, Part 03)",
+    "@types/pg": "ADR-003 (ACCEPTED 2026-10-19; types for the PostgreSQL driver)"
   }
 }

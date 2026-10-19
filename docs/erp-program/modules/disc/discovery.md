@@ -10,7 +10,7 @@ Module `disc`. Part 01 — Existing System Audit, Architecture Fitness Assessmen
 | S3 Calculation, item-master and control inventories | Done | CALCULATION_REGISTRY.md (42 entries), ITEM_LIKE_MASTERS.md, CONTROL_INVENTORY.md. |
 | S4 Data-quality profile and load probe | Not applicable | No database or traffic. Build size measured. |
 | S5 Fitness assessment and gap matrix | Done | ARCHITECTURE_FITNESS.md (4 components scored, 14 absent not scored); GAP_MATRIX.csv (95 Parts). |
-| S6 Golden baseline, integrity checker, backup and restore, sign-off | Done, sign-off pending | Golden baseline and checker done; repository restore rehearsed; technical-lead sign-off pending (CP-DISC-05). |
+| S6 Golden baseline, integrity checker, backup and restore, sign-off | Done; approved by the owner 2026-10-19 | Golden baseline and checker done; repository restore rehearsed; technical-lead sign-off pending (CP-DISC-05). |
 
 ## Method
 1. `node scripts/erp-program/inventory.mjs` (read-only; no timestamps, so reruns are identical).
@@ -44,4 +44,4 @@ Date 2026-10-19. `git clone --branch erp-baseline-v0` into a new directory outsi
 - Technical-lead sign-off in DECISIONS.md.
 
 ## Part 02 dependency note
-Part 02 was drafted after this Part without its sign-off (CF-011). Its outputs are in `docs/erp-program/ARCHITECTURE.md`, `adr/` and `modules/arch/`.
+Part 02 was drafted after this Part without its sign-off (CF-011). Part 01 was approved by the owner on 2026-10-19, which satisfies the dependency for Part 02 (CF-011 resolved). Its outputs are in `docs/erp-program/ARCHITECTURE.md`, `adr/` and `modules/arch/`.
