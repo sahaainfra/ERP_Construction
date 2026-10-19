@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-10-19 — Owner approvals: contrast, decimal money (D-040)
+- CF-004: darkened `brand.accent` and `status.warning.solid` for the light and high-contrast themes. `npm run check:design` passes.
+- CF-009: commercial money formulas use decimal.js 10.6.0 (ADR-004), rounded to paise at output. `commercial.priceVariation` golden changes from 999.9999999999995 to 1000 (re-captured; N4 change). Quantities are unchanged.
+- CF-005, CF-006, CF-012, CF-013, CF-016 remain open: each needs the named input.
+
 ## 2026-10-19 — Part 05 shared kernel (in progress; Part 04 not yet approved)
 - Added migration `202610191300_core_shared_kernel` (settings, number series and allocations, interim audit, ledger and evaluation tables, jobs, holidays, financial periods, reference table), with row-level security on every table.
 - Added `src/core/`: request context, error envelope and catalogue, logger, feature flags, calendar rules, i18n formatting, unit of work, numbering, settings with maker-checker, idempotency wrapper, job queue, rate limiter and cache.

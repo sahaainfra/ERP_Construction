@@ -43,6 +43,7 @@
     "traceability:rollup": "node scripts/erp-program/traceability-rollup.mjs"
   },
   "dependencies": {
+    "decimal.js": "10.6.0",
     "lucide-react": "^1.59.0",
     "next": "15.5.28",
     "pg": "^8.23.1",

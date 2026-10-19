@@ -19,7 +19,8 @@
     "react-dom",
     "tsx",
     "typescript",
-    "vitest"
+    "vitest",
+    "decimal.js"
   ],
   "adr": {
     "@eslint/eslintrc": "ADR-000 (tooling, carried from the create-next-app scaffold)",
@@ -40,6 +41,7 @@
     "@axe-core/playwright": "Part 04 test automation (approved, D-036). Test tooling only; not in the production bundle.",
     "@playwright/test": "Part 04 test automation (approved, D-036). Test tooling only; not in the production bundle.",
     "@vitest/coverage-v8": "Part 04 test automation (approved, D-036). Test tooling only; not in the production bundle.",
-    "playwright-core": "Part 04 test automation (approved, D-036). Test tooling only; not in the production bundle."
+    "playwright-core": "Part 04 test automation (approved, D-036). Test tooling only; not in the production bundle.",
+    "decimal.js": "ADR-004 (approved, D-038): exact decimal arithmetic for money in src/domain/commercial.ts. Runtime dependency, pinned exactly."
   }
 }
