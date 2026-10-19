@@ -36,10 +36,10 @@ const progressLines = [
     const STATUS = {
       "00": "ADOPTED — owner approved 2026-10-19 (D-025)",
       "01": "APPROVED — owner approved 2026-10-19 (D-025)",
-      "02": "APPROVED — document set, owner 2026-10-19; ADR-001,002,004-011 PROPOSED (CF-019)",
+      "02": "APPROVED — document set and ADR-001 to ADR-011, owner 2026-10-19 (D-038)",
       "03": "APPROVED — owner 2026-10-19 (D-033); PITR, ACP, legacy, masking deferred (CF-016)",
       "04": "APPROVED — owner 2026-10-19 (D-036); deployment, rollback and metrics deferred (CF-021); branch protection open (CF-022)",
-      "05": "DRAFTED — built and verified locally; dependencies now approved, Part 05 approval pending owner; CF-027, CF-028 deferred",
+      "05": "APPROVED — owner 2026-10-19 (D-037); Redis, object storage and remaining items deferred (CF-027, CF-028)",
     };
     const status = STATUS[p.id] ?? "NOT_STARTED";
     return row([
