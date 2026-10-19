@@ -1,6 +1,6 @@
 # Part 04 discovery and delivery record
 
-Module `cicd`. Part 04 — Quality Engineering, CI/CD, Test Automation & Release Management. Status: **drafted and verified locally; approval pending**. Dependencies: Parts 01 and 02 are approved; **Part 03 is not approved** (its approval is pending), so this Part is provisional (CF-020).
+Module `cicd`. Part 04 — Quality Engineering, CI/CD, Test Automation & Release Management. Status: **APPROVED by the owner 2026-10-19 (D-036)**. Dependencies: Parts 01, 02 and 03 are approved (CF-020 resolved). Deployment, rollback and metrics (CF-021) and branch protection (CF-022) remain deferred.
 
 ## Discovery (REQ-CICD-F01 input)
 - The repository had one CI workflow (quality, database, design, audit). Test frameworks present: Vitest only. No E2E tool, no coverage tool, no flag registry, no release record.

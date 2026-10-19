@@ -37,9 +37,9 @@
     "vitest": "ADR-000 (test runner, Decision D-007)",
     "pg": "ADR-003 (ACCEPTED 2026-10-19; PostgreSQL driver, Part 03)",
     "@types/pg": "ADR-003 (ACCEPTED 2026-10-19; types for the PostgreSQL driver)",
-    "@axe-core/playwright": "Part 04 test automation (PROPOSED; approval recorded with Part 04). Test tooling only; not in the production bundle.",
-    "@playwright/test": "Part 04 test automation (PROPOSED; approval recorded with Part 04). Test tooling only; not in the production bundle.",
-    "@vitest/coverage-v8": "Part 04 test automation (PROPOSED; approval recorded with Part 04). Test tooling only; not in the production bundle.",
-    "playwright-core": "Part 04 test automation (PROPOSED; approval recorded with Part 04). Test tooling only; not in the production bundle."
+    "@axe-core/playwright": "Part 04 test automation (approved, D-036). Test tooling only; not in the production bundle.",
+    "@playwright/test": "Part 04 test automation (approved, D-036). Test tooling only; not in the production bundle.",
+    "@vitest/coverage-v8": "Part 04 test automation (approved, D-036). Test tooling only; not in the production bundle.",
+    "playwright-core": "Part 04 test automation (approved, D-036). Test tooling only; not in the production bundle."
   }
 }
