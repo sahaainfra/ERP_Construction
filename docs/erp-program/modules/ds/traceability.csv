@@ -1,0 +1,17 @@
+req_id,requirement,status,evidence,note
+REQ-DS-F01,Token package,partial,design/design-tokens.json; scripts/build-tokens.mjs; src/design/tokens.css; src/design/tokens.ts; src/design/design.test.ts,"CSS and TypeScript generated from one source; literal rule enforced. Mobile resources wait for Part 14"
+REQ-DS-F02,Typography and locale,partial,src/design/fonts.css; public/fonts; scripts/design/vendor-fonts.mjs; src/design/design.test.ts,"Self-hosted IBM Plex and Noto Devanagari with OFL texts (A-84). Tabular figures and number formats not yet checked"
+REQ-DS-F03,Application shell,not started,,Phase 2 (S2)
+REQ-DS-F04,Navigation registry,not started,,Phase 2 (S2); permission filter per A-76
+REQ-DS-F05,Icon registry,not started,,Phase 2 (S2)
+REQ-DS-F06,Page templates and states,not started,,Phase 3 (S3)
+REQ-DS-F07,Component library,not started,,Phase 3 and 4 (S3, S4); libraries need ADRs
+REQ-DS-F08,Protocol components,not started,,Phase 4 (S4)
+REQ-DS-F09,Object page tabs,not started,,Phase 3 (S3)
+REQ-DS-F10,User preferences,partial,src/design/preferences.ts; src/design/design.test.ts,"Theme and density per viewer in local storage with a whitelisted pre-paint script. Per-user persistence is S2"
+REQ-DS-F11,Tenant branding,partial,src/design/branding.ts; src/design/contrast.ts; db/migrations/202610192500_ds_branding.up.sql; src/design/design.integration.test.ts,"Contrast-checked, maker-checker, light theme (A-83). Logo is a reference only (CF-027). Brand override not yet applied to the page"
+REQ-DS-F12,Theme bridge for legacy screens,not started,,Phase 5 (S5)
+REQ-DS-F13,Living style guide,not started,,Phase 5 (S5)
+REQ-DS-F14,Design quality gates,partial,scripts/check-design.mjs; src/design/literals.ts,"Contrast and literal gates run. Icon and navigation lint, axe and visual regression are S2 to S5"
+REQ-DS-F15,Preview environment,not started,,Phase 5 (S5); hosting waits for CF-012
+REQ-DS-F16,Messages launcher slot,deferred,,Parts 25 and 25A not approved (A-82)

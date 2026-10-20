@@ -51,7 +51,8 @@ for (const theme of THEMES) {
 
 // Token lint: no raw colour literals in module code. The token package is the only allowed place.
 const HEX = /#[0-9a-fA-F]{3,8}\b/g;
-const allowed = new Set(["src/design/tokens.css"]);
+// The token package, the rule that defines the check, and tests (which may hold fixture colours) are exempt. Same rule as src/design/literals.ts.
+const allowed = new Set(["src/design/tokens.css", "src/design/tokens.ts", "src/design/literals.ts"]);
 
 function* walk(dir) {
   for (const name of readdirSync(dir)) {
@@ -64,7 +65,7 @@ function* walk(dir) {
 let literals = 0;
 for (const file of walk(join(root, "src"))) {
   const rel = relative(root, file);
-  if (allowed.has(rel)) continue;
+  if (allowed.has(rel) || /\.test\.(ts|tsx|js|jsx)$/.test(rel)) continue;
   const lines = readFileSync(file, "utf8").split("\n");
   lines.forEach((line, i) => {
     const matches = line.match(HEX);

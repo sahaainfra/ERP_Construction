@@ -37,5 +37,6 @@ export function applyTheme(theme: Theme, density: Density): void {
   root.setAttribute("data-density", density);
 }
 
-// Source for the pre-paint script. Must stay in sync with applyTheme and the storage key above.
-export const PRE_PAINT_SCRIPT = `(function(){try{var p=JSON.parse(localStorage.getItem("${STORAGE_KEY}")||"{}");var r=document.documentElement;if(p.theme&&p.theme!=="system")r.setAttribute("data-theme",p.theme);r.setAttribute("data-density",p.density||"${DEFAULT_PREFS.density}");}catch(e){document.documentElement.setAttribute("data-density","${DEFAULT_PREFS.density}");}})();`;
+// Source for the pre-paint script. Must stay in sync with applyTheme and the storage key above. Only known values are applied;
+// anything else falls back to the defaults, so a damaged stored value cannot put an unknown attribute on the page.
+export const PRE_PAINT_SCRIPT = `(function(){var themes=["light","dark","high-contrast"],densities=["compact","cozy","touch"];var r=document.documentElement;try{var p=JSON.parse(localStorage.getItem("${STORAGE_KEY}")||"{}");if(themes.indexOf(p.theme)>=0)r.setAttribute("data-theme",p.theme);r.setAttribute("data-density",densities.indexOf(p.density)>=0?p.density:"${DEFAULT_PREFS.density}");}catch(e){r.setAttribute("data-density","${DEFAULT_PREFS.density}");}})();`;

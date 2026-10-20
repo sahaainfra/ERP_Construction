@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-10-20 — Part 12 slice S1 (D-068)
+- Vendored UI fonts into `public/fonts` with OFL texts; `src/design/fonts.css`; the root layout no longer loads fonts from Google at build time.
+- Token build also emits `src/design/tokens.ts`. Literal rule in `src/design/literals.ts` (unit test and design gate).
+- Added migration `202610192500_ds_branding` and `src/design/branding.ts`: contrast-checked, maker-checker brand versions (light theme, A-83).
+- Pre-paint script accepts only known theme and density values.
+
 ## 2026-10-20 — Part 12 approved (D-067)
 - Owner approved Part 12 for the phases in the discovery plan. Assumptions A-72 to A-82 recorded. The plan's §2 decisions remain open, including Annex A, the library ADRs and the design owners. No slice is built yet.
 

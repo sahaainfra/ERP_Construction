@@ -45,7 +45,7 @@
   --erp-rail-width: 56px;
   --erp-grid-gutter: 16px;
   --erp-grid-row-unit: 112px;
-  --erp-font-ui: "IBM Plex Sans", "Noto Sans", system-ui, sans-serif;
+  --erp-font-ui: "IBM Plex Sans", "Noto Sans Devanagari", system-ui, sans-serif;
   --erp-font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --erp-type-caption-size: 12px;
   --erp-type-caption-line: 16px;

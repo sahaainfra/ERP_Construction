@@ -11,7 +11,7 @@ const lint = (upSql: string, overrides: Partial<typeof base> = {}) => lintMigrat
 describe("migration files", () => {
   it("loads the committed migrations in order with checksums", () => {
     const migrations = loadMigrations(dir);
-    expect(migrations.map((m) => m.name)).toEqual(["202610191200_dbf_sys_foundation", "202610191230_dbf_sys_operations", "202610191300_core_shared_kernel", "202610191400_org_structure", "202610191500_org_projects_sites", "202610191600_org_lbs_geofence_allocation", "202610191700_iam_permissions", "202610191800_iam_sod", "202610191850_iam_authentication", "202610191900_iam_privileged_reviews", "202610191950_iam_step_up", "202610192000_secgov_audit_chain", "202610192100_secgov_security_events", "202610192200_auth_users", "202610192300_evbus_envelope_inbox", "202610192400_intg_connectors"]);
+    expect(migrations.map((m) => m.name)).toEqual(["202610191200_dbf_sys_foundation", "202610191230_dbf_sys_operations", "202610191300_core_shared_kernel", "202610191400_org_structure", "202610191500_org_projects_sites", "202610191600_org_lbs_geofence_allocation", "202610191700_iam_permissions", "202610191800_iam_sod", "202610191850_iam_authentication", "202610191900_iam_privileged_reviews", "202610191950_iam_step_up", "202610192000_secgov_audit_chain", "202610192100_secgov_security_events", "202610192200_auth_users", "202610192300_evbus_envelope_inbox", "202610192400_intg_connectors", "202610192500_ds_branding"]);
     expect(migrations.every((m) => m.downSql !== null && /^[0-9a-f]{64}$/.test(m.checksum))).toBe(true);
   });
 

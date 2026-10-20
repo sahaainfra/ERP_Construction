@@ -14,7 +14,7 @@ body {
 
 body {
   margin: 0;
-  font-family: var(--font-plex-sans), var(--erp-font-ui);
+  font-family: var(--erp-font-ui);
   font-size: var(--erp-type-body-size);
   line-height: var(--erp-type-body-line);
   font-weight: var(--erp-type-body-weight);
