@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-20 — Part 13 approved (D-073)
+- Owner approved Part 13 for the phases in the discovery plan. Assumptions A-93 to A-101 recorded. The §2 decisions remain open, including the session-layer question for screens. No slice is built yet.
+
 ## 2026-10-20 — Part 12 approved for slices S1 to S3 (D-072)
 - Owner approved Part 12 for the slices built (S1 to S3). S4 and S5 and the open decisions remain.
 
