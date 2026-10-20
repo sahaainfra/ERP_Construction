@@ -76,3 +76,6 @@ Note on the baseline down script: it drops `sys.migration_runs`, so the revert o
 | 202610191950_iam_step_up | iam_sessions.mfa_verified_at | column | Time of the last second factor on a session | Yes | No | iam |
 | 202610192000_secgov_audit_chain | sec_audit_log | table, append-only, RLS | Audit chain (hash-linked per tenant) | Yes | No | secgov |
 | 202610192000_secgov_audit_chain | sec_sensitive_reads | table, append-only, RLS | Sensitive field reads | Yes | No | secgov |
+| 202610192100_secgov_security_events | sec_login_history | table, append-only, RLS | Login outcomes, append-only | Yes | No | secgov |
+| 202610192100_secgov_security_events | sec_security_events | table, append-only, RLS | Security events raised by rules, append-only | Yes | No | secgov |
+| 202610192100_secgov_security_events | sec_security_event_status | table, append-only, RLS | Event status history, append-only | Yes | No | secgov |

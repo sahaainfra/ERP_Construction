@@ -4,6 +4,7 @@ import { randomBytes } from "node:crypto";
 import type { Pool, PoolClient } from "pg";
 import { AppError } from "../core/errors";
 import { withTransaction } from "../db/transactions";
+import { sha256Hex as hashOf } from "./crypto";
 import { base32Encode, decryptSecret, encryptSecret, hashPassword, passwordProblems, randomToken, sha256Hex, signToken, verifyPassword, verifyToken, verifyTotp, type loadKeys } from "./crypto";
 
 export type Keys = ReturnType<typeof loadKeys>;
@@ -25,6 +26,14 @@ const GENERIC = "invalid credentials";
 async function revokedPerson(client: PoolClient, tenantId: string, userRef: string): Promise<boolean> {
   const { rowCount } = await client.query("SELECT 1 FROM iam_revocations WHERE tenant_id = $1 AND user_ref = $2 AND cleared_at IS NULL", [tenantId, userRef]);
   return (rowCount ?? 0) > 0;
+}
+
+/** Records one login outcome for detection (Part 08 S2). Written inside the caller's transaction, so it survives refusals. */
+async function logLogin(client: PoolClient, tenantId: string, userRef: string | null, outcome: string, fingerprint: string | null): Promise<void> {
+  await client.query(
+    "INSERT INTO sec_login_history (tenant_id, user_ref, outcome, device_hash) VALUES ($1, $2, $3, $4)",
+    [tenantId, userRef, outcome, fingerprint === null ? null : hashOf(fingerprint)],
+  );
 }
 
 /** Counts a failed password or code, and locks the account at the limit. Shared by every failed factor. */
@@ -68,7 +77,8 @@ export async function login(
       );
       if (rows.length === 0) {
         verifyPassword(input.password, DUMMY_HASH);
-        throw new AppError("FORBIDDEN", GENERIC);
+        await logLogin(client, input.tenantId, null, "failure", input.deviceFingerprint);
+        return { ok: false as const };
       }
       const row = rows[0];
       // The password is always checked first, so a locked or revoked account costs the same time as any other. Lock and
@@ -76,10 +86,14 @@ export async function login(
       const checked = verifyPassword(input.password, row.password_hash);
       const locked = row.locked_until !== null && row.locked_until > now;
       const revoked = await revokedPerson(client, input.tenantId, input.userRef);
-      if (locked || revoked) return { ok: false as const };
+      if (locked || revoked) {
+        await logLogin(client, input.tenantId, input.userRef, locked ? "locked" : "revoked", input.deviceFingerprint);
+        return { ok: false as const };
+      }
       if (!checked.ok) {
         // Return, do not throw: a throw would roll the failure count back, and the lockout would never engage.
         await recordFailure(client, input.tenantId, input.userRef, row.failed_count, now);
+        await logLogin(client, input.tenantId, input.userRef, "failure", input.deviceFingerprint);
         return { ok: false as const };
       }
       if (checked.needsRehash) {
@@ -96,11 +110,13 @@ export async function login(
         if (!result.ok) {
           // A wrong code counts as a failure, like a wrong password. Returned, not thrown, so the count is kept.
           await recordFailure(client, input.tenantId, input.userRef, row.failed_count, now);
+          await logLogin(client, input.tenantId, input.userRef, "mfa_failed", input.deviceFingerprint);
           return { ok: false as const };
         }
         await client.query("UPDATE iam_mfa_factors SET last_used_step = $3 WHERE tenant_id = $1 AND user_ref = $2 AND kind = 'totp'", [input.tenantId, input.userRef, result.step]);
       }
       await client.query("UPDATE iam_credentials SET failed_count = 0, locked_until = NULL, last_login_at = $3 WHERE tenant_id = $1 AND user_ref = $2", [input.tenantId, input.userRef, now]);
+      await logLogin(client, input.tenantId, input.userRef, "success", input.deviceFingerprint);
       return { ok: true as const, mfa: factor.rowCount !== null && factor.rowCount > 0 };
     },
     { tenantId: input.tenantId },
@@ -160,6 +176,7 @@ export async function refreshSession(pool: Pool, keys: Keys, input: { tenantId: 
       if (s.refresh_hash !== presented) {
         // Commit the family revocation first; a throw here would roll it back.
         await client.query("UPDATE iam_sessions SET revoked_at = now(), revoke_reason = 'refresh token reuse' WHERE tenant_id = $1 AND family_id = $2 AND revoked_at IS NULL", [input.tenantId, s.family_id]);
+        await client.query("INSERT INTO sec_login_history (tenant_id, user_ref, outcome) VALUES ($1, $2, 'token_reuse')", [input.tenantId, s.user_ref]);
         return { refused: "reuse" as const };
       }
       if (s.revoked_at || s.idle_expires_at <= now || s.absolute_expires_at <= now) return { refused: "ended" as const };

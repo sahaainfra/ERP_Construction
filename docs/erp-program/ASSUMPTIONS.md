@@ -36,6 +36,8 @@ Each assumption is a working decision taken where the source material or the own
 | A-26 | The audit chain is one chain per tenant, with writes serialised by a per-tenant advisory lock. Throughput per tenant is therefore limited to one audit write at a time. Partitioning by month and the p95 target are not measured yet. | A single ordered chain is the simplest correct tamper evidence; per-tenant locks keep other tenants unaffected. | Measure under the Part 04 volume rehearsal; split chains by day or partition if the lock becomes the bottleneck. | Technical lead | Assumed |
 | A-27 | Reason codes are free text in S1, checked for presence but not against a catalogue. | The catalogue is master data from Part 17. | Restrict to the catalogue when Part 17 exists. | Technical lead | Assumed |
 
+| A-28 | Detection thresholds: brute force at five failures in 15 minutes; spray at ten accounts from one device in 15 minutes; lockout within 60 minutes; token reuse within a day (critical); privileged change at any count within 60 minutes; bulk export at 1,000 rows within 60 minutes. | Common practice for a first set; they are placed in one constant so the security lead can change them. | Confirmation by the security lead (CP-SECGOV-06 thresholds). | Security lead | Assumed |
+
 ## Not assumed
 These items cannot be assumed, because they are statements of fact or legal confirmation by named people:
 - **Statutory rates and thresholds and their owners (CF-005).** The owners must confirm the rates in `src/domain/statutory.ts` against the sources in force.

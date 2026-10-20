@@ -4,7 +4,7 @@ REQ-SECGOV-F02,Tamper evidence (hash chain),partial,src/secgov/audit.ts (verifyC
 REQ-SECGOV-F03,Audit explorer and record timeline,partial,src/secgov/audit.ts (recordTimeline),"Timeline query built. Explorer filters, compare, export and the AuditTimeline screen wait for routes and the UI shell"
 REQ-SECGOV-F04,Mandatory-reason framework,partial,src/secgov/audit.ts (REASON_REQUIRED; writeAudit),"Refused without a reason code and a narrative of at least 10 characters. Reason catalogue table waits for Part 17 master data (A-27)"
 REQ-SECGOV-F05,Sensitive-read auditing,partial,src/secgov/audit.ts (recordSensitiveRead); db/migrations/202610192000_secgov_audit_chain.up.sql,"Reads logged and written to the chain. Which fields are flagged (the field policy) is configured later; masking helper provided"
-REQ-SECGOV-F06,Login history and security events,deferred,,Slice S2
+REQ-SECGOV-F06,Login history and security events,partial,src/secgov/security.ts; src/iam/auth.ts (logLogin); src/secgov/security.integration.test.ts,"Login outcomes recorded inside the sign-in transaction; rules for brute force, spray, lockout, token reuse, privileged change and bulk export; OPEN → ACKNOWLEDGED → RESOLVED or FALSE_POSITIVE with reasons. Forbidden-spike and impossible-travel rules not built (no refusal log, no geo data); console screen waits for routes"
 REQ-SECGOV-F07,Legacy log adapter,deferred,,No legacy logs exist in this repository; the interim core table is replaced, not migrated
 REQ-SECGOV-F08,Secure coding standard and threat models,deferred,,Slice S3
 REQ-SECGOV-F09,CI security slot,deferred,,Slice S3 (CF-014 decides which gates block)
