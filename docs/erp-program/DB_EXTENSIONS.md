@@ -60,3 +60,16 @@ Note on the baseline down script: it drops `sys.migration_runs`, so the revert o
 | 202610191800_iam_sod | iam_actor_links | table, RLS | Linked accounts for one person | Yes | No | iam |
 | 202610191800_iam_sod | iam_sod_exceptions | table, RLS | SoD exceptions, time-boxed | Yes | No | iam |
 | 202610191800_iam_sod | iam_sod_findings | table, RLS | SoD findings, append-only | Yes | No | iam |
+| 202610191850_iam_authentication | iam_credentials | table, RLS | Password hashes, lockout, last login | Yes | No | iam |
+| 202610191850_iam_authentication | iam_password_resets | table, RLS | Reset tokens (hashed), single use | Yes | No | iam |
+| 202610191850_iam_authentication | iam_devices | table, RLS | Devices with trust level and revocation | Yes | No | iam |
+| 202610191850_iam_authentication | iam_sessions | table, RLS | Sessions with rotating refresh tokens | Yes | No | iam |
+| 202610191850_iam_authentication | iam_mfa_factors | table, RLS | TOTP factors (encrypted secret) | Yes | No | iam |
+| 202610191900_iam_privileged_reviews | iam_elevations | table, RLS | Privileged elevations, time-boxed | Yes | No | iam |
+| 202610191900_iam_privileged_reviews | iam_revocations | table, RLS | Person revocations (leavers) | Yes | No | iam |
+| 202610191900_iam_privileged_reviews | iam_access_reviews | table, RLS | Access review campaigns | Yes | No | iam |
+| 202610191900_iam_privileged_reviews | iam_access_review_items | table, RLS | Review items and decisions | Yes | No | iam |
+| 202610191900_iam_privileged_reviews | iam_export_rules | table, RLS | Export rules per report | Yes | No | iam |
+| 202610191900_iam_privileged_reviews | iam_export_events | table, RLS | Export decisions, append-only | Yes | No | iam |
+| 202610191900_iam_privileged_reviews | iam_shadow_comparisons | table, RLS | Shadow comparisons, append-only | Yes | No | iam |
+| 202610191900_iam_privileged_reviews | iam_user_role_assignments.revoked_at | column | Immediate revocation of a role assignment | Yes | No | iam |

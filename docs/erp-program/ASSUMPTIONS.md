@@ -25,6 +25,12 @@ Each assumption is a working decision taken where the source material or the own
 | A-15 | The sixteen seed SoD rules use the action keys shown in `src/iam/sod.ts`. The owning modules will emit these keys and the names are confirmed then. | The spec names the pairs but not the keys; Annex B10 was not verified. | The exact keys and any module that uses different names. | Module owners | Assumed |
 | A-16 | Actions are checked by the person (linked accounts count as one). The check uses an advisory lock per record. Permission checks for the action itself are the route's job, not the SoD engine's. | Keeps the SoD check independent of routes that do not exist yet. | Routes must call recordAction before any conflicting write (S5). | Technical lead | Assumed |
 
+| A-17 | Passwords use scrypt (N=2^14, r=8, p=1), not Argon2id. Stored parameters let a hash be upgraded later. | Argon2id needs a native dependency that is not yet allowed; scrypt is an accepted password hash. | Move to Argon2id when the dependency is approved. | Technical lead / security architect | Assumed |
+| A-18 | The identity provider is not named (CF-013). Sign-in uses the built-in engine until one is chosen; OIDC PKCE and claim rules are ready for it. | The owner asked for S1 to be settled; the choice needs a residency decision that is not verified. | Provider choice and ID-token signature verification (CF-013). | Owner; security architect | Assumed |
+| A-19 | The route registry is a version-controlled manifest checked at build time, not a database table. | A manifest reviewed in code cannot be changed at run time, which is the safer default. | Mirror to a table only if run-time reporting needs it. | Technical lead | Assumed |
+| A-20 | The pipeline writes its audit entry after the handler. A handler that writes business data must record its own audit in the same unit of work. | The pipeline cannot share a transaction with handlers it does not own. | Each write route follows this rule (S5 onward). | Technical lead | Assumed |
+| A-21 | Revocation takes effect at once through a revoked timestamp. An end date alone is inclusive, so it cannot do that. | Revoking today must stop access now, not at midnight. | None. | Technical lead | In use |
+
 ## Not assumed
 These items cannot be assumed, because they are statements of fact or legal confirmation by named people:
 - **Statutory rates and thresholds and their owners (CF-005).** The owners must confirm the rates in `src/domain/statutory.ts` against the sources in force.

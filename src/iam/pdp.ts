@@ -18,7 +18,7 @@ export async function grantsFor(client: PoolClient | Pool, tenantId: string, use
        JOIN iam_roles r ON r.id = a.role_id AND r.status = 'active'
        JOIN iam_role_permissions rp ON rp.role_id = r.id AND rp.permission_key = $3 AND rp.approval_status = 'approved'
       WHERE a.tenant_id = $1 AND a.user_ref = $2 AND a.approval_status = 'approved'
-        AND a.valid_from <= CURRENT_DATE AND (a.valid_to IS NULL OR a.valid_to >= CURRENT_DATE)`,
+        AND a.revoked_at IS NULL AND a.valid_from <= CURRENT_DATE AND (a.valid_to IS NULL OR a.valid_to >= CURRENT_DATE)`,
     [tenantId, userId, key],
   );
   const grants = rows.map((r) => ({ roleCode: r.role_code, effect: r.effect, conditions: r.conditions, scopeType: r.scope_type, scopeId: r.scope_id }));

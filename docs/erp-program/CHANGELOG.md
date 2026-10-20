@@ -5,6 +5,12 @@
 - CF-009: commercial money formulas use decimal.js 10.6.0 (ADR-004), rounded to paise at output. `commercial.priceVariation` golden changes from 999.9999999999995 to 1000 (re-captured; N4 change). Quantities are unchanged.
 - CF-005, CF-006, CF-012, CF-013, CF-016 remain open: each needs the named input.
 
+## 2026-10-20 — Part 07 slices S1, S4, S5 (D-051)
+- S1: authentication engine (scrypt, TOTP, sessions with rotating refresh tokens, devices, lockout, reset), OIDC PKCE and claim checks. Identity provider still unnamed (CF-013).
+- S4: privileged elevation, joiner/mover/leaver with immediate revocation, access reviews, export controls, shadow comparisons.
+- S5: request pipeline and route registry with a build-time check (`npm run iam:routes`, part of `check:all`).
+- Migrations `202610191850_iam_authentication` and `202610191900_iam_privileged_reviews`. Assumptions A-17 to A-21. Local keys `TOKEN_SIGNING_KEY` and `MFA_ENCRYPTION_KEY` documented in LOCALHOST.md.
+
 ## 2026-10-20 — Part 07 slice S3 approval (D-050)
 - Owner approved slice S3. Slices S1, S4, S5, the toxic role-pair check, the vendor bank window and the independent review remain open.
 

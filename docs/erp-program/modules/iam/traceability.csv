@@ -1,8 +1,8 @@
 req_id,requirement,status,evidence,note
-REQ-IAM-F01,Authentication core services,deferred,,Slice S1 (needs CF-013 identity-provider decision)
-REQ-IAM-F02,Federation (OIDC/PKCE and service accounts),deferred,,Slice S1
-REQ-IAM-F03,MFA and step-up,deferred,,Slice S1
-REQ-IAM-F04,Sessions and devices,deferred,,Slice S1
+REQ-IAM-F01,Authentication core services,partial,src/iam/auth.ts; src/iam/crypto.ts; db/migrations/202610191850_iam_authentication.up.sql; src/iam/auth.integration.test.ts,"scrypt passwords (A-17), lockout after five failures, generic refusals, reset tokens single-use and hashed, sessions ended on reset. Sign-in page and provisioning belong to Part 08A"
+REQ-IAM-F02,Federation (OIDC/PKCE and service accounts),partial,src/iam/federation.ts; src/iam/crypto.test.ts,"PKCE and ID-token claim rules built and tested. Token exchange and signature check need the named provider (CF-013, A-18). Service accounts not built"
+REQ-IAM-F03,MFA and step-up,partial,src/iam/crypto.ts (TOTP); src/iam/auth.ts (enrolTotp, confirmTotp),"TOTP (RFC 6238, tested against the RFC vector), encrypted secrets, replay refused. WebAuthn, OTP fallback and step-up for listed actions not built"
+REQ-IAM-F04,Sessions and devices,partial,src/iam/auth.ts (startSession; refreshSession; verifyAccess; revokeDevice),"Rotating refresh tokens with reuse detection, idle and absolute timeouts, device revocation ends sessions at once. Concurrent-session policy, shared-device mode not built"
 REQ-IAM-F05,Permission registry,partial,db/migrations/202610191700_iam_permissions.up.sql; src/iam/roles.ts (registerPermissions); src/iam/iam.integration.test.ts,Key form enforced; module registration by each Part at start-up is a later step
 REQ-IAM-F06,Roles and scoped assignments,partial,src/iam/roles.ts; src/iam/iam.integration.test.ts,Maker-checker for grants and assignments; system roles not seeded (A-13)
 REQ-IAM-F07,Policy decision point,partial,src/iam/pdp.ts; src/iam/policy.ts; src/iam/policy.test.ts,"Deny by default and explicit deny; no cache yet (p95 target needs Part 10)"
@@ -11,15 +11,15 @@ REQ-IAM-F09,Field-level policies,partial,src/iam/masking.ts; src/iam/iam.integra
 REQ-IAM-F10,Authority limits,partial,src/iam/authority.ts; src/iam/iam.integration.test.ts,Consumed by Part 16 routing (not built)
 REQ-IAM-F11,UI gating,deferred,,Needs routes (S5)
 REQ-IAM-F12,Explain and simulate,deferred,,Needs the explorer screens
-REQ-IAM-F13,Legacy shadow mode,deferred,,Nothing legacy exists in this codebase
+REQ-IAM-F13,Legacy shadow mode,partial,src/iam/shadow.ts; src/iam/s4s5.integration.test.ts,"Comparisons recorded and switch-over judged on counts. Nothing calls it: no legacy authorisation exists in this repository"
 REQ-IAM-F14,SoD rule engine,partial,src/iam/sod.ts; db/migrations/202610191800_iam_sod.up.sql; src/iam/sod.integration.test.ts,"Sixteen seed rules as drafts (A-15). Lifecycle draft, observe, enforce, retired. Vendor bank 30-day window not modelled"
 REQ-IAM-F15,Preventive and detective SoD,partial,src/iam/sod.ts (recordAction; detectiveScan); src/iam/sod.integration.test.ts,"Preventive check under a record lock; detective scan adds findings once. Toxic role pairs at assignment (CP-IAM-03) not built. Routes that call recordAction wait for S5"
 REQ-IAM-F16,SoD exceptions,partial,src/iam/sod.ts (proposeException; approveException),"Time-boxed to 90 days, project-scoped, two approvers; not allowed for payment rules. Compensating-control review task not built"
-REQ-IAM-F17,Privileged access,deferred,,Slice S4
-REQ-IAM-F18,Joiner/mover/leaver,deferred,,Slice S4 (needs Part 54)
-REQ-IAM-F19,Access certification,deferred,,Slice S4
-REQ-IAM-F20,Export controls,deferred,,Slice S4
-REQ-IAM-F21,Request pipeline,deferred,,Slice S5
-REQ-IAM-F22,Route registry,deferred,,Slice S5 (CP-IAM-05)
-REQ-IAM-F23,Portal and service principals,deferred,,Slice S1 and S4
+REQ-IAM-F17,Privileged access,partial,src/iam/privileged.ts; src/iam/s4s5.integration.test.ts,"Four-hour elevation with a second approver, ends early or on expiry. Break-glass accounts not built"
+REQ-IAM-F18,Joiner/mover/leaver,partial,src/iam/jml.ts; src/iam/s4s5.integration.test.ts,"Leaver revoked at once and pending grants rejected; settlement gate; mover ends assignments from a date. HR event feed (Part 54) not connected"
+REQ-IAM-F19,Access certification,partial,src/iam/reviews.ts; src/iam/s4s5.integration.test.ts,"Campaigns by company or project, no self-review, closes only at 100 %, unreviewed grants expire after grace. Quarterly scheduling and evidence pack not built"
+REQ-IAM-F20,Export controls,partial,src/iam/exports.ts; src/iam/s4s5.integration.test.ts,"Permission, row limit, step-up above threshold, watermark, every decision recorded. Report routes not built"
+REQ-IAM-F21,Request pipeline,partial,src/iam/pipeline.ts; src/iam/s4s5.integration.test.ts,"Authenticate, authorise on the record named, validate with unknown fields refused, execute, audit (A-20). Token signature check comes from S1 verifyAccess, called by the route"
+REQ-IAM-F22,Route registry,partial,src/iam/routes.ts; scripts/iam/route-check.ts; src/iam/routes.test.ts,"Build check fails an unregistered route or a public route without a reason (A-19). Registry covers handler kinds rest only; jobs, sockets and webhooks not built"
+REQ-IAM-F23,Portal and service principals,deferred,,Portal audiences (Part 73) and service accounts not built
 REQ-IAM-F24,WorkChat authorisation support,partial,src/iam/pdp.ts (can); src/iam/masking.ts (maskFields),Reusable calls exist; the WorkChat adapter is Part 25

@@ -16,6 +16,7 @@ const GATES = [
   ["golden baseline", "npm run baseline:check"],
   ["secret scan", "npm run secret:scan"],
   ["design contrast", "npm run check:design"],
+  ["route registry", "npm run iam:routes"],
 ];
 
 /** Whether a TCP connection to the test database host and port succeeds. Database tests fail in confusing ways without it. */

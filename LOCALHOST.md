@@ -77,6 +77,8 @@ npm run check:design        # currently fails: CF-004 (four contrast pairings)
 | `APP_DATABASE_URL` | the running server (health endpoint) | Application role (DML only) |
 | `TEST_DATABASE_URL`, `TEST_APP_DATABASE_URL` | database tests | A database that the tests reset. Use `erp_test` only. |
 | `APP_ENV` | tests and reset helper | `production` refuses the reset |
+| `TOKEN_SIGNING_KEY` | sign-in (Part 07) | 32 random bytes, base64. Signs access tokens. Generate with `openssl rand -base64 32`. Never commit it. |
+| `MFA_ENCRYPTION_KEY` | sign-in (Part 07) | 32 random bytes, base64. Encrypts TOTP secrets. Generate with `openssl rand -base64 32`. Losing it makes enrolled factors unusable. |
 
 No cloud or external services are needed. Authentication, sessions and the business API do not exist yet (Parts 07, 05).
 

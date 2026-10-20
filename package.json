@@ -13,6 +13,7 @@
     "build:tokens": "node scripts/build-tokens.mjs",
     "check:design": "node scripts/check-design.mjs",
     "test": "vitest run",
+    "iam:routes": "tsx scripts/iam/route-check.ts",
     "check:all": "node scripts/check-all.mjs",
     "build:program": "node scripts/build-program-index.mjs",
     "build:legacy": "node scripts/build-legacy-crosswalk.mjs",
