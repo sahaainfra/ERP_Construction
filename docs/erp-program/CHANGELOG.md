@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-20 — Part 09 approved (D-061)
+- Owner approved Part 09 for the phases in the discovery plan. Assumptions A-36 to A-44 recorded. No slice built yet. Open: CTO confirmation of SLO targets, CF-012, and the independent reviewer.
+
 ## 2026-10-20 — Part 08A slice S1 approved (D-060)
 - Owner approved slice S1. Assumptions A-29 and A-31 to A-35 accepted; A-33 remains a known gap. Slices S2 to S6 and the independent review remain open.
 
