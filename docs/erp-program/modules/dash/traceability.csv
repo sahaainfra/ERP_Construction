@@ -1,0 +1,16 @@
+req_id,requirement,status,evidence,note
+REQ-DASH-F01,Widget registry and runtime,partial,src/dash/types.ts; src/dash/registry.ts; src/dash/runtime.ts; src/dash/dash.test.ts,"Contract, start-up validation, parallel loading with timeout and isolated errors. Data API routes wait for the session layer"
+REQ-DASH-F02,Role spaces and personal workspace,partial,src/dash/spaces.ts; db/migrations/202610192700_dash_spaces.up.sql; src/dash/dash.integration.test.ts,"Personal, role and default spaces with permission and liveness filters. Designer and publishing are S2; screens wait for the session layer"
+REQ-DASH-F03,Common widgets,partial,src/dash/widgets.ts,"My projects and sites, Open security alerts, My recent sign-ins built. Approvals, tasks, gates, exceptions, calendar and documents wait for their Parts"
+REQ-DASH-F04,Dashboard designer,not started,,Phase 2 (S2)
+REQ-DASH-F05,Global filters,not started,,Phase 2 (S2)
+REQ-DASH-F06,Project 360 and site frames,not started,,Phase 2 (S2)
+REQ-DASH-F07,Search indexer,not started,,Phase 3 (S3)
+REQ-DASH-F08,Search query service,not started,,Phase 3 (S3); ADR-003
+REQ-DASH-F09,Command palette,not started,,Phase 3 (S3)
+REQ-DASH-F10,Recent, favourites and pinned,not started,,Phase 3 (S3)
+REQ-DASH-F11,Drill registry,not started,,Phase 4 (S4)
+REQ-DASH-F12,Hierarchy navigator,not started,,Phase 4 (S4)
+REQ-DASH-F13,Where-used links,not started,,Phase 4 (S4)
+REQ-DASH-F14,Activity timeline,not started,,Phase 5 (S5)
+REQ-DASH-F15,WorkChat search provider,deferred,,Part 25A not approved

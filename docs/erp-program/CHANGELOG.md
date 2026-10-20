@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-10-20 — Part 13 slice S1 (D-074)
+- Added `src/dash/`: widget contract, registry, runtime (parallel, isolated, timed), three widgets with real data, and spaces (personal, role, default).
+- Added migration `202610192700_dash_spaces`. Screens and routes wait for the session layer.
+
 ## 2026-10-20 — Part 13 approved (D-073)
 - Owner approved Part 13 for the phases in the discovery plan. Assumptions A-93 to A-101 recorded. The §2 decisions remain open, including the session-layer question for screens. No slice is built yet.
 
