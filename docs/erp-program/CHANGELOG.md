@@ -5,6 +5,9 @@
 - CF-009: commercial money formulas use decimal.js 10.6.0 (ADR-004), rounded to paise at output. `commercial.priceVariation` golden changes from 999.9999999999995 to 1000 (re-captured; N4 change). Quantities are unchanged.
 - CF-005, CF-006, CF-012, CF-013, CF-016 remain open: each needs the named input.
 
+## 2026-10-20 — Part 08 slice S1 approval (D-056)
+- Owner approved slice S1. Explorer and timeline screens, partitioning, the nightly job, external anchoring, slices S2 to S5 and the independent review remain open.
+
 ## 2026-10-20 — Part 08 slice S1 (D-055)
 - Added migration `202610192000_secgov_audit_chain`: `sec_audit_log` (hash-linked per tenant, append-only) and `sec_sensitive_reads`.
 - Added `src/secgov/audit.ts`: writer, chain verification, record timeline, sensitive-read logging, account masking. The unit of work now writes to the chain (`core/uow.ts`).
