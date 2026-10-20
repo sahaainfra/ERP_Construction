@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-20 — Part 12 approved (D-067)
+- Owner approved Part 12 for the phases in the discovery plan. Assumptions A-72 to A-82 recorded. The plan's §2 decisions remain open, including Annex A, the library ADRs and the design owners. No slice is built yet.
+
 ## 2026-10-20 — Part 11 slice S1 (D-066)
 - Added migration `202610192400_intg_connectors`: connectors, credential versions, mappings, messages, dead-letter queue (all tenant-scoped with RLS).
 - Added `src/intg/`: SSRF-safe destination check, connector circuit breaker, guarded connector call, credential vault, versioned mappings, monitor view.
