@@ -12,6 +12,10 @@ Each assumption is a working decision taken where the source material or the own
 | A-06 | The local object-storage adapter is for development and tests only. | Part 05 REQ-CORE-F12. Object storage needs a provider. | Production storage, signed URLs and encryption (CF-027). | Technical lead | In use |
 | A-07 | Hindi text is a draft until a reviewer approves it. | Part 05 REQ-CORE-F16. | Any user-facing Hindi that has not been reviewed. | Language reviewer | In use |
 
+| A-08 | Contract mode is stored as free text (2 to 40 characters) for now. | Annex B2 values were not verified in this session. | The allowed list. It must be restricted to Annex B2 once confirmed. | Owner / commercial lead | Assumed |
+| A-09 | A lost tender moves straight from Tendering to Closed, with no closure checklist. | No work was done, so there is no closure to check. | Any cost or claim after a lost tender. | Owner | Assumed |
+| A-10 | Activation and closure gates stay closed until their slices exist (geofence S4, LBS S3, RACI Part 17, closure checklist S5). Until then each gate is passed only by a recorded exception with a second approver. | CP-ORG-01 and CP-ORG-03 require these items. | Projects are not activated without an exception until those slices are built. | Technical lead | In use |
+
 ## Not assumed
 These items cannot be assumed, because they are statements of fact or legal confirmation by named people:
 - **Statutory rates and thresholds and their owners (CF-005).** The owners must confirm the rates in `src/domain/statutory.ts` against the sources in force.

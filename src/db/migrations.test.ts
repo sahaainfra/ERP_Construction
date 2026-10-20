@@ -11,7 +11,7 @@ const lint = (upSql: string, overrides: Partial<typeof base> = {}) => lintMigrat
 describe("migration files", () => {
   it("loads the committed migrations in order with checksums", () => {
     const migrations = loadMigrations(dir);
-    expect(migrations.map((m) => m.name)).toEqual(["202610191200_dbf_sys_foundation", "202610191230_dbf_sys_operations", "202610191300_core_shared_kernel", "202610191400_org_structure"]);
+    expect(migrations.map((m) => m.name)).toEqual(["202610191200_dbf_sys_foundation", "202610191230_dbf_sys_operations", "202610191300_core_shared_kernel", "202610191400_org_structure", "202610191500_org_projects_sites"]);
     expect(migrations.every((m) => m.downSql !== null && /^[0-9a-f]{64}$/.test(m.checksum))).toBe(true);
   });
 

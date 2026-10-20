@@ -24,8 +24,15 @@ export const ALLOWED_PARENTS: Record<UnitType, readonly (UnitType | "root")[]> =
   plant_depot: ["company", "branch"],
 };
 
-/** The four tables that go through maker-checker. The name is checked against this list before it is used in SQL. */
-const APPROVABLE = { legal_entity: "org_legal_entities", unit: "org_units", cost_centre: "org_cost_centres", profit_centre: "org_profit_centres" } as const;
+/** The tables that go through maker-checker. The name is checked against this list before it is used in SQL. */
+const APPROVABLE = {
+  legal_entity: "org_legal_entities",
+  unit: "org_units",
+  cost_centre: "org_cost_centres",
+  profit_centre: "org_profit_centres",
+  project: "org_projects",
+  site: "org_sites",
+} as const;
 export type ApprovableKind = keyof typeof APPROVABLE;
 
 const reasonProblem = (reason: string) => (reason.trim().length < 10 ? [{ field: "reason", message: "at least 10 characters" }] : []);

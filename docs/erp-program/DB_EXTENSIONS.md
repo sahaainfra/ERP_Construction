@@ -40,3 +40,8 @@ Note on the baseline down script: it drops `sys.migration_runs`, so the revert o
 | 202610191400_org_structure | org_unit_history | table, RLS | Hierarchy change history, append-only | Yes | No | org |
 | 202610191400_org_structure | org_cost_centres | table, RLS | Cost centres | Yes | No | org |
 | 202610191400_org_structure | org_profit_centres | table, RLS | Profit centres | Yes | No | org |
+| 202610191500_org_projects_sites | org_projects | table, RLS | Project master, lifecycle | Yes | No | org |
+| 202610191500_org_projects_sites | org_sites | table, RLS | Site master, lifecycle | Yes | No | org |
+| 202610191500_org_projects_sites | org_project_status_history | table, RLS | Project status history, append-only | Yes | No | org |
+| 202610191500_org_projects_sites | org_project_templates | table, RLS | Project templates | Yes | No | org |
+| 202610191500_org_projects_sites | org_cost_centres.project_id | column | Cost centre linked to a project | Yes | No | org |
