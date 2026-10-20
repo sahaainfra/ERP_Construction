@@ -79,3 +79,6 @@ Note on the baseline down script: it drops `sys.migration_runs`, so the revert o
 | 202610192100_secgov_security_events | sec_login_history | table, append-only, RLS | Login outcomes, append-only | Yes | No | secgov |
 | 202610192100_secgov_security_events | sec_security_events | table, append-only, RLS | Security events raised by rules, append-only | Yes | No | secgov |
 | 202610192100_secgov_security_events | sec_security_event_status | table, append-only, RLS | Event status history, append-only | Yes | No | secgov |
+| 202610192200_auth_users | auth_id_series | table, RLS | Gap-free User ID sequence per company | Yes | No | auth |
+| 202610192200_auth_users | auth_users | table, RLS | Users, User IDs, account states, validity dates | Yes | No | auth |
+| 202610192200_auth_users | auth_password_history | table, append-only, RLS | Previous password hashes (last five are checked) | Yes | No | auth |

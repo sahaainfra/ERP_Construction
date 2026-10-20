@@ -62,10 +62,16 @@ export async function createCredentials(pool: Pool, tenantId: string, userRef: s
 }
 
 /** Signs a person in with a password and, when enrolled, a TOTP code. Locks the account after repeated failures. */
+/**
+ * Decides, after the password is proven, whether the account may sign in (its lifecycle state, validity dates). Returning false
+ * refuses with the generic answer. Runs inside the sign-in transaction.
+ */
+export type StateGate = (client: PoolClient, tenantId: string, userRef: string, now: Date) => Promise<boolean>;
+
 export async function login(
   pool: Pool,
   keys: Keys,
-  input: { tenantId: string; userRef: string; password: string; deviceFingerprint: string; mfaCode?: string; now?: Date },
+  input: { tenantId: string; userRef: string; password: string; deviceFingerprint: string; mfaCode?: string; now?: Date; stateGate?: StateGate },
 ): Promise<{ accessToken: string; refreshToken: string; sessionId: string; deviceId: string }> {
   const now = input.now ?? new Date();
   const verdict = await withTransaction(
@@ -88,6 +94,11 @@ export async function login(
       const revoked = await revokedPerson(client, input.tenantId, input.userRef);
       if (locked || revoked) {
         await logLogin(client, input.tenantId, input.userRef, locked ? "locked" : "revoked", input.deviceFingerprint);
+        return { ok: false as const };
+      }
+      // The account state is checked only once the password is proven, so state is never revealed without it.
+      if (input.stateGate && !(await input.stateGate(client, input.tenantId, input.userRef, now))) {
+        await logLogin(client, input.tenantId, input.userRef, "revoked", input.deviceFingerprint);
         return { ok: false as const };
       }
       if (!checked.ok) {

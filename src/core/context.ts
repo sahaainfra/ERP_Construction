@@ -27,11 +27,13 @@ export interface RequestContext extends VerifiedSession {
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+// Auth User IDs (Part 08A REQ-AUTH-F01): company code plus a five-digit sequence, e.g. ACME00001. A user is identified by it in sessions.
+const USER_ID = /^[A-Z][A-Z0-9]{1,7}[0-9]{5,}$/;
 
 /** Builds the context from a verified session. Refuses a session without the mandatory identifiers. */
 export function buildContext(session: VerifiedSession, channel: Channel, correlationId: string, causationId: string | null = null, activeProjectId: string | null = null): RequestContext {
   if (!UUID.test(session.tenantId)) throw new RangeError("session has no valid tenant");
-  if (!UUID.test(session.userId)) throw new RangeError("session has no valid user");
+  if (!UUID.test(session.userId) && !USER_ID.test(session.userId)) throw new RangeError("session has no valid user");
   if (!correlationId || correlationId.length > 100) throw new RangeError("correlationId is required");
   if (activeProjectId !== null && !session.projectIds.includes(activeProjectId)) {
     throw new RangeError("the active project is not in the session scope");

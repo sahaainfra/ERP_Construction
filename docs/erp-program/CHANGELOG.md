@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-10-20 — Part 08A slice S1 (D-059)
+- Added migration `202610192200_auth_users`: User ID series, users with account states and validity dates, password history (append-only).
+- Added `src/auth/users.ts` (User IDs, admin-created users, state moves) and `src/auth/signin.ts` (sign-in gate, generic refusal, password change, sign-out).
+- `buildContext` accepts a User ID as the session user as well as a UUID (A-34). `login` takes an optional account-state gate.
+- Pending accounts may be suspended or deactivated by an administrator (A-35).
+
 ## 2026-10-19 — Owner approvals: contrast, decimal money (D-040)
 - CF-004: darkened `brand.accent` and `status.warning.solid` for the light and high-contrast themes. `npm run check:design` passes.
 - CF-009: commercial money formulas use decimal.js 10.6.0 (ADR-004), rounded to paise at output. `commercial.priceVariation` golden changes from 999.9999999999995 to 1000 (re-captured; N4 change). Quantities are unchanged.
