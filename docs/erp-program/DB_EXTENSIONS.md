@@ -90,3 +90,4 @@ Note on the baseline down script: it drops `sys.migration_runs`, so the revert o
 | 202610192400_intg_connectors | intg_messages | table, RLS | One row per call attempt (outcome, timing, payload hash) | Yes | No | intg |
 | 202610192400_intg_connectors | intg_dlq | table, RLS | Dead-letter entries for failed messages (replay in S2) | Yes | No | intg |
 | 202610192500_ds_branding | ui_branding | table, RLS | Tenant brand versions: two colours, logo reference, contrast report, approval | Yes | No | ds |
+| 202610192600_ds_user_preferences | ui_user_preferences | table, RLS | Per-user theme, density, collapsed flag and pinned routes (max 10) | Yes | No | ds |

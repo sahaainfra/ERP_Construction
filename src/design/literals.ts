@@ -13,3 +13,20 @@ export function literalProblems(path: string, text: string): string[] {
   });
   return problems;
 }
+
+const ICON_LIBRARY_IMPORT = /from\s+["']lucide-react["']/;
+const ICON_FILE_IMPORT = /import\s[^;]*["'][^"']+\.svg["']/;
+
+/**
+ * Icon rule (REQ-DS-F05; A-75). Icons are used through the registry in src/design/icons.tsx, by semantic key. Module code may not
+ * import the icon library directly, or import an icon from a file. Returns one message per offending line.
+ */
+export function iconProblems(path: string, text: string): string[] {
+  if (path === "src/design/icons.tsx" || /\.test\.(ts|tsx)$/.test(path)) return [];
+  const problems: string[] = [];
+  text.split("\n").forEach((line, i) => {
+    if (ICON_LIBRARY_IMPORT.test(line)) problems.push(`${path}:${i + 1}: import icons through the registry (src/design/icons.tsx), not the icon library`);
+    if (ICON_FILE_IMPORT.test(line)) problems.push(`${path}:${i + 1}: icons are imported by key, not by file`);
+  });
+  return problems;
+}

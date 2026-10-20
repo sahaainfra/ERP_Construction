@@ -7,9 +7,11 @@ export interface DisplayPrefs {
   theme: Theme;
   density: Density;
   navCollapsed: boolean;
+  /** Routes the viewer pinned to the top of the side navigation (A-78). */
+  pinned: string[];
 }
 
-export const DEFAULT_PREFS: DisplayPrefs = { theme: "system", density: "cozy", navCollapsed: false };
+export const DEFAULT_PREFS: DisplayPrefs = { theme: "system", density: "cozy", navCollapsed: false, pinned: [] };
 const STORAGE_KEY = "erp.display";
 
 export function readPrefs(): DisplayPrefs {

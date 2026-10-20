@@ -3,19 +3,97 @@
   "version": "1.0.0",
   "source": "Part 00 Annex A, DS-13 and DS-14",
   "groups": [
-    { "id": "home", "order": 1, "label": "Home", "route": "/home", "icon": "erp.group.home" },
-    { "id": "projects", "order": 2, "label": "Projects", "route": "/projects", "icon": "erp.group.projects" },
-    { "id": "engineering", "order": 3, "label": "Engineering & Documents", "route": "/engineering", "icon": "erp.group.engineering" },
-    { "id": "commercial", "order": 4, "label": "Estimation & Commercial", "route": "/commercial", "icon": "erp.group.commercial" },
-    { "id": "site", "order": 5, "label": "Site Execution", "route": "/site", "icon": "erp.group.site" },
-    { "id": "supply", "order": 6, "label": "Procurement & Stores", "route": "/supply", "icon": "erp.group.supply" },
-    { "id": "plant", "order": 7, "label": "Plant & Equipment", "route": "/plant", "icon": "erp.group.plant" },
-    { "id": "workforce", "order": 8, "label": "Workforce", "route": "/workforce", "icon": "erp.group.workforce" },
-    { "id": "qhse", "order": 9, "label": "Quality, HSE & Completion", "route": "/qhse", "icon": "erp.group.qhse" },
-    { "id": "finance", "order": 10, "label": "Finance", "route": "/finance", "icon": "erp.group.finance" },
-    { "id": "insights", "order": 11, "label": "Reports & Analytics", "route": "/insights", "icon": "erp.group.insights" },
-    { "id": "collab", "order": 12, "label": "Collaboration", "route": "/collab", "icon": "erp.group.collab" },
-    { "id": "admin", "order": 13, "label": "Administration", "route": "/admin", "icon": "erp.group.admin" }
+    {
+      "id": "home",
+      "order": 1,
+      "label": "Home",
+      "route": "/home",
+      "icon": "erp.group.home"
+    },
+    {
+      "id": "projects",
+      "order": 2,
+      "label": "Projects",
+      "route": "/projects",
+      "icon": "erp.group.projects"
+    },
+    {
+      "id": "engineering",
+      "order": 3,
+      "label": "Engineering & Documents",
+      "route": "/engineering",
+      "icon": "erp.group.engineering"
+    },
+    {
+      "id": "commercial",
+      "order": 4,
+      "label": "Estimation & Commercial",
+      "route": "/commercial",
+      "icon": "erp.group.commercial"
+    },
+    {
+      "id": "site",
+      "order": 5,
+      "label": "Site Execution",
+      "route": "/site",
+      "icon": "erp.group.site"
+    },
+    {
+      "id": "supply",
+      "order": 6,
+      "label": "Procurement & Stores",
+      "route": "/supply",
+      "icon": "erp.group.supply"
+    },
+    {
+      "id": "plant",
+      "order": 7,
+      "label": "Plant & Equipment",
+      "route": "/plant",
+      "icon": "erp.group.plant"
+    },
+    {
+      "id": "workforce",
+      "order": 8,
+      "label": "Workforce",
+      "route": "/workforce",
+      "icon": "erp.group.workforce"
+    },
+    {
+      "id": "qhse",
+      "order": 9,
+      "label": "Quality, HSE & Completion",
+      "route": "/qhse",
+      "icon": "erp.group.qhse"
+    },
+    {
+      "id": "finance",
+      "order": 10,
+      "label": "Finance",
+      "route": "/finance",
+      "icon": "erp.group.finance"
+    },
+    {
+      "id": "insights",
+      "order": 11,
+      "label": "Reports & Analytics",
+      "route": "/insights",
+      "icon": "erp.group.insights"
+    },
+    {
+      "id": "collab",
+      "order": 12,
+      "label": "Collaboration",
+      "route": "/collab",
+      "icon": "erp.group.collab"
+    },
+    {
+      "id": "admin",
+      "order": 13,
+      "label": "Administration",
+      "route": "/admin",
+      "icon": "erp.group.admin"
+    }
   ],
   "entries": [
     {
@@ -30,8 +108,15 @@
       "permission": null,
       "feature_flag": null,
       "order": 1,
-      "search_keywords": ["home", "launchpad", "dashboard"],
-      "default_roles": ["*"]
+      "search_keywords": [
+        "home",
+        "launchpad",
+        "dashboard"
+      ],
+      "default_roles": [
+        "*"
+      ],
+      "mobile_slot": "today"
     }
   ]
 }

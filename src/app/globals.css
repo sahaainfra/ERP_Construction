@@ -312,3 +312,47 @@ a {
     animation-duration: 0ms !important;
   }
 }
+
+/* Mobile bottom navigation (Part 12 REQ-DS-F03). Shown only on narrow screens and only when a mobile slot is live. */
+.erp-bottomnav {
+  display: none;
+}
+
+@media (max-width: 599px) {
+  .erp-sidenav {
+    display: none;
+  }
+
+  .erp-main {
+    padding-bottom: calc(var(--erp-control-height) + var(--erp-space-6));
+  }
+
+  .erp-bottomnav {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: var(--erp-z-sticky);
+    display: flex;
+    justify-content: space-around;
+    background: var(--erp-color-bg-nav);
+    border-block-start: 1px solid var(--erp-color-border-subtle);
+    padding-block: var(--erp-space-2);
+  }
+
+  .erp-bottomnav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--erp-space-1);
+    min-block-size: var(--erp-control-height);
+    min-inline-size: var(--erp-control-height);
+    color: var(--erp-color-text-secondary);
+    text-decoration: none;
+    font-size: 0.75rem;
+  }
+
+  .erp-bottomnav-link[aria-current="page"] {
+    color: var(--erp-color-text-primary);
+    font-weight: 600;
+  }
+}

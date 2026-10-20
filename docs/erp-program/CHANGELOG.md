@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-10-20 — Part 12 slice S2 (D-069)
+- Navigation filtered by permission (`src/design/navigation.ts`, server check in `navigation-access.ts`). Bottom bar for narrow screens; pinned entries in the side navigation.
+- Icon rule: no direct icon-library import or icon-by-file outside the registry (unit test).
+- Added migration `202610192600_ds_user_preferences` and `src/design/preferences-server.ts` (own-row preferences, validation).
+- Shell elements that need later Parts (Create, inbox, notifications, help, user menu, launcher) are not rendered yet (A-86).
+
 ## 2026-10-20 — Part 12 slice S1 (D-068)
 - Vendored UI fonts into `public/fonts` with OFL texts; `src/design/fonts.css`; the root layout no longer loads fonts from Google at build time.
 - Token build also emits `src/design/tokens.ts`. Literal rule in `src/design/literals.ts` (unit test and design gate).

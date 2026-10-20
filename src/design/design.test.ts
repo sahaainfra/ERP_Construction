@@ -4,7 +4,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
 import { contrastRatio, luminance, parseHex } from "./contrast";
-import { literalProblems } from "./literals";
+import { iconProblems, literalProblems } from "./literals";
 import { COLOUR_TOKENS, THEMES } from "./tokens";
 import { PRE_PAINT_SCRIPT } from "./preferences";
 import { brandContrast, brandProblems, brandingCss } from "./branding";
@@ -33,13 +33,23 @@ describe("literal lint (REQ-DS-F01, CP-DS-02)", () => {
     expect(literalProblems("src/design/tokens.ts", 'export const X = "#FFFFFF";')).toEqual([]);
     expect(literalProblems("src/design/contrast.test.ts", 'const c = "#000000";')).toEqual([]);
   });
-  it("finds no colour literal anywhere in the module tree", () => {
+  it("flags an icon imported from the library or by file, and passes an icon from the registry", () => {
+    expect(iconProblems("src/components/x.tsx", 'import { Home } from "lucide-react";')).toHaveLength(1);
+    expect(iconProblems("src/components/x.tsx", 'import logo from "./logo.svg";')).toHaveLength(1);
+    expect(iconProblems("src/components/x.tsx", 'import { Icon } from "@/design/icons";')).toEqual([]);
+    expect(iconProblems("src/design/icons.tsx", 'import { Home } from "lucide-react";')).toEqual([]);
+  });
+  it("finds no colour literal and no direct icon import anywhere in the module tree", () => {
     const problems: string[] = [];
     const walk = (dir: string) => {
       for (const name of readdirSync(dir)) {
         const path = join(dir, name);
         if (statSync(path).isDirectory()) walk(path);
-        else if (/\.(ts|tsx|css)$/.test(name)) problems.push(...literalProblems(relative(ROOT, path).replace(/\\/g, "/"), readFileSync(path, "utf8")));
+        else if (/\.(ts|tsx|css)$/.test(name)) {
+          const rel = relative(ROOT, path).replace(/\\/g, "/");
+          const text = readFileSync(path, "utf8");
+          problems.push(...literalProblems(rel, text), ...iconProblems(rel, text));
+        }
       }
     };
     walk(join(ROOT, "src"));

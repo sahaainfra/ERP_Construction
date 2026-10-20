@@ -1,14 +1,14 @@
 req_id,requirement,status,evidence,note
 REQ-DS-F01,Token package,partial,design/design-tokens.json; scripts/build-tokens.mjs; src/design/tokens.css; src/design/tokens.ts; src/design/design.test.ts,"CSS and TypeScript generated from one source; literal rule enforced. Mobile resources wait for Part 14"
 REQ-DS-F02,Typography and locale,partial,src/design/fonts.css; public/fonts; scripts/design/vendor-fonts.mjs; src/design/design.test.ts,"Self-hosted IBM Plex and Noto Devanagari with OFL texts (A-84). Tabular figures and number formats not yet checked"
-REQ-DS-F03,Application shell,not started,,Phase 2 (S2)
-REQ-DS-F04,Navigation registry,not started,,Phase 2 (S2); permission filter per A-76
-REQ-DS-F05,Icon registry,not started,,Phase 2 (S2)
+REQ-DS-F03,Application shell,partial,src/components/shell/AppShell.tsx; src/app/globals.css,"Side navigation with pinned entries, tablet rail, mobile bottom bar. Shell bar slots for Create, inbox, notifications, help, user menu and launcher are not rendered (A-86)"
+REQ-DS-F04,Navigation registry,partial,src/design/navigation.ts; src/design/navigation-access.ts; src/design/shell.test.ts; src/design/shell.integration.test.ts,"Permission-filtered and live-route-filtered. Server permission check built; page-level wiring waits for sessions (A-87)"
+REQ-DS-F05,Icon registry,partial,src/design/icons.tsx; src/design/literals.ts (iconProblems); src/design/design.test.ts,"Icon import rule enforced by unit test. Construction glyphs not yet added (A-75)"
 REQ-DS-F06,Page templates and states,not started,,Phase 3 (S3)
 REQ-DS-F07,Component library,not started,,Phase 3 and 4 (S3, S4); libraries need ADRs
 REQ-DS-F08,Protocol components,not started,,Phase 4 (S4)
 REQ-DS-F09,Object page tabs,not started,,Phase 3 (S3)
-REQ-DS-F10,User preferences,partial,src/design/preferences.ts; src/design/design.test.ts,"Theme and density per viewer in local storage with a whitelisted pre-paint script. Per-user persistence is S2"
+REQ-DS-F10,User preferences,partial,src/design/preferences-server.ts; db/migrations/202610192600_ds_user_preferences.up.sql; src/design/shell.integration.test.ts,"Per-user preferences with validation. HTTP route and sign-in sync not built (A-87, A-88)"
 REQ-DS-F11,Tenant branding,partial,src/design/branding.ts; src/design/contrast.ts; db/migrations/202610192500_ds_branding.up.sql; src/design/design.integration.test.ts,"Contrast-checked, maker-checker, light theme (A-83). Logo is a reference only (CF-027). Brand override not yet applied to the page"
 REQ-DS-F12,Theme bridge for legacy screens,not started,,Phase 5 (S5)
 REQ-DS-F13,Living style guide,not started,,Phase 5 (S5)
