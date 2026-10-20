@@ -9,7 +9,7 @@ import { migrateUp, resetForTests } from "../db/migrator";
 import { withTransaction } from "../db/transactions";
 import { buildContext, type RequestContext } from "../core/context";
 import { registerPermissions } from "../iam/roles";
-import { verifyAccess, refreshSession, type Keys } from "../iam/auth";
+import { verifyAccess, refreshSession, insertCredentials, type Keys } from "../iam/auth";
 import { createUser, setState, getUser, USER_PERMISSIONS } from "./users";
 import { changePassword, mustChangePassword, signIn } from "./signin";
 
@@ -71,6 +71,19 @@ describe.skipIf(!TEST_URL || !APP_URL)("users, sign-in and password change (Part
     expect(a.initialPassword.length).toBeGreaterThanOrEqual(16);
     await expectRefused(createUser(app, admin, { companyCode: "ACME", personType: "internal", personRef: "EMP-1", displayName: "Duplicate", reason: REASON }), "CONFLICT");
     expect(await getUser(app, admin, a.userId)).toMatchObject({ state: "pending_activation", mustChange: true });
+  });
+
+  it("writes the credential inside the caller's transaction, so a rollback leaves no credential behind", async () => {
+    const tenant = randomUUID();
+    const userId = "ROLL000001";
+    await expect(
+      withTransaction(app, async (client) => {
+        await insertCredentials(client, tenant, userId, "a fresh quiet phrase 42");
+        throw new Error("the rest of the provisioning failed");
+      }, { tenantId: tenant }),
+    ).rejects.toThrow("the rest of the provisioning failed");
+    const left = await withTransaction(app, (c) => c.query("SELECT 1 FROM iam_credentials WHERE user_ref = $1", [userId]), { tenantId: tenant });
+    expect(left.rowCount).toBe(0);
   });
 
   it("refuses a person without the user-management permission", async () => {

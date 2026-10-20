@@ -76,6 +76,10 @@ describe("field masks (REQ-IAM-F09)", () => {
     expect(maskValue(90000, "full")).toBeUndefined();
     expect(maskValue("ABCDE1234F", "partial")).toBe("******234F".replace("******", "******"));
     expect(maskValue("1234567890", "partial")).toBe("******7890");
-    expect(String(maskValue("ABCDE1234F", "hash"))).toMatch(/^[0-9a-f]{12}$/);
+    const key = Buffer.alloc(32, 7);
+    expect(String(maskValue("ABCDE1234F", "hash", key))).toMatch(/^[0-9a-f]{12}$/);
+    expect(maskValue("ABCDE1234F", "hash", key)).toBe(maskValue("ABCDE1234F", "hash", key));
+    expect(maskValue("ABCDE1234F", "hash", key)).not.toBe(maskValue("ABCDE1234F", "hash", Buffer.alloc(32, 8)));
+    expect(() => maskValue("ABCDE1234F", "hash")).toThrow("masking key");
   });
 });

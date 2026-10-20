@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS sys.mask_phone(text);
 DROP FUNCTION IF EXISTS sys.mask_pan(text);
 DROP FUNCTION IF EXISTS sys.hex_digits(text, integer);
 DROP FUNCTION IF EXISTS sys.mask_salt();
+DROP FUNCTION IF EXISTS sys.mask_bytes(text);
 DROP FUNCTION IF EXISTS raise_mask_salt_missing();
 DROP FUNCTION IF EXISTS sys.create_monthly_partitions(regclass, integer);
 DROP FUNCTION IF EXISTS sys.enable_tenant_rls(regclass);

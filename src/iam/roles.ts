@@ -6,7 +6,7 @@ import { AppError } from "../core/errors";
 import type { RequestContext } from "../core/context";
 import { runUnitOfWork } from "../core/uow";
 import { withTransaction } from "../db/transactions";
-import { can, grantsFor, permissionKnown } from "./pdp";
+import { can, permissionKnown } from "./pdp";
 import { sameActor } from "./actors";
 import { CONDITION_NAMES, SCOPE_TYPES, type ScopeType, type Resource } from "./policy";
 

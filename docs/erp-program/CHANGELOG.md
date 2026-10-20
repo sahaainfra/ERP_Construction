@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-10-20 — Review of Parts 00 to 12 (D-071)
+- Fixed the foundation down script (missing `sys.mask_bytes` drop) and added a rollback rehearsal test.
+- User provisioning writes the credential inside its transaction (orphan-credential fix; test added).
+- Hash masking is keyed with `MASKING_KEY` (A-91). Unused import removed.
+- Playwright pinned to 1.55.1 (advisory fix, A-92).
+
 ## 2026-10-20 — Part 12 slice S3 (D-070)
 - Added `src/design/ui/` (states, core components, templates) and token-only styles in `globals.css`.
 - Added `e2e/design-templates.spec.ts` and `e2e/fixtures/`: 24 cases × 3 themes checked with axe in Chromium (72 of 72 passed).

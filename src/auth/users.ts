@@ -7,7 +7,7 @@ import type { RequestContext } from "../core/context";
 import { writeAudit } from "../secgov/audit";
 import { withTransaction } from "../db/transactions";
 import { can } from "../iam/pdp";
-import { createCredentials } from "../iam/auth";
+import { insertCredentials } from "../iam/auth";
 import { passwordProblems } from "../iam/crypto";
 
 export const USER_PERMISSIONS = [
@@ -84,10 +84,10 @@ export async function createUser(pool: Pool, ctx: RequestContext, input: NewUser
          VALUES ($1, $2, $3, $4, $5, COALESCE($6::date, CURRENT_DATE), $7, $8, $9)`,
         [ctx.tenantId, userId, input.personType, input.personRef ?? null, input.displayName, input.validFrom ?? null, input.validTo ?? null, ctx.userId, input.reason],
       );
+      // The credential is written in this transaction, so a failure anywhere below leaves no user and no credential behind.
       const initialPassword = generateInitialPassword(userId);
-      await createCredentials(pool, ctx.tenantId, userId, initialPassword);
-      const hash = await client.query<{ password_hash: string }>("SELECT password_hash FROM iam_credentials WHERE tenant_id = $1 AND user_ref = $2", [ctx.tenantId, userId]);
-      await client.query("INSERT INTO auth_password_history (tenant_id, user_id, password_hash) VALUES ($1, $2, $3)", [ctx.tenantId, userId, hash.rows[0].password_hash]);
+      const hash = await insertCredentials(client, ctx.tenantId, userId, initialPassword);
+      await client.query("INSERT INTO auth_password_history (tenant_id, user_id, password_hash) VALUES ($1, $2, $3)", [ctx.tenantId, userId, hash]);
       await writeAudit(client, ctx, { action: "auth.user.created", entityType: "user", entityId: userId, after: { personType: input.personType, state: "pending_activation" }, reason: input.reason });
       return { userId, initialPassword };
     },

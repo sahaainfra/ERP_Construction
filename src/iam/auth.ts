@@ -46,19 +46,25 @@ async function recordFailure(client: PoolClient, tenantId: string, userRef: stri
   );
 }
 
-export async function createCredentials(pool: Pool, tenantId: string, userRef: string, password: string): Promise<void> {
+/**
+ * Writes the credential inside the caller's transaction and returns the stored hash. Use this when the credential must commit or
+ * roll back together with other rows (user provisioning does).
+ */
+export async function insertCredentials(client: PoolClient, tenantId: string, userRef: string, password: string): Promise<string> {
   const problems = passwordProblems(password, userRef);
   if (problems.length > 0) throw new AppError("VALIDATION_FAILED", `the password must have ${problems.join(", ")}`, [{ field: "password", message: problems.join(", ") }]);
+  const hash = hashPassword(password);
   try {
-    await withTransaction(
-      pool,
-      (c) => c.query("INSERT INTO iam_credentials (tenant_id, user_ref, password_hash) VALUES ($1, $2, $3)", [tenantId, userRef, hashPassword(password)]),
-      { tenantId },
-    );
+    await client.query("INSERT INTO iam_credentials (tenant_id, user_ref, password_hash) VALUES ($1, $2, $3)", [tenantId, userRef, hash]);
   } catch (error) {
     if ((error as { code?: string }).code === "23505") throw new AppError("CONFLICT", "this user already has credentials");
     throw error;
   }
+  return hash;
+}
+
+export async function createCredentials(pool: Pool, tenantId: string, userRef: string, password: string): Promise<void> {
+  await withTransaction(pool, (c) => insertCredentials(c, tenantId, userRef, password), { tenantId });
 }
 
 /** Signs a person in with a password and, when enrolled, a TOTP code. Locks the account after repeated failures. */
