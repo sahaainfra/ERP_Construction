@@ -5,6 +5,9 @@
 - CF-009: commercial money formulas use decimal.js 10.6.0 (ADR-004), rounded to paise at output. `commercial.priceVariation` golden changes from 999.9999999999995 to 1000 (re-captured; N4 change). Quantities are unchanged.
 - CF-005, CF-006, CF-012, CF-013, CF-016 remain open: each needs the named input.
 
+## 2026-10-20 — Part 07 slice S2 approval (D-048)
+- Owner approved slice S2. Slices S1, S3–S5, the independent review, and the system roles remain open.
+
 ## 2026-10-20 — Part 07 slice S2 (D-047)
 - Added migration `202610191700_iam_permissions`: permission registry, roles, role grants, scoped assignments, authority limits, field policies.
 - Added `src/iam/`: the policy decision point `can()`, data-scope builder, field masks, maker-checker for grants and assignments, authority limits.

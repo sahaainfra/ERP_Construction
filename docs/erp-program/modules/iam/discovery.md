@@ -1,6 +1,6 @@
 # Part 07 discovery, plan and delivery record
 
-Module `iam`. Part 07 — Identity, Access Control, Segregation of Duties & Zero-Trust. Status: **drafted; slice S2 built and verified; approval pending the owner**. Depends on Part 05 (approved) and Part 06 (approved for S1–S5 scope).
+Module `iam`. Part 07 — Identity, Access Control, Segregation of Duties & Zero-Trust. Status: **slice S2 APPROVED by the owner 2026-10-20 (D-048)**; S1, S3–S5 and the independent review remain open. Depends on Part 05 (approved) and Part 06 (approved for S1–S5 scope).
 
 ## 1. Discovery
 - The repository has **no authentication**: the only routes are the health endpoints (LOCALHOST.md §10 says so). Nothing exists to carry over, so "every existing user keeps their current access" has nothing to preserve in this codebase. Legacy-built marks in the spec cannot be verified here (Part 01 inventory: absent).
@@ -11,7 +11,7 @@ Module `iam`. Part 07 — Identity, Access Control, Segregation of Duties & Zero
 | Slice | Scope | Status |
 |---|---|---|
 | S1 | Authentication engine (Argon2id or scrypt, throttling, reset), OIDC/PKCE, MFA (TOTP, WebAuthn), sessions and devices | Not built. Needs an identity provider decision (CF-013) and session infrastructure; not started |
-| S2 | Permission registry, roles, role grants (maker-checker), scoped assignments (maker-checker, own-scope check), policy decision `can()`, data scope, field masks, authority limits | **Built** (`src/iam/`, migration `202610191700`); 21 database tests, 12 pure |
+| S2 | Permission registry, roles, role grants (maker-checker), scoped assignments (maker-checker, own-scope check), policy decision `can()`, data scope, field masks, authority limits | **Built and APPROVED** (D-048); `src/iam/`, migration `202610191700`; 21 database tests, 12 pure |
 | S3 | SoD rule engine, exceptions, detective scans | Not started |
 | S4 | Privileged access, joiner/mover/leaver, access reviews, export controls | Not started |
 | S5 | Zero-trust request pipeline, route registry (CP-IAM-05), shadow mode and switch-over | Not started. Routes need S1 authentication |
