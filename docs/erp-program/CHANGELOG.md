@@ -5,6 +5,9 @@
 - CF-009: commercial money formulas use decimal.js 10.6.0 (ADR-004), rounded to paise at output. `commercial.priceVariation` golden changes from 999.9999999999995 to 1000 (re-captured; N4 change). Quantities are unchanged.
 - CF-005, CF-006, CF-012, CF-013, CF-016 remain open: each needs the named input.
 
+## 2026-10-20 — Part 08 approved (D-058)
+- Owner approved Part 08 slices S1 and S2. Slices S3 to S5, the screens and routes, partitioning, the nightly job, external anchoring and the independent review remain open.
+
 ## 2026-10-20 — Part 08 slice S2 (D-057)
 - Added migration `202610192100_secgov_security_events`: login history, security events, event status history (all append-only).
 - Added `src/secgov/security.ts`: six detection rules, status flow with reasons, login history reads. Sign-in records each outcome inside its transaction.
