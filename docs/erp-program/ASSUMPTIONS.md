@@ -19,6 +19,9 @@ Each assumption is a working decision taken where the source material or the own
 | A-11 | Default location levels per project type follow the list in the Part 06 spec (building: tower, floor, zone; road: chainage stretch with LHS and RHS; bridge: pier and span; industrial: area, unit, system). | Annex B11 was not verified in this session. | Other location schemes, which need Annex B11 confirmed. | Owner / planning lead | Assumed |
 | A-12 | Geofence distance uses the haversine formula on a sphere, accurate to about 0.5 %. A punch is inside when the distance is within radius plus accuracy tolerance. A fix worse than five times the tolerance is reported as low accuracy. | Adequate for fences of 20 m to 5 km; industry-standard approach for mobile punches. | Survey-grade geodesy or legal boundary disputes. | Technical lead | Assumed |
 
+| A-13 | System roles from Annex B10 are not seeded yet. The first administrator is written directly by the owner. | Annex B10 was not verified in this session, and nothing can grant the first permission without a bootstrap. | The system roles and the break-glass procedure (S4). | Owner / IAM administrator | Assumed |
+| A-14 | Authority limits: the most specific limit applies (project and category), and the lowest limit applies within one level. | Conservative: an unclear overlap never grants more. | Limit rules agreed with Finance. | CFO | Assumed |
+
 ## Not assumed
 These items cannot be assumed, because they are statements of fact or legal confirmation by named people:
 - **Statutory rates and thresholds and their owners (CF-005).** The owners must confirm the rates in `src/domain/statutory.ts` against the sources in force.

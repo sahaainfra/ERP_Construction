@@ -49,3 +49,9 @@ Note on the baseline down script: it drops `sys.migration_runs`, so the revert o
 | 202610191600_org_lbs_geofence_allocation | org_site_geofences | table, RLS | Site geofence versions | Yes | No | org |
 | 202610191600_org_lbs_geofence_allocation | org_project_allocations | table, RLS | Project allocations | Yes | No | org |
 | 202610191600_org_lbs_geofence_allocation | org_user_contexts | table, RLS | Per-person pinned and recent contexts | Yes | No | org |
+| 202610191700_iam_permissions | iam_permissions | table | Permission registry (global) | Yes | No | iam |
+| 202610191700_iam_permissions | iam_roles | table | Roles | Yes | No | iam |
+| 202610191700_iam_permissions | iam_role_permissions | table | Role grants, maker-checker | Yes | No | iam |
+| 202610191700_iam_permissions | iam_user_role_assignments | table | Scoped role assignments, maker-checker | Yes | No | iam |
+| 202610191700_iam_permissions | iam_authority_limits | table | Approval authority limits | Yes | No | iam |
+| 202610191700_iam_permissions | iam_field_policies | table | Field-level view and mask policies (global) | Yes | No | iam |

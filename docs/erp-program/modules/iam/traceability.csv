@@ -1,0 +1,25 @@
+req_id,requirement,status,evidence,note
+REQ-IAM-F01,Authentication core services,deferred,,Slice S1 (needs CF-013 identity-provider decision)
+REQ-IAM-F02,Federation (OIDC/PKCE and service accounts),deferred,,Slice S1
+REQ-IAM-F03,MFA and step-up,deferred,,Slice S1
+REQ-IAM-F04,Sessions and devices,deferred,,Slice S1
+REQ-IAM-F05,Permission registry,partial,db/migrations/202610191700_iam_permissions.up.sql; src/iam/roles.ts (registerPermissions); src/iam/iam.integration.test.ts,Key form enforced; module registration by each Part at start-up is a later step
+REQ-IAM-F06,Roles and scoped assignments,partial,src/iam/roles.ts; src/iam/iam.integration.test.ts,Maker-checker for grants and assignments; system roles not seeded (A-13)
+REQ-IAM-F07,Policy decision point,partial,src/iam/pdp.ts; src/iam/policy.ts; src/iam/policy.test.ts,"Deny by default and explicit deny; no cache yet (p95 target needs Part 10)"
+REQ-IAM-F08,Data-scope builder,partial,src/iam/pdp.ts (dataScope),Returns ids and the all flag; repositories not yet filtered by it
+REQ-IAM-F09,Field-level policies,partial,src/iam/masking.ts; src/iam/iam.integration.test.ts,"Full, partial and hash masks; applied in serializers once routes exist"
+REQ-IAM-F10,Authority limits,partial,src/iam/authority.ts; src/iam/iam.integration.test.ts,Consumed by Part 16 routing (not built)
+REQ-IAM-F11,UI gating,deferred,,Needs routes (S5)
+REQ-IAM-F12,Explain and simulate,deferred,,Needs the explorer screens
+REQ-IAM-F13,Legacy shadow mode,deferred,,Nothing legacy exists in this codebase
+REQ-IAM-F14,SoD rule engine,deferred,,Slice S3
+REQ-IAM-F15,Preventive and detective SoD,deferred,,Slice S3
+REQ-IAM-F16,SoD exceptions,deferred,,Slice S3
+REQ-IAM-F17,Privileged access,deferred,,Slice S4
+REQ-IAM-F18,Joiner/mover/leaver,deferred,,Slice S4 (needs Part 54)
+REQ-IAM-F19,Access certification,deferred,,Slice S4
+REQ-IAM-F20,Export controls,deferred,,Slice S4
+REQ-IAM-F21,Request pipeline,deferred,,Slice S5
+REQ-IAM-F22,Route registry,deferred,,Slice S5 (CP-IAM-05)
+REQ-IAM-F23,Portal and service principals,deferred,,Slice S1 and S4
+REQ-IAM-F24,WorkChat authorisation support,partial,src/iam/pdp.ts (can); src/iam/masking.ts (maskFields),Reusable calls exist; the WorkChat adapter is Part 25

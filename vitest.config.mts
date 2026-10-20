@@ -15,7 +15,7 @@ export default defineConfig({
     fileParallelism: false,
     coverage: {
       provider: "v8",
-      include: ["src/db/**", "src/domain/**", "src/program/**", "src/testing/**", "src/core/**", "src/org/**"],
+      include: ["src/db/**", "src/domain/**", "src/program/**", "src/testing/**", "src/core/**", "src/org/**", "src/iam/**"],
       exclude: ["**/*.test.ts", "**/*.generated.json", "**/*.d.ts"],
       // Floors from docs/erp-program/quality-gates.json (coverage.lines). Measured with the database tests enabled.
       thresholds: { lines: 80, statements: 80, functions: 80, branches: 75 },
