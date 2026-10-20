@@ -45,3 +45,7 @@ Note on the baseline down script: it drops `sys.migration_runs`, so the revert o
 | 202610191500_org_projects_sites | org_project_status_history | table, RLS | Project status history, append-only | Yes | No | org |
 | 202610191500_org_projects_sites | org_project_templates | table, RLS | Project templates | Yes | No | org |
 | 202610191500_org_projects_sites | org_cost_centres.project_id | column | Cost centre linked to a project | Yes | No | org |
+| 202610191600_org_lbs_geofence_allocation | org_locations | table, RLS | Location breakdown (LBS) | Yes | No | org |
+| 202610191600_org_lbs_geofence_allocation | org_site_geofences | table, RLS | Site geofence versions | Yes | No | org |
+| 202610191600_org_lbs_geofence_allocation | org_project_allocations | table, RLS | Project allocations | Yes | No | org |
+| 202610191600_org_lbs_geofence_allocation | org_user_contexts | table, RLS | Per-person pinned and recent contexts | Yes | No | org |

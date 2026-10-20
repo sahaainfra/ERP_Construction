@@ -5,6 +5,11 @@
 - CF-009: commercial money formulas use decimal.js 10.6.0 (ADR-004), rounded to paise at output. `commercial.priceVariation` golden changes from 999.9999999999995 to 1000 (re-captured; N4 change). Quantities are unchanged.
 - CF-005, CF-006, CF-012, CF-013, CF-016 remain open: each needs the named input.
 
+## 2026-10-20 — Part 06 slices S3–S5 (D-046)
+- Added migration `202610191600_org_lbs_geofence_allocation`: locations, geofence versions, allocations, user contexts.
+- Added LBS (`lbs.ts`), geofences and punch checks (`geofence.ts`, `geo.ts`), allocations and context data (`allocations.ts`), closure checklist (`closure.ts`). Activation and closure gates now use the real checks.
+- Assumptions A-11 and A-12. Owner approval recorded as D-046 for the built scope.
+
 ## 2026-10-20 — Part 06 slice S2 approval (D-045)
 - Owner approved slice S2. Slices S3–S5, the independent review, and routes and screens remain open.
 

@@ -16,6 +16,9 @@ Each assumption is a working decision taken where the source material or the own
 | A-09 | A lost tender moves straight from Tendering to Closed, with no closure checklist. | No work was done, so there is no closure to check. | Any cost or claim after a lost tender. | Owner | Assumed |
 | A-10 | Activation and closure gates stay closed until their slices exist (geofence S4, LBS S3, RACI Part 17, closure checklist S5). Until then each gate is passed only by a recorded exception with a second approver. | CP-ORG-01 and CP-ORG-03 require these items. | Projects are not activated without an exception until those slices are built. | Technical lead | In use |
 
+| A-11 | Default location levels per project type follow the list in the Part 06 spec (building: tower, floor, zone; road: chainage stretch with LHS and RHS; bridge: pier and span; industrial: area, unit, system). | Annex B11 was not verified in this session. | Other location schemes, which need Annex B11 confirmed. | Owner / planning lead | Assumed |
+| A-12 | Geofence distance uses the haversine formula on a sphere, accurate to about 0.5 %. A punch is inside when the distance is within radius plus accuracy tolerance. A fix worse than five times the tolerance is reported as low accuracy. | Adequate for fences of 20 m to 5 km; industry-standard approach for mobile punches. | Survey-grade geodesy or legal boundary disputes. | Technical lead | Assumed |
+
 ## Not assumed
 These items cannot be assumed, because they are statements of fact or legal confirmation by named people:
 - **Statutory rates and thresholds and their owners (CF-005).** The owners must confirm the rates in `src/domain/statutory.ts` against the sources in force.

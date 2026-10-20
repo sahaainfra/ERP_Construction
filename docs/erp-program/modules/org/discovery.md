@@ -24,6 +24,7 @@ Module `org`. Part 06 — Enterprise Structure: Organisation, Company, Project &
 | P3 Validation | `src/org/validation.ts` (PAN, GSTIN check character and consistency, state, codes, coordinates, dates) | Done (S1) |
 | P4 Tests | 11 pure and 26 database tests; coverage scope includes `src/org` | Done (S1) |
 | P6a Slice S2 | Project and site masters, lifecycle gates, templates (`src/org/projects.ts`, migration `202610191500`); 39 tests (pure and database) | Built; APPROVED by the owner 2026-10-20 (D-045) |
+| P6b Slices S3–S5 | LBS, geofences, allocations, context data, closure checklist (migration `202610191600`; `src/org/lbs.ts`, `geofence.ts`, `geo.ts`, `allocations.ts`, `closure.ts`); 56 tests in the org suite | Built; APPROVED by the owner for the built scope (D-046) |
 | P5 Interfaces | Routes and screens (`/admin/org`) | Not started: needs Part 07 authentication. Deliberately not exposed unauthenticated |
 | P6 Slices S3–S5 | LBS (S3), geofences, allocations and context switcher (S4), closure checklist and reports (S5) | Planned, not built |
 | P7 Review | Independent reviewer (Part 00 §5.8; Risk: High) | Open: required before the Part is considered reviewed. The owner approval (D-043) does not replace it |

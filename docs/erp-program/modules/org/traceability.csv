@@ -4,10 +4,10 @@ REQ-ORG-F02,Organisation explorer and drag-to-reparent,partial,src/org/structure
 REQ-ORG-F03,Project master,partial,db/migrations/202610191500_org_projects_sites.up.sql; src/org/projects.ts; src/org/projects.integration.test.ts,"Core identity, parties, dates, key people, JV flag built. Contract mode is free text (A-08). Auto-creation of cost centres not built"
 REQ-ORG-F04,Project lifecycle,partial,src/org/projects.ts (transitionProject); src/org/projects.test.ts,"Transitions, history and read-only archive built. Activation gate needs geofence, LBS and RACI (exception path until then); closure gate needs S5"
 REQ-ORG-F05,Site master,partial,src/org/projects.ts (createSite and transitionSite); src/org/projects.integration.test.ts,"Site master and lifecycle built; the geofence and timezone rules come with S4"
-REQ-ORG-F06,Location breakdown structure,deferred,,Slice S3
-REQ-ORG-F07,Geofences,deferred,,Slice S4
-REQ-ORG-F08,Allocations,deferred,,Slice S4
-REQ-ORG-F09,Context switcher data,deferred,,Slice S4 (needs allocations)
+REQ-ORG-F06,Location breakdown structure,partial,db/migrations/202610191600_org_lbs_geofence_allocation.up.sql; src/org/lbs.ts; src/org/operations.integration.test.ts,"Levels per project type (A-11), chainage builder, all-or-nothing batch, tree. Geometry reference and Annex B11 lists still open"
+REQ-ORG-F07,Geofences,done,src/org/geofence.ts; src/org/geo.ts; src/org/operations.integration.test.ts,"Versioned, approved by a second person, punch checked against the version valid at the time (A-12). Map drawing UI waits for Part 11 and routes (Part 07)"
+REQ-ORG-F08,Allocations,done,src/org/allocations.ts; src/org/operations.integration.test.ts,"Dates within the project, peak daily load, CP-ORG-04 WARN above 100 %. Role-based data scope waits for Part 07"
+REQ-ORG-F09,Context switcher data,partial,src/org/allocations.ts (allocatedScopes; recordContextUse; getUserContext),"Allocated scopes, pinned and recent choices per person. Screens and routes wait for Part 07"
 REQ-ORG-F10,Department catalogue and senior-to-junior hierarchy,partial,src/org/structure.ts (ALLOWED_PARENTS),Hierarchy types and parent rules built; routing consumers wait for Part 18
 REQ-ORG-F11,Project templates,partial,src/org/projects.ts (createTemplate); src/org/projects.integration.test.ts,"Contract-mode default applied once at creation. LBS, RACI, folder, workflow and report defaults wait for their slices"
-REQ-ORG-F12,Closure checklist,deferred,,Slice S5
+REQ-ORG-F12,Closure checklist,partial,src/org/closure.ts; src/org/projects.ts,"Allocations and site status checked now; eight module-owned items reported as open until their modules exist. Reports wait for routes"

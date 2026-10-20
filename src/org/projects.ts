@@ -8,6 +8,8 @@ import type { RequestContext } from "../core/context";
 import { runUnitOfWork } from "../core/uow";
 import { withTransaction } from "../db/transactions";
 import { coordinatesProblems, datesProblems, isStateCode, isUnitCode } from "./validation";
+import { closureChecklist } from "./closure";
+import { countLocations } from "./lbs";
 
 export const PROJECT_TYPES = ["building", "road_highway", "bridge_flyover", "metro_rail", "water_irrigation_pipeline", "industrial_epc", "power_transmission", "real_estate_development", "interiors_fit_out", "other"] as const;
 export type ProjectType = (typeof PROJECT_TYPES)[number];
@@ -60,8 +62,11 @@ export async function activationChecklist(client: PoolClient, tenantId: string, 
   if (site.rowCount === 0) missing.push("no approved site has a site manager");
   const centre = await client.query("SELECT 1 FROM org_cost_centres WHERE project_id = $1 AND tenant_id = $2 AND centre_type = 'project' AND approval_status = 'approved'", [projectId, tenantId]);
   if (centre.rowCount === 0) missing.push("no approved project cost centre");
-  // Not built yet: each item stays missing until its slice exists. The exception path covers the gap.
-  missing.push("geofence not built (Part 06 S4)", "RACI template not built (Part 17)", "location breakdown not built (Part 06 S3)");
+  const fence = await client.query("SELECT 1 FROM org_site_geofences g JOIN org_sites s ON s.id = g.site_id WHERE s.project_id = $1 AND g.tenant_id = $2 AND g.approval_status = 'approved' AND g.valid_to IS NULL", [projectId, tenantId]);
+  if (fence.rowCount === 0) missing.push("no approved geofence for any site");
+  if ((await countLocations(client, tenantId, projectId)) === 0) missing.push("no location breakdown (LBS) for the project");
+  // Not built yet: stays missing until Part 17 exists. The exception path covers the gap.
+  missing.push("RACI template not built (Part 17)");
   return missing;
 }
 
@@ -224,7 +229,9 @@ export async function transitionProject(pool: Pool, ctx: RequestContext, input: 
 
     let missing: string[] = [];
     if (input.to === "active") missing = await activationChecklist(uow.client, ctx.tenantId, input.id);
-    if (from === "dlp" && input.to === "closed") missing = ["closure checklist not built (Part 06 S5)"];
+    if (from === "dlp" && input.to === "closed") {
+      missing = (await closureChecklist(uow.client, ctx.tenantId, input.id)).map((item) => `closure checklist open: ${item}`);
+    }
     if (missing.length > 0) {
       if (!input.exception) fail([`the gate is not met: ${missing.join("; ")}`]);
       await uow.evaluate({ cpCode: "CP-ORG-01", result: "EXCEPTION_REQUIRED", detail: { to: input.to, missing, exceptionApprovedBy: input.exception.approvedBy } });
