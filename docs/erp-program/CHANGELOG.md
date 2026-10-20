@@ -5,6 +5,9 @@
 - CF-009: commercial money formulas use decimal.js 10.6.0 (ADR-004), rounded to paise at output. `commercial.priceVariation` golden changes from 999.9999999999995 to 1000 (re-captured; N4 change). Quantities are unchanged.
 - CF-005, CF-006, CF-012, CF-013, CF-016 remain open: each needs the named input.
 
+## 2026-10-20 — Part 06 slice S2 approval (D-045)
+- Owner approved slice S2. Slices S3–S5, the independent review, and routes and screens remain open.
+
 ## 2026-10-20 — Part 06 slice S2 (D-044)
 - Added migration `202610191500_org_projects_sites`: projects, sites, status history (append-only), templates; cost centres link to projects.
 - Added `src/org/projects.ts`: project and site creation, lifecycle gates with exception path, read-only archive, templates applied once.
