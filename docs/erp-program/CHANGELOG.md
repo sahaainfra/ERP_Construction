@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-10-20 — Part 12 slice S3 (D-070)
+- Added `src/design/ui/` (states, core components, templates) and token-only styles in `globals.css`.
+- Added `e2e/design-templates.spec.ts` and `e2e/fixtures/`: 24 cases × 3 themes checked with axe in Chromium (72 of 72 passed).
+
 ## 2026-10-20 — Part 12 slice S2 (D-069)
 - Navigation filtered by permission (`src/design/navigation.ts`, server check in `navigation-access.ts`). Bottom bar for narrow screens; pinned entries in the side navigation.
 - Icon rule: no direct icon-library import or icon-by-file outside the registry (unit test).
