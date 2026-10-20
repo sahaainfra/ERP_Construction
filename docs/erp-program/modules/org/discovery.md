@@ -1,6 +1,6 @@
 # Part 06 discovery, plan and delivery record
 
-Module `org`. Part 06 — Enterprise Structure: Organisation, Company, Project & Site. Status: **drafted; slice S1 built and verified; approval pending the owner**. Depends on Part 05 (APPROVED).
+Module `org`. Part 06 — Enterprise Structure: Organisation, Company, Project & Site. Status: **APPROVED by the owner 2026-10-20 (D-043) for slice S1**. Slices S2–S5, routes and screens, and the independent review (Part 00 §5.8) remain open. Depends on Part 05 (APPROVED).
 
 ## 1. Discovery
 - Searched the repository for existing organisation, company, legal entity, branch, department, cost centre, project and site code. Nothing exists beyond the shared kernel's settings and numbering. This is a BUILD for this slice, not an EXTEND (the legacy-built mark in the spec cannot be verified here; the Part 01 inventory recorded it as absent).
@@ -25,7 +25,7 @@ Module `org`. Part 06 — Enterprise Structure: Organisation, Company, Project &
 | P4 Tests | 11 pure and 26 database tests; coverage scope includes `src/org` | Done (S1) |
 | P5 Interfaces | Routes and screens (`/admin/org`) | Not started: needs Part 07 authentication. Deliberately not exposed unauthenticated |
 | P6 Slices S2–S5 | Project and site masters and lifecycle (S2), LBS (S3), geofences, allocations and context switcher (S4), closure checklist and reports (S5) | Planned, not built |
-| P7 Review | Independent reviewer (Part 00 §5.8; Risk: High) | Pending |
+| P7 Review | Independent reviewer (Part 00 §5.8; Risk: High) | Open: required before the Part is considered reviewed. The owner approval (D-043) does not replace it |
 
 ## 4. Requirements status (S1 scope)
 | Requirement | Status |
