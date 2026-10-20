@@ -1,0 +1,16 @@
+req_id,requirement,status,evidence,note
+REQ-OBS-F01,Correlation everywhere,partial,src/obs/correlation.ts; src/core/logger.ts; src/obs/telemetry.ts; src/obs/obs.test.ts,"Routes and log lines carry the correlation and trace ids. Not yet propagated to jobs, outbox, socket events, integration calls, sync batches, imports or AI calls"
+REQ-OBS-F02,Structured logs with redaction,partial,src/core/logger.ts; src/obs/redact.ts; src/obs/obs.test.ts,"Standard fields for routes; value-based redaction with tests. Sink is stdout only; retention per Part 84 not configured"
+REQ-OBS-F03,Metrics (RED / USE / business),partial,src/obs/metrics.ts; src/obs/telemetry.ts,"Route RED counters and histogram in process. No HTTP endpoint, no USE or business metrics yet"
+REQ-OBS-F04,Distributed tracing,partial,src/obs/trace.ts; src/obs/obs.test.ts,"Spans and W3C context in process with head sampling. No exporter; web and database spans not yet added"
+REQ-OBS-F05,SLO catalogue,not started,,Phase 2 (S2)
+REQ-OBS-F06,Synthetic monitoring and RUM,not started,,Phase 2 (S2)
+REQ-OBS-F07,Queue, job and database monitoring,not started,,Phase 2 (S2)
+REQ-OBS-F08,Alerting and incidents,not started,,Phase 2 (S2)
+REQ-OBS-F09,Performance playbook and budgets,not started,,Phase 3 (S3)
+REQ-OBS-F10,Load, soak and spike tests,not started,,Phase 3 (S3)
+REQ-OBS-F11,Resilience library,not started,,Phase 4 (S4)
+REQ-OBS-F12,Fault injection,not started,,Phase 4 (S4)
+REQ-OBS-F13,Error taxonomy and catalogue,not started,,Phase 5 (S5); A-42
+REQ-OBS-F14,UI state contract,not started,,Phase 5 (S5)
+REQ-OBS-F15,Support correlation lookup,not started,,Phase 5 (S5)

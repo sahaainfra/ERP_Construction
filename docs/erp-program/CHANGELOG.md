@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-10-20 — Part 09 slice S1 (D-062)
+- Added `src/obs/`: value redaction (`redact.ts`), correlation scope (`correlation.ts`), W3C trace context and spans (`trace.ts`), in-process RED metrics (`metrics.ts`), route telemetry (`telemetry.ts`).
+- `src/core/logger.ts` masks secret-like values in strings and adds the correlation and trace ids of the running work.
+- `runRoute` in `src/iam/pipeline.ts` runs every route through `instrumentRoute`.
+- No package added (CP-ARCH-01). A-36 and A-37 adapted; ADR pending owner.
+
 ## 2026-10-20 — Part 09 approved (D-061)
 - Owner approved Part 09 for the phases in the discovery plan. Assumptions A-36 to A-44 recorded. No slice built yet. Open: CTO confirmation of SLO targets, CF-012, and the independent reviewer.
 

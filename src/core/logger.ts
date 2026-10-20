@@ -1,10 +1,16 @@
-// Structured logging with redaction (Part 05 REQ-CORE-F06). JSON lines; secret-like and personal-identifier keys are removed.
+// Structured logging with redaction (Part 05 REQ-CORE-F06; Part 09 REQ-OBS-F01, F02). JSON lines. Secret-like and personal-identifier
+// keys are removed, and secret-like or personal values are masked inside strings (src/obs/redact.ts). The correlation scope
+// of the running work is added to every line.
+import { redactText } from "../obs/redact";
+import { currentCorrelation } from "../obs/correlation";
+
 export type Level = "debug" | "info" | "warn" | "error";
 const ORDER: Record<Level, number> = { debug: 10, info: 20, warn: 30, error: 40 };
 const SENSITIVE_KEY = /pass(word)?|secret|token|authorization|cookie|api[_-]?key|pan|aadhaar|aadhar|account|salary|bank|phone|email/i;
 
 export function redact(value: unknown, depth = 0): unknown {
   if (depth > 6) return "[depth-limit]";
+  if (typeof value === "string") return redactText(value);
   if (Array.isArray(value)) return value.map((v) => redact(v, depth + 1));
   if (value && typeof value === "object") {
     const out: Record<string, unknown> = {};
@@ -39,7 +45,17 @@ export function createLogger(options: {
   const logger: Logger = {
     log(level, msg, fields = {}) {
       if (ORDER[level] < ORDER[minFor(base.module)]) return;
-      const record: LogRecord = { ts: new Date().toISOString(), level, msg, module: base.module, ...(base.correlationId ? { correlationId: base.correlationId } : {}), ...(redact(fields) as Record<string, unknown>) };
+      const scope = currentCorrelation();
+      const correlationId = base.correlationId ?? scope?.correlationId;
+      const record: LogRecord = {
+        ts: new Date().toISOString(),
+        level,
+        msg: redactText(msg),
+        module: base.module,
+        ...(correlationId ? { correlationId } : {}),
+        ...(scope?.traceId ? { traceId: scope.traceId } : {}),
+        ...(redact(fields) as Record<string, unknown>),
+      };
       sink(JSON.stringify(record));
     },
     child(bindings) {

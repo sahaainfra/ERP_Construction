@@ -6,6 +6,7 @@ import type { Pool } from "pg";
 import { AppError } from "../core/errors";
 import { buildContext, type Channel, type RequestContext } from "../core/context";
 import { runUnitOfWork } from "../core/uow";
+import { instrumentRoute } from "../obs/telemetry";
 import { can } from "./pdp";
 import type { Resource } from "./policy";
 
@@ -35,7 +36,12 @@ export interface RouteOptions<I, R> {
   handler: (ctx: RequestContext, input: I) => Promise<R>;
 }
 
-export async function runRoute<I extends Record<string, unknown>, R>(pool: Pool, session: RouteSession | null, spec: RouteSpec, input: unknown, options: RouteOptions<I, R>): Promise<R> {
+/** Every route runs inside a correlated span with one log line and the RED counters (Part 09 REQ-OBS-F01, F03, F04). */
+export function runRoute<I extends Record<string, unknown>, R>(pool: Pool, session: RouteSession | null, spec: RouteSpec, input: unknown, options: RouteOptions<I, R>): Promise<R> {
+  return instrumentRoute(spec.name, { correlationId: options.correlationId }, () => executeRoute(pool, session, spec, input, options));
+}
+
+async function executeRoute<I extends Record<string, unknown>, R>(pool: Pool, session: RouteSession | null, spec: RouteSpec, input: unknown, options: RouteOptions<I, R>): Promise<R> {
   // 1. Authenticate.
   let ctx: RequestContext | null = null;
   if (spec.permissionKey !== null) {
