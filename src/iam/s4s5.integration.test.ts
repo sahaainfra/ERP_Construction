@@ -314,7 +314,7 @@ describe.skipIf(!TEST_URL || !APP_URL)("Part 07 S4–S5", () => {
       const loadProject = async (input: { projectId?: unknown }) => ({ projectId: typeof input.projectId === "string" ? input.projectId : undefined });
       await expectRefused(runRoute(app, session, spec, { projectId: "P1", title: "x", price: 1 }, { correlationId: "c3", resource: loadProject, handler }), "VALIDATION_FAILED", "price");
       expect(await runRoute(app, session, spec, { projectId: "P1", title: "x" }, { correlationId: "c4", resource: loadProject, handler })).toEqual({ ok: true });
-      const audit = await withTransaction(app, (c) => c.query("SELECT 1 FROM core_audit_entries WHERE action = 'procurement.po.created' AND correlation_id = 'c4'"), { tenantId: tenant });
+      const audit = await withTransaction(app, (c) => c.query("SELECT 1 FROM sec_audit_log WHERE action = 'procurement.po.created' AND correlation_id = 'c4'"), { tenantId: tenant });
       expect(audit.rowCount).toBe(1);
     });
 

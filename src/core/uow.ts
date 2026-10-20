@@ -4,6 +4,7 @@
 import type { Pool, PoolClient } from "pg";
 import { withTransaction } from "../db/transactions";
 import { enqueueEvent, type OutboxEvent } from "../db/outbox";
+import { writeAudit } from "../secgov/audit";
 import type { RequestContext } from "./context";
 
 export type LifecycleAction = "CREATED" | "SUBMITTED" | "VERIFIED" | "REVIEWED" | "APPROVED" | "REJECTED" | "RETURNED" | "MODIFIED" | "EXECUTED" | "RECORDED" | "RECONCILED" | "CLOSED" | "CANCELLED" | "REVERSED";
@@ -24,11 +25,9 @@ export async function runUnitOfWork<T>(pool: Pool, ctx: RequestContext, work: (u
       const uow: UnitOfWork = {
         client,
         async audit(e) {
-          await client.query(
-            `INSERT INTO core_audit_entries (tenant_id, actor_id, action, entity_type, entity_id, correlation_id, detail)
-             VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-            [ctx.tenantId, ctx.userId, e.action, e.entityType, e.entityId, ctx.correlationId, JSON.stringify(e.detail ?? {})],
-          );
+          // The audit chain (Part 08, D-055) is written in this transaction: the change and its audit row commit together.
+          const reason = typeof e.detail?.reason === "string" ? e.detail.reason : null;
+          await writeAudit(client, ctx, { action: e.action, entityType: e.entityType, entityId: e.entityId, after: e.detail ?? {}, reason, reasonCode: typeof e.detail?.reasonCode === "string" ? e.detail.reasonCode : null });
         },
         async ledger(e) {
           await client.query(

@@ -1,6 +1,6 @@
 # Part 08 discovery and plan
 
-Module `secgov`. Part 08 — Audit Trail, Secure SDLC & Security Governance. Status: **discovery and plan only; no code written**. Part 08 depends on Parts 04, 05 and 07 (must be APPROVED). Part 07 is **not approved** (approval held, D-053), so under Part 00 §1.2 Part 08 cannot start as a build yet.
+Module `secgov`. Part 08 — Audit Trail, Secure SDLC & Security Governance. Status: **discovery and plan (first session); slice S1 built (D-055), approval pending the owner**. Dependencies Parts 04, 05 and 07 are approved (Part 07 under D-054).
 
 ## 1. Discovery (what exists)
 - **Audit:** an interim audit table `core_audit_entries` (Part 05, append-only, RLS) is written by the unit of work. It has no hash chain, no before/after values, no reason framework and no sensitive-read logging. Part 08 replaces it behind the same interface (D-034).
@@ -26,7 +26,7 @@ Module `secgov`. Part 08 — Audit Trail, Secure SDLC & Security Governance. Sta
 | Web and mobile baselines | F13, F15 | Not applied in the app (no CSP, HSTS or CORS configured) |
 | Privacy (DPDP) | F18–F20 | None |
 
-## 3. Blockers and decisions needed
+## 3. Blockers and decisions needed (as at the plan; S1 built since)
 1. **Part 07 approval** is held. Part 08 needs it. Owner options: (a) approve Part 08 provisionally on Part 07's approved scope, recording the held items as a dependency risk; or (b) wait until the Part 07 review items are closed and the human reviewer has checked them.
 2. **Vault (F12)** needs a provider decision (CF-012).
 3. **Chain anchoring to WORM storage (F02)** needs a provider decision (CF-012).

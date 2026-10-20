@@ -74,3 +74,5 @@ Note on the baseline down script: it drops `sys.migration_runs`, so the revert o
 | 202610191900_iam_privileged_reviews | iam_shadow_comparisons | table, RLS | Shadow comparisons, append-only | Yes | No | iam |
 | 202610191900_iam_privileged_reviews | iam_user_role_assignments.revoked_at | column | Immediate revocation of a role assignment | Yes | No | iam |
 | 202610191950_iam_step_up | iam_sessions.mfa_verified_at | column | Time of the last second factor on a session | Yes | No | iam |
+| 202610192000_secgov_audit_chain | sec_audit_log | table, append-only, RLS | Audit chain (hash-linked per tenant) | Yes | No | secgov |
+| 202610192000_secgov_audit_chain | sec_sensitive_reads | table, append-only, RLS | Sensitive field reads | Yes | No | secgov |

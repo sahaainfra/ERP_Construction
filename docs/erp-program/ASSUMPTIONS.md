@@ -33,6 +33,9 @@ Each assumption is a working decision taken where the source material or the own
 
 | A-22 | Services accept times (`now`, `at`, `asOf`) for testing and replay. A route must never pass a time from the client; it passes the server clock. | The independent review found that a forwarded time could bypass lockout or expiry. | Route layer (S5 onward) must follow this rule. | Technical lead | Assumed |
 
+| A-26 | The audit chain is one chain per tenant, with writes serialised by a per-tenant advisory lock. Throughput per tenant is therefore limited to one audit write at a time. Partitioning by month and the p95 target are not measured yet. | A single ordered chain is the simplest correct tamper evidence; per-tenant locks keep other tenants unaffected. | Measure under the Part 04 volume rehearsal; split chains by day or partition if the lock becomes the bottleneck. | Technical lead | Assumed |
+| A-27 | Reason codes are free text in S1, checked for presence but not against a catalogue. | The catalogue is master data from Part 17. | Restrict to the catalogue when Part 17 exists. | Technical lead | Assumed |
+
 ## Not assumed
 These items cannot be assumed, because they are statements of fact or legal confirmation by named people:
 - **Statutory rates and thresholds and their owners (CF-005).** The owners must confirm the rates in `src/domain/statutory.ts` against the sources in force.

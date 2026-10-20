@@ -62,7 +62,7 @@ describe.skipIf(!TEST_URL || !APP_URL)("shared kernel (Part 05)", () => {
         await uow.evaluate({ cpCode: "CP-CORE-01", result: "PASS" });
         await uow.emit({ eventType: "core.sample.created", payload: { id: 1 } });
       });
-      expect(await count(ctx.tenantId, "core_audit_entries", "correlation_id = $1", [ctx.correlationId])).toBe(1);
+      expect(await count(ctx.tenantId, "sec_audit_log", "correlation_id = $1", [ctx.correlationId])).toBe(1);
       expect(await count(ctx.tenantId, "core_action_ledger", "correlation_id = $1", [ctx.correlationId])).toBe(1);
       expect(await count(ctx.tenantId, "core_protocol_evaluations", "correlation_id = $1", [ctx.correlationId])).toBe(1);
       expect(await count(ctx.tenantId, "sys.outbox", "tenant_id = $1", [ctx.tenantId])).toBe(1);
@@ -81,7 +81,7 @@ describe.skipIf(!TEST_URL || !APP_URL)("shared kernel (Part 05)", () => {
         }),
       ).rejects.toThrow("forced failure");
       expect(await count(ctx.tenantId, "core_sample_records", "title = 'Rollback check'")).toBe(0);
-      expect(await count(ctx.tenantId, "core_audit_entries", "correlation_id = $1", [ctx.correlationId])).toBe(0);
+      expect(await count(ctx.tenantId, "sec_audit_log", "correlation_id = $1", [ctx.correlationId])).toBe(0);
       expect(await count(ctx.tenantId, "core_action_ledger", "correlation_id = $1", [ctx.correlationId])).toBe(0);
       expect(await count(ctx.tenantId, "core_protocol_evaluations", "correlation_id = $1", [ctx.correlationId])).toBe(0);
       expect(await count(ctx.tenantId, "sys.outbox", "tenant_id = $1", [ctx.tenantId])).toBe(0);
