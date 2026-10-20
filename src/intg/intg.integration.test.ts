@@ -91,19 +91,20 @@ describe.skipIf(!TEST_URL || !APP_URL)("connector framework, vault, mappings and
 
   it("stores a secret only encrypted, lets someone other than the proposer approve it, and supersedes the old version", async () => {
     const { tenant, proposer, approver } = await setup();
-    const secret = "sftp-key-material-0001";
-    const v1 = await proposeCredential(app, proposer, KEY, { connectorCode: "bank_sftp", secret, reason: "Initial bank key for the pilot" });
+    const material = Buffer.from("sftp-key-material-0001", "utf8").toString("base64").slice(0, 24);
+    const v1 = await proposeCredential(app, proposer, KEY, { connectorCode: "bank_sftp", secret: material, reason: "Initial bank key for the pilot" });
     expect(v1).toEqual({ version: 1 });
     expect(await readActiveSecret(app, tenant, "bank_sftp", KEY)).toBeNull();
     const raw = await inTenant(tenant, (c) => c.query("SELECT ciphertext FROM intg_credentials_ref WHERE version = 1"));
-    expect(raw.rows[0].ciphertext).not.toContain(secret);
+    expect(raw.rows[0].ciphertext).not.toContain(material);
     await expect(approveCredential(app, proposer, { connectorCode: "bank_sftp", version: 1, reason: "Approving my own proposal" })).rejects.toMatchObject({ code: "FORBIDDEN" });
     await approveCredential(app, approver, { connectorCode: "bank_sftp", version: 1, reason: "Checked against the bank letter" });
-    expect((await readActiveSecret(app, tenant, "bank_sftp", KEY))?.toString("utf8")).toBe(secret);
+    expect((await readActiveSecret(app, tenant, "bank_sftp", KEY))?.toString("utf8")).toBe(material);
 
-    await proposeCredential(app, proposer, KEY, { connectorCode: "bank_sftp", secret: "sftp-key-material-0002", reason: "Rotation after the pilot review" });
+    const rotated = Buffer.from("sftp-key-material-0002", "utf8").toString("base64").slice(0, 24);
+    await proposeCredential(app, proposer, KEY, { connectorCode: "bank_sftp", secret: rotated, reason: "Rotation after the pilot review" });
     await approveCredential(app, approver, { connectorCode: "bank_sftp", version: 2, reason: "Rotation checked with the bank" });
-    expect((await readActiveSecret(app, tenant, "bank_sftp", KEY))?.toString("utf8")).toBe("sftp-key-material-0002");
+    expect((await readActiveSecret(app, tenant, "bank_sftp", KEY))?.toString("utf8")).toBe(rotated);
     const active = await inTenant(tenant, (c) => c.query("SELECT count(*)::int AS n FROM intg_credentials_ref WHERE status = 'active'"));
     expect(active.rows[0].n).toBe(1);
     expect(() => loadVaultKey({ ...process.env, INTG_VAULT_KEY: "" })).toThrow("INTG_VAULT_KEY");
