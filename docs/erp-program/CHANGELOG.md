@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-20 — Part 08A slice S1 approved (D-060)
+- Owner approved slice S1. Assumptions A-29 and A-31 to A-35 accepted; A-33 remains a known gap. Slices S2 to S6 and the independent review remain open.
+
 ## 2026-10-20 — Part 08A slice S1 (D-059)
 - Added migration `202610192200_auth_users`: User ID series, users with account states and validity dates, password history (append-only).
 - Added `src/auth/users.ts` (User IDs, admin-created users, state moves) and `src/auth/signin.ts` (sign-in gate, generic refusal, password change, sign-out).
