@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-20 — Part 12 approved for slices S1 to S3 (D-072)
+- Owner approved Part 12 for the slices built (S1 to S3). S4 and S5 and the open decisions remain.
+
 ## 2026-10-20 — Review of Parts 00 to 12 (D-071)
 - Fixed the foundation down script (missing `sys.mask_bytes` drop) and added a rollback rehearsal test.
 - User provisioning writes the credential inside its transaction (orphan-credential fix; test added).
