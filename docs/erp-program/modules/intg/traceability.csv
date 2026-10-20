@@ -1,0 +1,19 @@
+req_id,requirement,status,evidence,note
+REQ-INTG-F01,Connector framework,partial,src/intg/connectors.ts; src/intg/breaker.ts; src/intg/ssrf.ts; src/intg/intg.test.ts; src/intg/intg.integration.test.ts,"Guarded call, timeouts, retries (idempotent only), breaker, SSRF check, per-connector counters. Breaker in memory (A-69). DLQ and replay are S2"
+REQ-INTG-F02,Credential vault usage,partial,src/intg/vault.ts; src/intg/intg.integration.test.ts,"Encrypted, shown never again, maker-checker, internal-only read. Rotation reminders and key service not built (A-58, CF-012)"
+REQ-INTG-F03,Mapping service,partial,src/intg/mappings.ts; src/intg/intg.test.ts,"Versioned mappings with validation. Import of mappings from files and the mapping screen are not built"
+REQ-INTG-F04,API standards and gateway,not started,,Phase 2 (S2)
+REQ-INTG-F05,Client registration,not started,,Phase 2 (S2)
+REQ-INTG-F06,Bulk async APIs,not started,,Phase 3 (S3); waits for Part 24
+REQ-INTG-F07,API audit log,not started,,Phase 2 (S2)
+REQ-INTG-F08,Developer portal,not started,,Phase 3 (S3)
+REQ-INTG-F09,Sandbox tenant,deferred,,Waits for Part 81
+REQ-INTG-F10,Edge and device ingestion,not started,,Phase 4 (S4)
+REQ-INTG-F11,File-based integrations,not started,,Phase 5 (S5)
+REQ-INTG-F12,Scheduling interop adapters,not started,,Phase 5 (S5); waits for Part 38
+REQ-INTG-F13,Accounting coexistence adapters,not started,,Phase 5 (S5)
+REQ-INTG-F14,BI and data-share connectors,not started,,Phase 5 (S5); waits for Part 75
+REQ-INTG-F15,Maps provider abstraction,not started,,Phase 5 (S5); provider chosen in Part 37 (A-65)
+REQ-INTG-F16,Integration monitor,partial,src/intg/connectors.ts (connectorStatus); src/intg/intg.integration.test.ts,"Status, last success and failure, breaker state, stale flag. Alerts through Part 09 and the business-safe summary are S2"
+REQ-INTG-F17,Canonical events and honest status,partial,src/intg/connectors.ts (A-67 status transitions),"Status rules built and tested. Canonical event mapping and INTEGRATION_STALE and INTEGRATION_FAILED events are S2 and S4"
+REQ-INTG-F18,Plant and site devices,not started,,Phase 4 (S4); no hardware available (plan §2.3)

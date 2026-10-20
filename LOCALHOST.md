@@ -79,6 +79,7 @@ npm run check:design        # currently fails: CF-004 (four contrast pairings)
 | `APP_ENV` | tests and reset helper | `production` refuses the reset |
 | `TOKEN_SIGNING_KEY` | sign-in (Part 07) | 32 random bytes, base64. Signs access tokens. Generate with `openssl rand -base64 32`. Never commit it. |
 | `MFA_ENCRYPTION_KEY` | sign-in (Part 07) | 32 random bytes, base64. Encrypts TOTP secrets. Generate with `openssl rand -base64 32`. Losing it makes enrolled factors unusable. |
+| `INTG_VAULT_KEY` | connector secrets (Part 11) | 32 random bytes, base64. Encrypts connector credentials at rest. Generate with `openssl rand -base64 32`. Losing it makes stored connector secrets unreadable; they must then be proposed again. Never commit it. |
 
 No cloud or external services are needed. Authentication, sessions and the business API do not exist yet (Parts 07, 05).
 

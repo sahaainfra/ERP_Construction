@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-10-20 — Part 11 slice S1 (D-066)
+- Added migration `202610192400_intg_connectors`: connectors, credential versions, mappings, messages, dead-letter queue (all tenant-scoped with RLS).
+- Added `src/intg/`: SSRF-safe destination check, connector circuit breaker, guarded connector call, credential vault, versioned mappings, monitor view.
+- `INTG_VAULT_KEY` added to `.env.example` and LOCALHOST.md. No live external call is made by any test.
+
 ## 2026-10-20 — Part 11 approved (D-065)
 - Owner approved Part 11 for the phases in the discovery plan. Assumptions A-57 to A-68 recorded. The plan's §2 decisions remain open; no slice is built yet.
 

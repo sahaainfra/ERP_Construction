@@ -84,3 +84,8 @@ Note on the baseline down script: it drops `sys.migration_runs`, so the revert o
 | 202610192200_auth_users | auth_password_history | table, append-only, RLS | Previous password hashes (last five are checked) | Yes | No | auth |
 | 202610192300_evbus_envelope_inbox | sys.outbox (columns aggregate_key, correlation_id, causation_id) | table alteration, additive | Event envelope fields on the outbox | Yes | No | evbus |
 | 202610192300_evbus_envelope_inbox | evt_inbox | table, RLS, append-only | Consumer inbox: one row per consumer and event | Yes | No | evbus |
+| 202610192400_intg_connectors | intg_connectors | table, RLS | Connectors: code, type, status, allow-list, failure counters | Yes | No | intg |
+| 202610192400_intg_connectors | intg_credentials_ref | table, RLS | Secret versions, AES-256-GCM ciphertext, maker-checker state | Yes | No | intg |
+| 202610192400_intg_connectors | intg_mappings | table, RLS | Versioned ERP-to-external code mappings | Yes | No | intg |
+| 202610192400_intg_connectors | intg_messages | table, RLS | One row per call attempt (outcome, timing, payload hash) | Yes | No | intg |
+| 202610192400_intg_connectors | intg_dlq | table, RLS | Dead-letter entries for failed messages (replay in S2) | Yes | No | intg |
