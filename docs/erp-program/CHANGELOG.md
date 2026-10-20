@@ -5,6 +5,11 @@
 - CF-009: commercial money formulas use decimal.js 10.6.0 (ADR-004), rounded to paise at output. `commercial.priceVariation` golden changes from 999.9999999999995 to 1000 (re-captured; N4 change). Quantities are unchanged.
 - CF-005, CF-006, CF-012, CF-013, CF-016 remain open: each needs the named input.
 
+## 2026-10-20 — Part 07 slice S3 (D-049)
+- Added migration `202610191800_iam_sod`: SoD rules, action log, actor links, exceptions, findings.
+- Added `src/iam/sod.ts`: sixteen seed rules, preventive check under a record lock, observe and enforce modes, exceptions (90 days max), detective scan, findings.
+- Added `check:all` preflight for the test database. Assumptions A-15 and A-16.
+
 ## 2026-10-20 — Part 07 slice S2 approval (D-048)
 - Owner approved slice S2. Slices S1, S3–S5, the independent review, and the system roles remain open.
 

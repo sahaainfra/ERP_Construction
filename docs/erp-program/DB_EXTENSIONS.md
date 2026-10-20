@@ -55,3 +55,8 @@ Note on the baseline down script: it drops `sys.migration_runs`, so the revert o
 | 202610191700_iam_permissions | iam_user_role_assignments | table | Scoped role assignments, maker-checker | Yes | No | iam |
 | 202610191700_iam_permissions | iam_authority_limits | table | Approval authority limits | Yes | No | iam |
 | 202610191700_iam_permissions | iam_field_policies | table | Field-level view and mask policies (global) | Yes | No | iam |
+| 202610191800_iam_sod | iam_sod_rules | table, RLS | SoD rules and lifecycle | Yes | No | iam |
+| 202610191800_iam_sod | iam_action_log | table, RLS | Action log for SoD, append-only | Yes | No | iam |
+| 202610191800_iam_sod | iam_actor_links | table, RLS | Linked accounts for one person | Yes | No | iam |
+| 202610191800_iam_sod | iam_sod_exceptions | table, RLS | SoD exceptions, time-boxed | Yes | No | iam |
+| 202610191800_iam_sod | iam_sod_findings | table, RLS | SoD findings, append-only | Yes | No | iam |

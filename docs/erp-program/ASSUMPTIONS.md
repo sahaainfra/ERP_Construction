@@ -22,6 +22,9 @@ Each assumption is a working decision taken where the source material or the own
 | A-13 | System roles from Annex B10 are not seeded yet. The first administrator is written directly by the owner. | Annex B10 was not verified in this session, and nothing can grant the first permission without a bootstrap. | The system roles and the break-glass procedure (S4). | Owner / IAM administrator | Assumed |
 | A-14 | Authority limits: the most specific limit applies (project and category), and the lowest limit applies within one level. | Conservative: an unclear overlap never grants more. | Limit rules agreed with Finance. | CFO | Assumed |
 
+| A-15 | The sixteen seed SoD rules use the action keys shown in `src/iam/sod.ts`. The owning modules will emit these keys and the names are confirmed then. | The spec names the pairs but not the keys; Annex B10 was not verified. | The exact keys and any module that uses different names. | Module owners | Assumed |
+| A-16 | Actions are checked by the person (linked accounts count as one). The check uses an advisory lock per record. Permission checks for the action itself are the route's job, not the SoD engine's. | Keeps the SoD check independent of routes that do not exist yet. | Routes must call recordAction before any conflicting write (S5). | Technical lead | Assumed |
+
 ## Not assumed
 These items cannot be assumed, because they are statements of fact or legal confirmation by named people:
 - **Statutory rates and thresholds and their owners (CF-005).** The owners must confirm the rates in `src/domain/statutory.ts` against the sources in force.

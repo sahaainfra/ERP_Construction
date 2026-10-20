@@ -3,6 +3,7 @@
 // Loads .env.test when present, so the database tests run; without it they are skipped and the summary says so.
 import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
+import { connect } from "node:net";
 
 if (existsSync(".env.test")) process.loadEnvFile(".env.test");
 
@@ -16,6 +17,23 @@ const GATES = [
   ["secret scan", "npm run secret:scan"],
   ["design contrast", "npm run check:design"],
 ];
+
+/** Whether a TCP connection to the test database host and port succeeds. Database tests fail in confusing ways without it. */
+function databaseReachable(url) {
+  if (!url) return Promise.resolve(false);
+  const { hostname, port } = new URL(url);
+  return new Promise((resolve) => {
+    const socket = connect({ host: hostname, port: Number(port || 5432), timeout: 2000 });
+    socket.once("connect", () => { socket.destroy(); resolve(true); });
+    socket.once("timeout", () => { socket.destroy(); resolve(false); });
+    socket.once("error", () => resolve(false));
+  });
+}
+
+const dbUrl = process.env.TEST_DATABASE_URL;
+if (dbUrl && !(await databaseReachable(dbUrl))) {
+  console.log("WARNING: the test database is not reachable. Start PostgreSQL first (on Ubuntu: sudo pg_ctlcluster 16 main start), then re-run.");
+}
 
 const results = GATES.map(([name, cmd]) => {
   const started = Date.now();

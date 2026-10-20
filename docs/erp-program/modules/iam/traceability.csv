@@ -12,9 +12,9 @@ REQ-IAM-F10,Authority limits,partial,src/iam/authority.ts; src/iam/iam.integrati
 REQ-IAM-F11,UI gating,deferred,,Needs routes (S5)
 REQ-IAM-F12,Explain and simulate,deferred,,Needs the explorer screens
 REQ-IAM-F13,Legacy shadow mode,deferred,,Nothing legacy exists in this codebase
-REQ-IAM-F14,SoD rule engine,deferred,,Slice S3
-REQ-IAM-F15,Preventive and detective SoD,deferred,,Slice S3
-REQ-IAM-F16,SoD exceptions,deferred,,Slice S3
+REQ-IAM-F14,SoD rule engine,partial,src/iam/sod.ts; db/migrations/202610191800_iam_sod.up.sql; src/iam/sod.integration.test.ts,"Sixteen seed rules as drafts (A-15). Lifecycle draft, observe, enforce, retired. Vendor bank 30-day window not modelled"
+REQ-IAM-F15,Preventive and detective SoD,partial,src/iam/sod.ts (recordAction; detectiveScan); src/iam/sod.integration.test.ts,"Preventive check under a record lock; detective scan adds findings once. Toxic role pairs at assignment (CP-IAM-03) not built. Routes that call recordAction wait for S5"
+REQ-IAM-F16,SoD exceptions,partial,src/iam/sod.ts (proposeException; approveException),"Time-boxed to 90 days, project-scoped, two approvers; not allowed for payment rules. Compensating-control review task not built"
 REQ-IAM-F17,Privileged access,deferred,,Slice S4
 REQ-IAM-F18,Joiner/mover/leaver,deferred,,Slice S4 (needs Part 54)
 REQ-IAM-F19,Access certification,deferred,,Slice S4
