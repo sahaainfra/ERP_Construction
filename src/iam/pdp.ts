@@ -18,7 +18,8 @@ export async function grantsFor(client: PoolClient | Pool, tenantId: string, use
        JOIN iam_roles r ON r.id = a.role_id AND r.status = 'active'
        JOIN iam_role_permissions rp ON rp.role_id = r.id AND rp.permission_key = $3 AND rp.approval_status = 'approved'
       WHERE a.tenant_id = $1 AND a.user_ref = $2 AND a.approval_status = 'approved'
-        AND a.revoked_at IS NULL AND a.valid_from <= CURRENT_DATE AND (a.valid_to IS NULL OR a.valid_to >= CURRENT_DATE)`,
+        AND a.revoked_at IS NULL AND a.valid_from <= CURRENT_DATE AND (a.valid_to IS NULL OR a.valid_to >= CURRENT_DATE)
+        AND NOT EXISTS (SELECT 1 FROM iam_revocations rv WHERE rv.tenant_id = $1 AND rv.user_ref = $2 AND rv.cleared_at IS NULL)`,
     [tenantId, userId, key],
   );
   const grants = rows.map((r) => ({ roleCode: r.role_code, effect: r.effect, conditions: r.conditions, scopeType: r.scope_type, scopeId: r.scope_id }));
@@ -30,7 +31,7 @@ export async function can(pool: Pool, ctx: RequestContext, key: string, resource
   return withTransaction(
     pool,
     async (client) => {
-      if (!(await permissionKnown(client, key))) return { allowed: false, reason: `${key} is not a registered permission`, source: null };
+      if (!(await permissionKnown(client, key))) return { allowed: false, denied: false, reason: `${key} is not a registered permission`, source: null };
       const grants = await grantsFor(client, ctx.tenantId, ctx.userId, key);
       return decide(grants, ctx.userId, resource, key);
     },
@@ -64,4 +65,18 @@ export async function dataScope(pool: Pool, ctx: RequestContext, key: string): P
     },
     { tenantId: ctx.tenantId },
   );
+}
+
+/**
+ * SQL for a list: `column = ANY(ids)` when the person has a limited set, nothing when they have none, and no filter for all.
+ * Excluded ids are removed on top of an all-scope. Callers must use this; reading `all` alone would skip the exclusions.
+ */
+export function scopePredicate(scope: { all: boolean; ids: string[]; excluded: string[] }, column: string, paramIndex: number): { sql: string; params: unknown[] } {
+  if (scope.all) {
+    return scope.excluded.length === 0
+      ? { sql: "TRUE", params: [] }
+      : { sql: `${column} <> ALL($${paramIndex}::text[])`, params: [scope.excluded] };
+  }
+  if (scope.ids.length === 0) return { sql: "FALSE", params: [] };
+  return { sql: `${column} = ANY($${paramIndex}::text[])`, params: [scope.ids] };
 }

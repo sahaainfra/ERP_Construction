@@ -32,9 +32,12 @@ export interface Grant {
   scopeId: string | null;
 }
 
-/** Whether an assignment's scope covers a resource. Without a resource, any scope covers (used for menu gating). */
+/**
+ * Whether an assignment's scope covers a resource. With no resource (a check about no particular record, such as a create or a
+ * menu), only a tenant-wide grant covers: a grant at one project must never open an action on another project.
+ */
 export function scopeCovers(grant: Pick<Grant, "scopeType" | "scopeId">, userId: string, resource: Resource | undefined): boolean {
-  if (!resource) return true;
+  if (!resource) return grant.scopeType === "tenant";
   if (grant.scopeType === "tenant") return true;
   if (grant.scopeType === "own") return resource.ownerUserId === userId;
   const field = RESOURCE_FIELD[grant.scopeType];
@@ -66,6 +69,8 @@ export const CONDITION_NAMES = ["maxAmountPaise", "statusIn"] as const;
 
 export interface Decision {
   allowed: boolean;
+  /** True when an explicit deny applied. An elevation must never override this. */
+  denied: boolean;
   reason: string;
   source: { roleCode: string; scopeType: ScopeType; scopeId: string | null } | null;
 }
@@ -74,10 +79,10 @@ export interface Decision {
 export function decide(grants: readonly Grant[], userId: string, resource: Resource | undefined, key: string): Decision {
   const applicable = grants.filter((g) => scopeCovers(g, userId, resource) && conditionsHold(g.conditions, resource));
   const deny = applicable.find((g) => g.effect === "deny");
-  if (deny) return { allowed: false, reason: `${key} is explicitly denied for role ${deny.roleCode}`, source: sourceOf(deny) };
+  if (deny) return { allowed: false, denied: true, reason: `${key} is explicitly denied for role ${deny.roleCode}`, source: sourceOf(deny) };
   const allow = applicable.find((g) => g.effect === "allow");
-  if (allow) return { allowed: true, reason: `allowed by role ${allow.roleCode}`, source: sourceOf(allow) };
-  return { allowed: false, reason: `no grant of ${key} covers this record`, source: null };
+  if (allow) return { allowed: true, denied: false, reason: `allowed by role ${allow.roleCode}`, source: sourceOf(allow) };
+  return { allowed: false, denied: false, reason: `no grant of ${key} covers this record`, source: null };
 }
 
 function sourceOf(g: Grant): Decision["source"] {
@@ -90,6 +95,8 @@ function sourceOf(g: Grant): Decision["source"] {
  */
 export function scopeIds(grants: readonly Grant[], scopeType: "company" | "project" | "site"): { all: boolean; ids: string[]; excluded: string[] } {
   const usable = grants.filter((g) => g.effect === "allow" && Object.keys(g.conditions).length === 0);
+  // A tenant-wide deny for this key removes everything at this level.
+  if (grants.some((g) => g.effect === "deny" && g.scopeType === "tenant")) return { all: false, ids: [], excluded: [] };
   const excluded = [...new Set(grants.filter((g) => g.effect === "deny" && g.scopeType === scopeType && g.scopeId).map((g) => g.scopeId as string))];
   if (usable.some((g) => g.scopeType === "tenant")) return { all: true, ids: [], excluded };
   const ids = [...new Set(usable.filter((g) => g.scopeType === scopeType && g.scopeId).map((g) => g.scopeId as string))].filter((id) => !excluded.includes(id));

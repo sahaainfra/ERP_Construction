@@ -29,7 +29,7 @@ export async function endAssignments(pool: Pool, ctx: RequestContext, input: { a
   await requireRevoke(pool, ctx);
   return runUnitOfWork(pool, ctx, async (uow) => {
     const res = await uow.client.query(
-      "UPDATE iam_user_role_assignments SET valid_to = GREATEST(valid_from, $3::date), revoked_at = now() WHERE tenant_id = $1 AND id = ANY($2::bigint[]) AND approval_status = 'approved' AND (valid_to IS NULL OR valid_to > $3::date)",
+      "UPDATE iam_user_role_assignments SET valid_to = GREATEST(valid_from, $3::date), revoked_at = CASE WHEN $3::date <= CURRENT_DATE THEN now() ELSE NULL END WHERE tenant_id = $1 AND id = ANY($2::bigint[]) AND approval_status = 'approved' AND (valid_to IS NULL OR valid_to > $3::date)",
       [ctx.tenantId, input.assignmentIds, input.endOn],
     );
     await uow.audit({ action: "iam.assignment.ended", entityType: "assignment", entityId: input.assignmentIds.join(","), detail: { endOn: input.endOn, count: res.rowCount } });

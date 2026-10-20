@@ -5,6 +5,8 @@ import { AppError } from "../core/errors";
 import type { RequestContext } from "../core/context";
 import { runUnitOfWork } from "../core/uow";
 import { withTransaction } from "../db/transactions";
+import { can } from "./pdp";
+import { sameActor } from "./actors";
 
 export interface LimitInput {
   userRef: string;
@@ -19,6 +21,8 @@ export interface LimitInput {
 
 /** Creates a limit pending approval. The approver must be someone else (CP-IAM-01). */
 export async function proposeLimit(pool: Pool, ctx: RequestContext, input: LimitInput): Promise<{ id: number }> {
+  const allowed = await can(pool, ctx, "iam.limit.manage");
+  if (!allowed.allowed) throw new AppError("FORBIDDEN", allowed.reason);
   if (!Number.isInteger(input.maxAmountPaise) || input.maxAmountPaise < 0) throw new AppError("VALIDATION_FAILED", "the limit must be a whole number of paise, 0 or more", [{ field: "maxAmountPaise", message: "invalid" }]);
   if (input.reason.trim().length < 10) throw new AppError("VALIDATION_FAILED", "the reason is too short", [{ field: "reason", message: "at least 10 characters" }]);
   return runUnitOfWork(pool, ctx, async (uow) => {
@@ -36,10 +40,12 @@ export async function proposeLimit(pool: Pool, ctx: RequestContext, input: Limit
 
 export async function approveLimit(pool: Pool, ctx: RequestContext, id: number, reason: string): Promise<void> {
   if (reason.trim().length < 10) throw new AppError("VALIDATION_FAILED", "the reason is too short");
+  const allowed = await can(pool, ctx, "iam.limit.approve");
+  if (!allowed.allowed) throw new AppError("FORBIDDEN", allowed.reason);
   await runUnitOfWork(pool, ctx, async (uow) => {
     const found = await uow.client.query<{ created_by: string; approval_status: string }>("SELECT created_by, approval_status FROM iam_authority_limits WHERE id = $1 FOR UPDATE", [id]);
     if (found.rowCount === 0) throw new AppError("NOT_FOUND", "the limit was not found");
-    if (found.rows[0].created_by === ctx.userId) throw new AppError("MAKER_CHECKER_REQUIRED", "the creator cannot approve their own limit");
+    if (await sameActor(uow.client, ctx.tenantId, found.rows[0].created_by, ctx.userId)) throw new AppError("MAKER_CHECKER_REQUIRED", "the creator cannot approve their own limit");
     if (found.rows[0].approval_status !== "pending") throw new AppError("CONFLICT", "the limit has already been decided");
     await uow.client.query("UPDATE iam_authority_limits SET approval_status = 'approved', approved_by = $2 WHERE id = $1", [id, ctx.userId]);
     await uow.audit({ action: "iam.authority_limit.approved", entityType: "authority_limit", entityId: String(id), detail: { reason } });
@@ -67,8 +73,11 @@ export async function limitFor(pool: Pool, ctx: RequestContext, input: { userRef
   return Math.min(...rows.filter((r) => specificity(r) === top).map((r) => Number(r.max_amount_paise)));
 }
 
-/** Whether a person may approve an amount for a document type. Refuses when there is no limit or the amount is above it. */
-export async function mayApprove(pool: Pool, ctx: RequestContext, input: { userRef: string; docType: string; projectId?: number | null; category?: string | null; amountPaise: number; at: string }): Promise<{ allowed: boolean; limitPaise: number | null }> {
-  const limit = await limitFor(pool, ctx, input);
+/**
+ * Whether the signed-in person may approve an amount for a document type. The limit is looked up for the signed-in person only:
+ * a caller cannot ask about someone else's limit.
+ */
+export async function mayApprove(pool: Pool, ctx: RequestContext, input: { docType: string; projectId?: number | null; category?: string | null; amountPaise: number; at: string }): Promise<{ allowed: boolean; limitPaise: number | null }> {
+  const limit = await limitFor(pool, ctx, { userRef: ctx.userId, docType: input.docType, projectId: input.projectId, category: input.category, at: input.at });
   return { allowed: limit !== null && input.amountPaise <= limit, limitPaise: limit };
 }

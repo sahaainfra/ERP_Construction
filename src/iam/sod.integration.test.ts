@@ -9,6 +9,7 @@ import { migrateUp, resetForTests } from "../db/migrator";
 import { withTransaction } from "../db/transactions";
 import { buildContext, type RequestContext } from "../core/context";
 import { registerPermissions } from "./roles";
+import { IAM_PERMISSIONS } from "./actors";
 import { approveException, approveRule, detectiveScan, linkActor, openFindings, proposeException, proposeRule, recordAction, resolveFinding, seedRules, setEnforcement } from "./sod";
 
 const TEST_URL = process.env.TEST_DATABASE_URL;
@@ -41,6 +42,7 @@ describe.skipIf(!TEST_URL || !APP_URL)("segregation of duties (Part 07 S3)", () 
     app = createPool(APP_URL!, { application_name: "erp-sodtest-app" });
     await resetForTests(owner);
     await migrateUp(owner, loadMigrations(dir));
+    await registerPermissions(app, IAM_PERMISSIONS);
     await registerPermissions(app, [{ key: "iam.sod.manage", module: "iam", description: "Manage segregation-of-duties rules", stage: "APPROVE", sensitivity: "privileged" }]);
   });
 
@@ -55,19 +57,28 @@ describe.skipIf(!TEST_URL || !APP_URL)("segregation of duties (Part 07 S3)", () 
       owner,
       async (c) => {
         const role = await c.query<{ id: string }>("INSERT INTO iam_roles (tenant_id, role_code, name, created_by) VALUES ($1, $2, 'SoD admin', 'bootstrap') RETURNING id", [tenant, `sod_admin_${randomUUID().slice(0, 8)}`]);
-        await c.query("INSERT INTO iam_role_permissions (tenant_id, role_id, permission_key, effect, created_by, approved_by, approval_status, change_reason) VALUES ($1, $2, 'iam.sod.manage', 'allow', 'bootstrap', 'bootstrap-owner', 'approved', 'Bootstrap SoD administrator grant')", [tenant, role.rows[0].id]);
+        for (const key of ["iam.sod.manage", "iam.sod.exception.approve"]) {
+          await c.query("INSERT INTO iam_role_permissions (tenant_id, role_id, permission_key, effect, created_by, approved_by, approval_status, change_reason) VALUES ($1, $2, $3, 'allow', 'bootstrap', 'bootstrap-owner', 'approved', 'Bootstrap SoD administrator grant')", [tenant, role.rows[0].id, key]);
+        }
         await c.query("INSERT INTO iam_user_role_assignments (tenant_id, user_ref, role_id, scope_type, valid_from, created_by, approved_by, approval_status, reason) VALUES ($1, $2, $3, 'tenant', '2026-01-01', 'bootstrap', 'bootstrap-owner', 'approved', 'Bootstrap SoD administrator assignment')", [tenant, userId, role.rows[0].id]);
       },
       { tenantId: tenant },
     );
   }
 
+  /** A signed-in person who holds the SoD approval permissions. */
+  async function approverIn(tenant: string): Promise<RequestContext> {
+    const ctx = contextFor(tenant);
+    await bootstrapAdmin(tenant, ctx.userId);
+    return ctx;
+  }
+
   /** A rule approved to observe, or to enforce by a third person. */
   async function ruleAt(tenant: string, admin: RequestContext, code: string, to: "observe" | "enforce") {
     const id = await withTransaction(app, (c) => c.query<{ id: string }>("SELECT id FROM iam_sod_rules WHERE rule_code = $1", [code]), { tenantId: tenant }).then((r) => Number(r.rows[0].id));
-    const approver = contextFor(tenant);
+    const approver = await approverIn(tenant);
     await approveRule(app, approver, id, "Checked against the authority matrix");
-    if (to === "enforce") await setEnforcement(app, contextFor(tenant), id, "enforce", "Enforced after the observation period");
+    if (to === "enforce") await setEnforcement(app, await approverIn(tenant), id, "enforce", "Enforced after the observation period");
     void admin;
     return id;
   }
@@ -103,10 +114,10 @@ describe.skipIf(!TEST_URL || !APP_URL)("segregation of duties (Part 07 S3)", () 
     await bootstrapAdmin(tenant, admin.userId);
     await seedRules(app, admin);
     const id = await withTransaction(app, (c) => c.query<{ id: string }>("SELECT id FROM iam_sod_rules WHERE rule_code = 'PO_CREATE_APPROVE'"), { tenantId: tenant }).then((r) => Number(r.rows[0].id));
-    const checker = contextFor(tenant);
+    const checker = await approverIn(tenant);
     await approveRule(app, checker, id, "Checked against the authority matrix");
     await expectRefused(setEnforcement(app, checker, id, "enforce", "The approver tries to enforce"), "MAKER_CHECKER_REQUIRED");
-    await setEnforcement(app, contextFor(tenant), id, "enforce", "Enforced after the observation period");
+    await setEnforcement(app, await approverIn(tenant), id, "enforce", "Enforced after the observation period");
     const maker = randomUUID();
     await recordAction(app, contextFor(tenant, maker), { actionKey: "purchase.order.create", entityType: "po", entityId: "PO-BLK" });
     await expectRefused(recordAction(app, contextFor(tenant, maker), { actionKey: "purchase.order.approve", entityType: "po", entityId: "PO-BLK" }), "PROTOCOL_BLOCKED");
@@ -147,7 +158,7 @@ describe.skipIf(!TEST_URL || !APP_URL)("segregation of duties (Part 07 S3)", () 
     );
     const ex = await proposeException(app, admin, { ruleId, personRef: person, reason: "A small site with one store keeper", compensatingControl: "Monthly review by the finance controller", validFrom: "2026-10-20", validTo: "2026-11-20" });
     await expectRefused(approveException(app, admin, ex.id), "MAKER_CHECKER_REQUIRED");
-    await approveException(app, contextFor(tenant), ex.id);
+    await approveException(app, await approverIn(tenant), ex.id);
     await recordAction(app, contextFor(tenant, person), { actionKey: "purchase.order.create", entityType: "po", entityId: "PO-EXC" });
     const { violations } = await recordAction(app, contextFor(tenant, person), { actionKey: "purchase.order.approve", entityType: "po", entityId: "PO-EXC" });
     expect(violations).toEqual([expect.objectContaining({ ruleCode: "PO_CREATE_APPROVE", covered: true })]);

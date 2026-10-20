@@ -7,6 +7,7 @@ import type { RequestContext } from "../core/context";
 import { runUnitOfWork } from "../core/uow";
 import { withTransaction } from "../db/transactions";
 import { can } from "./pdp";
+import { sameActor } from "./actors";
 
 export async function openReview(pool: Pool, ctx: RequestContext, input: { scopeType: "company" | "project"; scopeId: string; dueOn: string; graceDays?: number; reviewerRef: string }): Promise<{ id: number; items: number }> {
   const allowed = await can(pool, ctx, "iam.access.review");
@@ -21,8 +22,8 @@ export async function openReview(pool: Pool, ctx: RequestContext, input: { scope
     const items = await uow.client.query(
       `INSERT INTO iam_access_review_items (tenant_id, review_id, assignment_id, user_ref, reviewer_ref)
        SELECT tenant_id, $2, id, user_ref, $3 FROM iam_user_role_assignments
-        WHERE tenant_id = $1 AND scope_type = $4 AND scope_id = $5 AND approval_status = 'approved' AND (valid_to IS NULL OR valid_to >= CURRENT_DATE)
-          AND user_ref <> $3`,
+        WHERE tenant_id = $1 AND (scope_type = 'tenant' OR (scope_type = $4 AND scope_id = $5)) AND approval_status = 'approved'
+          AND revoked_at IS NULL AND (valid_to IS NULL OR valid_to >= CURRENT_DATE) AND user_ref <> $3`,
       [ctx.tenantId, reviewId, input.reviewerRef, input.scopeType, input.scopeId],
     );
     await uow.audit({ action: "iam.access_review.opened", entityType: "access_review", entityId: String(reviewId), detail: { items: items.rowCount } });
@@ -43,7 +44,7 @@ export async function decideItem(pool: Pool, ctx: RequestContext, itemId: number
     const item = found.rows[0];
     if (item.review_status !== "open") throw new AppError("CONFLICT", "the campaign is closed");
     if (item.reviewer_ref !== ctx.userId) throw new AppError("FORBIDDEN", "only the assigned reviewer can decide this item");
-    if (item.user_ref === ctx.userId) throw new AppError("MAKER_CHECKER_REQUIRED", "nobody reviews their own access");
+    if (await sameActor(uow.client, ctx.tenantId, item.user_ref, ctx.userId)) throw new AppError("MAKER_CHECKER_REQUIRED", "nobody reviews their own access");
     if (item.decision !== "pending") throw new AppError("CONFLICT", "this item has already been decided");
     await uow.client.query("UPDATE iam_access_review_items SET decision = $2, decided_by = $3, decided_at = now(), reason = $4 WHERE id = $1", [itemId, decision, ctx.userId, reason]);
     if (decision === "revoke") {
@@ -76,19 +77,23 @@ export async function expireUnreviewed(pool: Pool, ctx: RequestContext, reviewId
 
 /** Closes a campaign only when every item is decided (CP-IAM-06). */
 export async function closeReview(pool: Pool, ctx: RequestContext, reviewId: number): Promise<void> {
-  await runUnitOfWork(pool, ctx, async (uow) => {
+  const allowed = await can(pool, ctx, "iam.access.review");
+  if (!allowed.allowed) throw new AppError("FORBIDDEN", allowed.reason);
+  const blockedBy = await runUnitOfWork(pool, ctx, async (uow) => {
     const review = await uow.client.query<{ status: string }>("SELECT status FROM iam_access_reviews WHERE id = $1 FOR UPDATE", [reviewId]);
     if (review.rowCount === 0) throw new AppError("NOT_FOUND", "the campaign was not found");
     if (review.rows[0].status !== "open") throw new AppError("CONFLICT", "the campaign is already closed");
     const pending = await uow.client.query<{ n: string }>("SELECT count(*) AS n FROM iam_access_review_items WHERE review_id = $1 AND decision = 'pending'", [reviewId]);
     if (Number(pending.rows[0].n) > 0) {
       await uow.evaluate({ cpCode: "CP-IAM-06", result: "BLOCK", detail: { pending: Number(pending.rows[0].n) } });
-      throw new AppError("PROTOCOL_BLOCKED", `${pending.rows[0].n} grant(s) still need a decision`);
+      return Number(pending.rows[0].n);
     }
     await uow.client.query("UPDATE iam_access_reviews SET status = 'closed', closed_by = $2 WHERE id = $1", [reviewId, ctx.userId]);
     await uow.evaluate({ cpCode: "CP-IAM-06", result: "PASS", detail: { reviewId } });
     await uow.audit({ action: "iam.access_review.closed", entityType: "access_review", entityId: String(reviewId), detail: {} });
+    return 0;
   });
+  if (blockedBy > 0) throw new AppError("PROTOCOL_BLOCKED", `${blockedBy} grant(s) still need a decision`);
 }
 
 export async function pendingCount(pool: Pool, ctx: RequestContext, reviewId: number): Promise<number> {

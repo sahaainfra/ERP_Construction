@@ -8,6 +8,7 @@ import type { RequestContext } from "../core/context";
 import { runUnitOfWork } from "../core/uow";
 import { withTransaction } from "../db/transactions";
 import { can } from "./pdp";
+import { personOf, sameActor } from "./actors";
 
 export const ACTION_KEY = /^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*){1,3}$/;
 const MAX_EXCEPTION_DAYS = 90;
@@ -74,10 +75,6 @@ export async function linkActor(pool: Pool, ctx: RequestContext, actorRef: strin
   );
 }
 
-async function personOf(client: PoolClient, tenantId: string, actorRef: string): Promise<string> {
-  const { rows } = await client.query<{ person_ref: string }>("SELECT person_ref FROM iam_actor_links WHERE tenant_id = $1 AND actor_ref = $2", [tenantId, actorRef]);
-  return rows[0]?.person_ref ?? actorRef;
-}
 
 export interface Violation {
   ruleCode: string;
@@ -176,10 +173,12 @@ export async function proposeRule(pool: Pool, ctx: RequestContext, input: { code
 /** Moves a draft rule to observe. A second person approves it (CP-IAM-01). */
 export async function approveRule(pool: Pool, ctx: RequestContext, id: number, reason: string): Promise<void> {
   if (reason.trim().length < 10) throw new AppError("VALIDATION_FAILED", "the reason is too short");
+  const allowed = await can(pool, ctx, "iam.sod.manage");
+  if (!allowed.allowed) throw new AppError("FORBIDDEN", allowed.reason);
   await runUnitOfWork(pool, ctx, async (uow) => {
     const found = await uow.client.query<{ created_by: string; enforcement: string }>("SELECT created_by, enforcement FROM iam_sod_rules WHERE id = $1 FOR UPDATE", [id]);
     if (found.rowCount === 0) throw new AppError("NOT_FOUND", "the rule was not found");
-    if (found.rows[0].created_by === ctx.userId) throw new AppError("MAKER_CHECKER_REQUIRED", "the creator cannot approve their own rule");
+    if (await sameActor(uow.client, ctx.tenantId, found.rows[0].created_by, ctx.userId)) throw new AppError("MAKER_CHECKER_REQUIRED", "the creator cannot approve their own rule");
     if (found.rows[0].enforcement !== "draft") throw new AppError("CONFLICT", "the rule is not a draft");
     await uow.client.query("UPDATE iam_sod_rules SET enforcement = 'observe', approved_by = $2 WHERE id = $1", [id, ctx.userId]);
     await uow.audit({ action: "iam.sod_rule.approved", entityType: "sod_rule", entityId: String(id), detail: { reason } });
@@ -190,13 +189,17 @@ export async function approveRule(pool: Pool, ctx: RequestContext, id: number, r
 /** Moves an observed rule to enforce, or retires it. Enforcing needs a third person: not the creator, not the observer approver. */
 export async function setEnforcement(pool: Pool, ctx: RequestContext, id: number, to: "enforce" | "retired", reason: string): Promise<void> {
   if (reason.trim().length < 10) throw new AppError("VALIDATION_FAILED", "the reason is too short");
+  const allowed = await can(pool, ctx, "iam.sod.manage");
+  if (!allowed.allowed) throw new AppError("FORBIDDEN", allowed.reason);
   await runUnitOfWork(pool, ctx, async (uow) => {
     const found = await uow.client.query<{ created_by: string; approved_by: string | null; enforcement: string }>("SELECT created_by, approved_by, enforcement FROM iam_sod_rules WHERE id = $1 FOR UPDATE", [id]);
     if (found.rowCount === 0) throw new AppError("NOT_FOUND", "the rule was not found");
     const rule = found.rows[0];
     if (to === "enforce") {
       if (rule.enforcement !== "observe") throw new AppError("CONFLICT", "only an observed rule can be enforced");
-      if (ctx.userId === rule.created_by || ctx.userId === rule.approved_by) throw new AppError("MAKER_CHECKER_REQUIRED", "enforcing needs a different person from the creator and the observer approver");
+      if ((await sameActor(uow.client, ctx.tenantId, ctx.userId, rule.created_by)) || (rule.approved_by !== null && (await sameActor(uow.client, ctx.tenantId, ctx.userId, rule.approved_by)))) {
+        throw new AppError("MAKER_CHECKER_REQUIRED", "enforcing needs a different person from the creator and the observer approver");
+      }
       await uow.client.query("UPDATE iam_sod_rules SET enforcement = 'enforce', enforce_approved_by = $2 WHERE id = $1", [id, ctx.userId]);
     } else {
       await uow.client.query("UPDATE iam_sod_rules SET enforcement = 'retired' WHERE id = $1", [id]);
@@ -207,6 +210,8 @@ export async function setEnforcement(pool: Pool, ctx: RequestContext, id: number
 }
 
 export async function proposeException(pool: Pool, ctx: RequestContext, input: { ruleId: number; personRef: string; projectId?: string | null; reason: string; compensatingControl: string; validFrom: string; validTo: string }): Promise<{ id: number }> {
+  const allowed = await can(pool, ctx, "iam.sod.manage");
+  if (!allowed.allowed) throw new AppError("FORBIDDEN", allowed.reason);
   if (input.reason.trim().length < 20 || input.compensatingControl.trim().length < 20) throw new AppError("VALIDATION_FAILED", "the reason and the compensating control need at least 20 characters each");
   const days = (Date.parse(input.validTo) - Date.parse(input.validFrom)) / 86_400_000;
   if (!(days >= 0 && days <= MAX_EXCEPTION_DAYS)) throw new AppError("VALIDATION_FAILED", `an exception lasts at most ${MAX_EXCEPTION_DAYS} days`, [{ field: "validTo", message: "too long" }]);
@@ -225,10 +230,15 @@ export async function proposeException(pool: Pool, ctx: RequestContext, input: {
 }
 
 export async function approveException(pool: Pool, ctx: RequestContext, id: number): Promise<void> {
+  const allowed = await can(pool, ctx, "iam.sod.exception.approve");
+  if (!allowed.allowed) throw new AppError("FORBIDDEN", allowed.reason);
   await runUnitOfWork(pool, ctx, async (uow) => {
-    const found = await uow.client.query<{ created_by: string; approval_status: string }>("SELECT created_by, approval_status FROM iam_sod_exceptions WHERE id = $1 FOR UPDATE", [id]);
+    const found = await uow.client.query<{ created_by: string; approval_status: string; person_ref: string }>("SELECT created_by, approval_status, person_ref FROM iam_sod_exceptions WHERE id = $1 FOR UPDATE", [id]);
     if (found.rowCount === 0) throw new AppError("NOT_FOUND", "the exception was not found");
-    if (found.rows[0].created_by === ctx.userId) throw new AppError("MAKER_CHECKER_REQUIRED", "the requester cannot approve their own exception");
+    // Neither the requester nor the person the exception covers (on any of their accounts) may approve it.
+    if (await sameActor(uow.client, ctx.tenantId, found.rows[0].created_by, ctx.userId) || (await sameActor(uow.client, ctx.tenantId, found.rows[0].person_ref, ctx.userId))) {
+      throw new AppError("MAKER_CHECKER_REQUIRED", "the requester and the covered person cannot approve the exception");
+    }
     if (found.rows[0].approval_status !== "pending") throw new AppError("CONFLICT", "the exception has already been decided");
     await uow.client.query("UPDATE iam_sod_exceptions SET approval_status = 'approved', approved_by = $2 WHERE id = $1", [id, ctx.userId]);
     await uow.audit({ action: "iam.sod_exception.approved", entityType: "sod_exception", entityId: String(id), detail: {} });
@@ -246,6 +256,8 @@ export async function detectiveScan(pool: Pool, ctx: RequestContext): Promise<nu
   return withTransaction(
     pool,
     async (client) => {
+      // One scan at a time per tenant, so two scans cannot both add the same finding.
+      await client.query("SELECT pg_advisory_xact_lock(hashtext($1))", [`${ctx.tenantId}:detective-scan`]);
       const { rows: rules } = await client.query<RuleRow>("SELECT id, rule_code, left_action, right_action, exception_allowed, enforcement FROM iam_sod_rules WHERE tenant_id = $1 AND enforcement IN ('observe','enforce')", [ctx.tenantId]);
       let added = 0;
       for (const rule of rules) {
@@ -295,6 +307,8 @@ export async function openFindings(pool: Pool, ctx: RequestContext): Promise<num
 /** Marks a finding resolved by appending a resolved row. The earlier rows stay. */
 export async function resolveFinding(pool: Pool, ctx: RequestContext, input: { ruleId: number; entityType: string; entityId: string; personRef: string; reason: string }): Promise<void> {
   if (input.reason.trim().length < 10) throw new AppError("VALIDATION_FAILED", "the reason is too short");
+  const allowed = await can(pool, ctx, "iam.sod.manage");
+  if (!allowed.allowed) throw new AppError("FORBIDDEN", allowed.reason);
   await runUnitOfWork(pool, ctx, async (uow) => {
     const res = await uow.client.query(
       `INSERT INTO iam_sod_findings (tenant_id, rule_id, person_ref, entity_type, entity_id, source, status)

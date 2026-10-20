@@ -1,6 +1,6 @@
 // Part 07 S4–S5 acceptance tests: elevation, joiner/mover/leaver, access reviews, export controls, shadow comparisons, and the
 // request pipeline. Run against the test database; skipped without it.
-import { randomUUID } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 import { join } from "node:path";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -10,12 +10,15 @@ import { migrateUp, resetForTests } from "../db/migrator";
 import { withTransaction } from "../db/transactions";
 import { buildContext, type RequestContext } from "../core/context";
 import { can } from "./pdp";
+import { IAM_PERMISSIONS } from "./actors";
 import { approveAssignment, approveRoleGrant, createRole, proposeRoleGrant, registerPermissions } from "./roles";
 import { approveElevation, decideWithElevation, endElevation, isElevated, requestElevation } from "./privileged";
 import { endAssignments, joinerAssignments, leaver, settlementGate } from "./jml";
 import { closeReview, decideItem, expireUnreviewed, openReview, pendingCount } from "./reviews";
 import { authorizeExport, setExportRule } from "./exports";
 import { recordComparison, switchOverReady } from "./shadow";
+import { base32Decode, totpAt } from "./crypto";
+import { confirmTotp, createCredentials, enrolTotp, login } from "./auth";
 import { runRoute } from "./pipeline";
 
 const TEST_URL = process.env.TEST_DATABASE_URL;
@@ -50,6 +53,7 @@ describe.skipIf(!TEST_URL || !APP_URL)("Part 07 S4–S5", () => {
     app = createPool(APP_URL!, { application_name: "erp-s45test-app" });
     await resetForTests(owner);
     await migrateUp(owner, loadMigrations(dir));
+    await registerPermissions(app, IAM_PERMISSIONS);
     await registerPermissions(app, [
       { key: "iam.role.manage", module: "iam", description: "Manage roles and role grants", stage: "APPROVE", sensitivity: "privileged" },
       { key: "iam.assignment.create", module: "iam", description: "Assign roles within own scope", stage: "APPROVE", sensitivity: "privileged" },
@@ -59,6 +63,7 @@ describe.skipIf(!TEST_URL || !APP_URL)("Part 07 S4–S5", () => {
       { key: "iam.export.manage", module: "iam", description: "Manage export rules", stage: "APPROVE", sensitivity: "privileged" },
       { key: "payroll.run.approve", module: "payroll", description: "Approve a payroll run", stage: "APPROVE", sensitivity: "privileged" },
       { key: "procurement.po.create", module: "procurement", description: "Create purchase orders", stage: "PLAN", sensitivity: "standard" },
+      { key: "procurement.po.approve", module: "procurement", description: "Approve purchase orders", stage: "APPROVE", sensitivity: "standard" },
       { key: "reports.payroll.register", module: "reports", description: "Export the payroll register", stage: "RECORD", sensitivity: "sensitive" },
     ]);
   });
@@ -121,9 +126,9 @@ describe.skipIf(!TEST_URL || !APP_URL)("Part 07 S4–S5", () => {
     it("revokes a leaver at once, rejects their pending grants, and holds settlement until it is done", async () => {
       const tenant = randomUUID();
       const admin = contextFor(tenant);
-      await grantRole(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create", "iam.access.revoke"]);
+      await grantRole(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create", "procurement.po.create", "procurement.po.approve", "iam.access.revoke"]);
       const checker = contextFor(tenant);
-      await grantRole(tenant, checker.userId, ["iam.assignment.create", "iam.role.manage"]);
+      await grantRole(tenant, checker.userId, ["iam.assignment.create", "iam.role.manage", "iam.assignment.approve"]);
       const role = await createRole(app, admin, { code: "buyer_jml", name: "Buyer" });
       const grant = await proposeRoleGrant(app, admin, { roleId: role.id, permissionKey: "procurement.po.create", effect: "allow", reason: REASON });
       await approveRoleGrant(app, checker, grant.id, "Checked against the purchasing policy");
@@ -143,7 +148,7 @@ describe.skipIf(!TEST_URL || !APP_URL)("Part 07 S4–S5", () => {
     it("ends a mover's old assignment from a date, without touching others", async () => {
       const tenant = randomUUID();
       const admin = contextFor(tenant);
-      await grantRole(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create", "iam.access.revoke"]);
+      await grantRole(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create", "procurement.po.create", "procurement.po.approve", "iam.access.revoke"]);
       const role = await createRole(app, admin, { code: "site_eng", name: "Site engineer" });
       const person = randomUUID();
       const ids = await joinerAssignments(app, admin, { userRef: person, assignments: [
@@ -158,27 +163,29 @@ describe.skipIf(!TEST_URL || !APP_URL)("Part 07 S4–S5", () => {
     it("closes only at 100 % decisions, and expires what nobody decided after the grace period", async () => {
       const tenant = randomUUID();
       const admin = contextFor(tenant);
-      await grantRole(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create", "iam.access.review"]);
+      await grantRole(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create", "procurement.po.create", "procurement.po.approve", "iam.access.review"]);
       const reviewer = contextFor(tenant);
-      await grantRole(tenant, reviewer.userId, ["iam.access.review"]);
+      await grantRole(tenant, reviewer.userId, ["iam.access.review", "iam.assignment.approve", "iam.role.manage"]);
       const role = await createRole(app, admin, { code: "reviewed_role", name: "Reviewed" });
       const g = await proposeRoleGrant(app, admin, { roleId: role.id, permissionKey: "procurement.po.create", effect: "allow", reason: REASON });
       await approveRoleGrant(app, reviewer, g.id, "Checked against the purchasing policy");
       const u1 = randomUUID();
       const u2 = randomUUID();
       for (const u of [u1, u2]) {
-        const [id] = await joinerAssignments(app, admin, { userRef: u, assignments: [{ userRef: u, roleId: role.id, scopeType: "project", scopeId: "P-REV", validFrom: "2026-01-01", reason: REASON, scopeResource: { projectId: "P-REV" } }] });
+        const [id] = await joinerAssignments(app, admin, { userRef: u, assignments: [{ userRef: u, roleId: role.id, scopeType: "project", scopeId: "P-REV", validFrom: "2026-01-01", reason: REASON }] });
         await approveAssignment(app, reviewer, id, "Checked against the joiner record");
       }
       const review = await openReview(app, admin, { scopeType: "project", scopeId: "P-REV", dueOn: "2026-01-01", graceDays: 0, reviewerRef: reviewer.userId });
-      expect(review.items).toBe(2);
+      // Both project grants plus the administrator's tenant-wide grant (campaigns cover tenant-wide grants too).
+      expect(review.items).toBe(3);
       const items = await withTransaction(app, (c) => c.query<{ id: string; user_ref: string }>("SELECT id, user_ref FROM iam_access_review_items WHERE review_id = $1 ORDER BY id", [review.id]), { tenantId: tenant });
-      await expectRefused(decideItem(app, contextFor(tenant), Number(items.rows[0].id), "keep", "Not my item to decide here"), "FORBIDDEN");
-      await decideItem(app, reviewer, Number(items.rows[0].id), "keep", "Still needed for the project");
-      expect(await pendingCount(app, reviewer, review.id)).toBe(1);
+      const itemOf = (user: string) => Number(items.rows.find((r) => r.user_ref === user)?.id);
+      await expectRefused(decideItem(app, contextFor(tenant), itemOf(u1), "keep", "Not my item to decide here"), "FORBIDDEN");
+      await decideItem(app, reviewer, itemOf(u1), "keep", "Still needed for the project");
+      expect(await pendingCount(app, reviewer, review.id)).toBe(2);
       await expectRefused(closeReview(app, reviewer, review.id), "PROTOCOL_BLOCKED", "still need a decision");
-      expect(await expireUnreviewed(app, reviewer, review.id, new Date("2026-06-01T00:00:00Z"))).toBe(1);
-      expect((await can(app, contextFor(tenant, items.rows[1].user_ref), "procurement.po.create", { projectId: "P-REV" })).allowed).toBe(false);
+      expect(await expireUnreviewed(app, reviewer, review.id, new Date("2026-06-01T00:00:00Z"))).toBe(2);
+      expect((await can(app, contextFor(tenant, u2), "procurement.po.create", { projectId: "P-REV" })).allowed).toBe(false);
       await closeReview(app, reviewer, review.id);
     });
 
@@ -192,21 +199,93 @@ describe.skipIf(!TEST_URL || !APP_URL)("Part 07 S4–S5", () => {
   });
 
   describe("export controls (S4; REQ-IAM-F20)", () => {
-    it("allows a small export with a watermark, asks for step-up above a threshold, and denies above the limit", async () => {
+    it("counts rows on the server, asks for a fresh second factor above a threshold, and denies above the limit", async () => {
       const tenant = randomUUID();
       const admin = contextFor(tenant);
       await grantRole(tenant, admin.userId, ["iam.export.manage"]);
       await setExportRule(app, admin, { reportKey: "reports.payroll.register", permissionKey: "reports.payroll.register", maxRows: 10000, stepUpAboveRows: 1000 });
       const user = contextFor(tenant);
       await grantRole(tenant, user.userId, ["reports.payroll.register"]);
-      const small = await authorizeExport(app, user, { reportKey: "reports.payroll.register", rowCount: 500, stepUpVerified: false });
-      expect(small).toMatchObject({ decision: "allowed" });
+      // Two real sessions: one signed in with a password only, one after a second factor was verified.
+      const keys = { tokenKey: randomBytes(32), mfaKey: randomBytes(32) };
+      const password = "a long quiet passphrase 1";
+      await createCredentials(app, tenant, user.userId, password);
+      const plain = await login(app, keys, { tenantId: tenant, userRef: user.userId, password, deviceFingerprint: "laptop" });
+      const { secret } = await enrolTotp(app, keys, tenant, user.userId);
+      const raw = base32Decode(secret);
+      const now = new Date();
+      const step = Math.floor(now.getTime() / 1000 / 30);
+      await confirmTotp(app, keys, tenant, user.userId, totpAt(raw, step), now);
+      const later = new Date(now.getTime() + 60_000);
+      const withMfa = await login(app, keys, { tenantId: tenant, userRef: user.userId, password, deviceFingerprint: "laptop", mfaCode: totpAt(raw, step + 2), now: later });
+      const rows = (n: number) => async () => n;
+      expect(await authorizeExport(app, user, { reportKey: "reports.payroll.register", count: rows(500), sessionId: plain.sessionId })).toMatchObject({ decision: "allowed" });
+      const small = await authorizeExport(app, user, { reportKey: "reports.payroll.register", count: rows(500), sessionId: plain.sessionId });
       expect(small.watermark).toContain(user.userId);
-      expect((await authorizeExport(app, user, { reportKey: "reports.payroll.register", rowCount: 5000, stepUpVerified: false })).decision).toBe("step_up_required");
-      expect((await authorizeExport(app, user, { reportKey: "reports.payroll.register", rowCount: 5000, stepUpVerified: true })).decision).toBe("allowed");
-      expect((await authorizeExport(app, user, { reportKey: "reports.payroll.register", rowCount: 20000, stepUpVerified: true })).decision).toBe("denied");
-      expect((await authorizeExport(app, contextFor(tenant), { reportKey: "reports.payroll.register", rowCount: 5, stepUpVerified: true })).decision).toBe("denied");
-      expect((await authorizeExport(app, user, { reportKey: "reports.unknown", rowCount: 5, stepUpVerified: true })).decision).toBe("denied");
+      expect((await authorizeExport(app, user, { reportKey: "reports.payroll.register", count: rows(5000), sessionId: plain.sessionId })).decision).toBe("step_up_required");
+      expect((await authorizeExport(app, user, { reportKey: "reports.payroll.register", count: rows(5000), sessionId: withMfa.sessionId })).decision).toBe("allowed");
+      expect((await authorizeExport(app, user, { reportKey: "reports.payroll.register", count: rows(20000), sessionId: withMfa.sessionId })).decision).toBe("denied");
+      expect((await authorizeExport(app, contextFor(tenant), { reportKey: "reports.payroll.register", count: rows(5), sessionId: null })).decision).toBe("denied");
+      expect((await authorizeExport(app, user, { reportKey: "reports.unknown", count: rows(5), sessionId: withMfa.sessionId })).decision).toBe("denied");
+    });
+  });
+
+  describe("review findings: guarantees that must hold (Part 07 independent review)", () => {
+    it("an elevation never overrides an explicit deny", async () => {
+      const tenant = randomUUID();
+      const admin = contextFor(tenant);
+      await grantRole(tenant, admin.userId, ["iam.elevation.approve", "payroll.run.approve"]);
+      const user = contextFor(tenant);
+      const deny = await withTransaction(owner, async (c) => {
+        const role = await c.query<{ id: string }>("INSERT INTO iam_roles (tenant_id, role_code, name, created_by) VALUES ($1, 'freeze_pay', 'Freeze', 'bootstrap') RETURNING id", [tenant]);
+        await c.query("INSERT INTO iam_role_permissions (tenant_id, role_id, permission_key, effect, created_by, approved_by, approval_status, change_reason) VALUES ($1, $2, 'payroll.run.approve', 'deny', 'bootstrap', 'bootstrap-owner', 'approved', 'Bootstrap freeze')", [tenant, role.rows[0].id]);
+        await c.query("INSERT INTO iam_user_role_assignments (tenant_id, user_ref, role_id, scope_type, valid_from, created_by, approved_by, approval_status, reason) VALUES ($1, $2, $3, 'tenant', '2026-01-01', 'bootstrap', 'bootstrap-owner', 'approved', 'Bootstrap freeze assignment')", [tenant, user.userId, role.rows[0].id]);
+        return true;
+      }, { tenantId: tenant });
+      expect(deny).toBe(true);
+      const { id } = await requestElevation(app, user, { permissionKey: "payroll.run.approve", reason: "Needs the run approved today", hours: 2 });
+      await approveElevation(app, admin, id);
+      expect(await decideWithElevation(app, user, "payroll.run.approve")).toMatchObject({ allowed: false, via: "none" });
+    });
+
+    it("a revoked person gets no decision, even through an elevation or a grant issued after the revocation", async () => {
+      const tenant = randomUUID();
+      const admin = contextFor(tenant);
+      await grantRole(tenant, admin.userId, ["iam.access.revoke", "procurement.po.create"]);
+      const user = contextFor(tenant);
+      await grantRole(tenant, user.userId, ["procurement.po.create"]);
+      expect((await can(app, user, "procurement.po.create")).allowed).toBe(true);
+      await leaver(app, admin, { userRef: user.userId, reason: "Left the company this week" });
+      expect((await can(app, user, "procurement.po.create")).allowed).toBe(false);
+    });
+
+    it("refuses an approval by a person without the approval permission", async () => {
+      const tenant = randomUUID();
+      const admin = contextFor(tenant);
+      await grantRole(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create"]);
+      const role = await createRole(app, admin, { code: "unapproved_role", name: "Unapproved" });
+      const g = await proposeRoleGrant(app, admin, { roleId: role.id, permissionKey: "procurement.po.create", effect: "allow", reason: REASON });
+      await expectRefused(approveRoleGrant(app, contextFor(tenant), g.id, "Approving without any permission"), "FORBIDDEN");
+    });
+
+    it("refuses an approval by a second account of the requester", async () => {
+      const tenant = randomUUID();
+      const admin = contextFor(tenant);
+      await grantRole(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create"]);
+      const twin = contextFor(tenant);
+      await grantRole(tenant, twin.userId, ["iam.role.manage"]);
+      await withTransaction(app, (c) => c.query("INSERT INTO iam_actor_links (tenant_id, actor_ref, person_ref, linked_by) VALUES ($1, $2, 'EMP-42', 'hr'), ($1, $3, 'EMP-42', 'hr')", [tenant, admin.userId, twin.userId]), { tenantId: tenant });
+      const role = await createRole(app, admin, { code: "twin_role", name: "Twin" });
+      const g = await proposeRoleGrant(app, admin, { roleId: role.id, permissionKey: "procurement.po.create", effect: "allow", reason: REASON });
+      await expectRefused(approveRoleGrant(app, twin, g.id, "Approving through a second account"), "MAKER_CHECKER_REQUIRED");
+    });
+
+    it("refuses a grant whose condition is malformed, so a deny cannot fail open", async () => {
+      const tenant = randomUUID();
+      const admin = contextFor(tenant);
+      await grantRole(tenant, admin.userId, ["iam.role.manage"]);
+      const role = await createRole(app, admin, { code: "bad_cond", name: "Bad condition" });
+      await expectRefused(proposeRoleGrant(app, admin, { roleId: role.id, permissionKey: "procurement.po.create", effect: "deny", conditions: { statusIn: "draft" }, reason: REASON }), "VALIDATION_FAILED", "statusIn");
     });
   });
 
@@ -232,8 +311,9 @@ describe.skipIf(!TEST_URL || !APP_URL)("Part 07 S4–S5", () => {
       const session = { tenantId: tenant, companyId: user.companyId, userId: user.userId, sessionId: "s1" };
       await expectRefused(runRoute(app, session, spec, { projectId: "P1", title: "x" }, { correlationId: "c2", handler }), "FORBIDDEN");
       await grantRole(tenant, user.userId, ["procurement.po.create"], { type: "project", id: "P1" });
-      await expectRefused(runRoute(app, session, spec, { projectId: "P1", title: "x", price: 1 }, { correlationId: "c3", handler }), "VALIDATION_FAILED", "price");
-      expect(await runRoute(app, session, spec, { projectId: "P1", title: "x" }, { correlationId: "c4", handler })).toEqual({ ok: true });
+      const loadProject = async (input: { projectId?: unknown }) => ({ projectId: typeof input.projectId === "string" ? input.projectId : undefined });
+      await expectRefused(runRoute(app, session, spec, { projectId: "P1", title: "x", price: 1 }, { correlationId: "c3", resource: loadProject, handler }), "VALIDATION_FAILED", "price");
+      expect(await runRoute(app, session, spec, { projectId: "P1", title: "x" }, { correlationId: "c4", resource: loadProject, handler })).toEqual({ ok: true });
       const audit = await withTransaction(app, (c) => c.query("SELECT 1 FROM core_audit_entries WHERE action = 'procurement.po.created' AND correlation_id = 'c4'"), { tenantId: tenant });
       expect(audit.rowCount).toBe(1);
     });

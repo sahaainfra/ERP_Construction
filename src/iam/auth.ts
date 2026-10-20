@@ -27,6 +27,16 @@ async function revokedPerson(client: PoolClient, tenantId: string, userRef: stri
   return (rowCount ?? 0) > 0;
 }
 
+/** Counts a failed password or code, and locks the account at the limit. Shared by every failed factor. */
+async function recordFailure(client: PoolClient, tenantId: string, userRef: string, previous: number, now: Date): Promise<void> {
+  const failures = previous + 1;
+  const lock = failures >= LOCK_AFTER_FAILURES;
+  await client.query(
+    "UPDATE iam_credentials SET failed_count = $3, locked_until = $4 WHERE tenant_id = $1 AND user_ref = $2",
+    [tenantId, userRef, lock ? 0 : failures, lock ? new Date(now.getTime() + LOCK_MINUTES * 60_000) : null],
+  );
+}
+
 export async function createCredentials(pool: Pool, tenantId: string, userRef: string, password: string): Promise<void> {
   const problems = passwordProblems(password, userRef);
   if (problems.length > 0) throw new AppError("VALIDATION_FAILED", `the password must have ${problems.join(", ")}`, [{ field: "password", message: problems.join(", ") }]);
@@ -61,17 +71,15 @@ export async function login(
         throw new AppError("FORBIDDEN", GENERIC);
       }
       const row = rows[0];
-      if (row.locked_until && row.locked_until > now) throw new AppError("FORBIDDEN", "the account is temporarily locked; try again later");
-      if (await revokedPerson(client, input.tenantId, input.userRef)) throw new AppError("FORBIDDEN", "access is revoked");
+      // The password is always checked first, so a locked or revoked account costs the same time as any other. Lock and
+      // revocation give the same answer as a wrong password: the response never shows account state without the password.
       const checked = verifyPassword(input.password, row.password_hash);
+      const locked = row.locked_until !== null && row.locked_until > now;
+      const revoked = await revokedPerson(client, input.tenantId, input.userRef);
+      if (locked || revoked) return { ok: false as const };
       if (!checked.ok) {
         // Return, do not throw: a throw would roll the failure count back, and the lockout would never engage.
-        const failures = row.failed_count + 1;
-        const lock = failures >= LOCK_AFTER_FAILURES;
-        await client.query(
-          "UPDATE iam_credentials SET failed_count = $3, locked_until = $4 WHERE tenant_id = $1 AND user_ref = $2",
-          [input.tenantId, input.userRef, lock ? 0 : failures, lock ? new Date(now.getTime() + LOCK_MINUTES * 60_000) : null],
-        );
+        await recordFailure(client, input.tenantId, input.userRef, row.failed_count, now);
         return { ok: false as const };
       }
       if (checked.needsRehash) {
@@ -85,16 +93,20 @@ export async function login(
         if (!input.mfaCode) throw new AppError("FORBIDDEN", "a one-time code is required");
         const secret = decryptSecret(factor.rows[0].secret_ciphertext, keys.mfaKey);
         const result = verifyTotp(secret, input.mfaCode, now.getTime(), Number(factor.rows[0].last_used_step));
-        if (!result.ok) throw new AppError("FORBIDDEN", "the one-time code is not valid");
+        if (!result.ok) {
+          // A wrong code counts as a failure, like a wrong password. Returned, not thrown, so the count is kept.
+          await recordFailure(client, input.tenantId, input.userRef, row.failed_count, now);
+          return { ok: false as const };
+        }
         await client.query("UPDATE iam_mfa_factors SET last_used_step = $3 WHERE tenant_id = $1 AND user_ref = $2 AND kind = 'totp'", [input.tenantId, input.userRef, result.step]);
       }
       await client.query("UPDATE iam_credentials SET failed_count = 0, locked_until = NULL, last_login_at = $3 WHERE tenant_id = $1 AND user_ref = $2", [input.tenantId, input.userRef, now]);
-      return { ok: true as const };
+      return { ok: true as const, mfa: factor.rowCount !== null && factor.rowCount > 0 };
     },
     { tenantId: input.tenantId },
   );
   if (!verdict.ok) throw new AppError("FORBIDDEN", GENERIC);
-  return startSession(pool, keys, { tenantId: input.tenantId, userRef: input.userRef, deviceFingerprint: input.deviceFingerprint, now });
+  return startSession(pool, keys, { tenantId: input.tenantId, userRef: input.userRef, deviceFingerprint: input.deviceFingerprint, now, mfaVerifiedAt: verdict.mfa ? now : null });
 }
 
 async function deviceFor(client: PoolClient, tenantId: string, userRef: string, fingerprint: string): Promise<{ id: string; revoked: boolean }> {
@@ -107,7 +119,7 @@ async function deviceFor(client: PoolClient, tenantId: string, userRef: string, 
   return { id: rows[0].id, revoked: rows[0].revoked_at !== null };
 }
 
-export async function startSession(pool: Pool, keys: Keys, input: { tenantId: string; userRef: string; deviceFingerprint: string; now?: Date }): Promise<{ accessToken: string; refreshToken: string; sessionId: string; deviceId: string }> {
+export async function startSession(pool: Pool, keys: Keys, input: { tenantId: string; userRef: string; deviceFingerprint: string; now?: Date; mfaVerifiedAt?: Date | null }): Promise<{ accessToken: string; refreshToken: string; sessionId: string; deviceId: string }> {
   const now = input.now ?? new Date();
   const refreshToken = randomToken(32);
   return withTransaction(
@@ -118,9 +130,9 @@ export async function startSession(pool: Pool, keys: Keys, input: { tenantId: st
       const idle = new Date(now.getTime() + IDLE_SESSION_MINUTES * 60_000);
       const absolute = new Date(now.getTime() + ABSOLUTE_SESSION_HOURS * 3_600_000);
       const { rows } = await client.query<{ id: string; family_id: string }>(
-        `INSERT INTO iam_sessions (tenant_id, user_ref, device_id, family_id, refresh_hash, idle_expires_at, absolute_expires_at, created_at, last_seen)
-         VALUES ($1, $2, $3, gen_random_uuid(), $4, $5, $6, $7, $7) RETURNING id, family_id`,
-        [input.tenantId, input.userRef, device.id, sha256Hex(refreshToken), idle, absolute, now],
+        `INSERT INTO iam_sessions (tenant_id, user_ref, device_id, family_id, refresh_hash, idle_expires_at, absolute_expires_at, created_at, last_seen, mfa_verified_at)
+         VALUES ($1, $2, $3, gen_random_uuid(), $4, $5, $6, $7, $7, $8) RETURNING id, family_id`,
+        [input.tenantId, input.userRef, device.id, sha256Hex(refreshToken), idle, absolute, now, input.mfaVerifiedAt ?? null],
       );
       const accessToken = signToken({ sub: input.userRef, tid: input.tenantId, sid: rows[0].id, aud: TOKEN_AUDIENCE, iat: Math.floor(now.getTime() / 1000), exp: Math.floor(now.getTime() / 1000) + ACCESS_TOKEN_SECONDS }, keys.tokenKey);
       return { accessToken, refreshToken, sessionId: rows[0].id, deviceId: device.id };
@@ -210,6 +222,18 @@ export async function verifyAccess(pool: Pool, keys: Keys, input: { tenantId: st
   );
 }
 
+/** Whether a second factor was verified on this session within the window. Step-up actions require it. */
+export async function stepUpFresh(pool: Pool, tenantId: string, sessionId: string, now: Date = new Date(), maxMinutes = 5): Promise<boolean> {
+  return withTransaction(
+    pool,
+    async (client) => {
+      const { rowCount } = await client.query("SELECT 1 FROM iam_sessions WHERE id = $1 AND tenant_id = $2 AND revoked_at IS NULL AND mfa_verified_at > $3", [sessionId, tenantId, new Date(now.getTime() - maxMinutes * 60_000)]);
+      return (rowCount ?? 0) > 0;
+    },
+    { tenantId },
+  );
+}
+
 export async function revokeSession(pool: Pool, tenantId: string, sessionId: string, reason: string): Promise<void> {
   await withTransaction(pool, (c) => c.query("UPDATE iam_sessions SET revoked_at = now(), revoke_reason = $3 WHERE id = $1 AND tenant_id = $2 AND revoked_at IS NULL", [sessionId, tenantId, reason]), { tenantId });
 }
@@ -233,7 +257,11 @@ export async function requestPasswordReset(pool: Pool, tenantId: string, userRef
     pool,
     async (client) => {
       const known = await client.query("SELECT 1 FROM iam_credentials WHERE tenant_id = $1 AND user_ref = $2", [tenantId, userRef]);
-      if ((known.rowCount ?? 0) === 0) return null;
+      if ((known.rowCount ?? 0) === 0) {
+        // Same work as a known user, so the answer does not reveal whether the account exists.
+        verifyPassword("not-a-real-password-for-timing-only", DUMMY_HASH);
+        return null;
+      }
       const token = randomToken(32);
       await client.query(
         "INSERT INTO iam_password_resets (tenant_id, user_ref, token_hash, expires_at) VALUES ($1, $2, $3, $4)",
@@ -272,14 +300,34 @@ export async function enrolTotp(pool: Pool, keys: Keys, tenantId: string, userRe
   const encoded = base32Encode(secret);
   await withTransaction(
     pool,
-    (c) => c.query(
+    async (c) => {
+      // A confirmed factor is never replaced without a code from it (that would let a password alone switch MFA off).
+      const confirmed = await c.query("SELECT 1 FROM iam_mfa_factors WHERE tenant_id = $1 AND user_ref = $2 AND confirmed_at IS NOT NULL", [tenantId, userRef]);
+      if ((confirmed.rowCount ?? 0) > 0) throw new AppError("CONFLICT", "a confirmed factor exists; remove it with a current code first");
+      await c.query(
       `INSERT INTO iam_mfa_factors (tenant_id, user_ref, secret_ciphertext) VALUES ($1, $2, $3)
        ON CONFLICT (tenant_id, user_ref, kind) DO UPDATE SET secret_ciphertext = EXCLUDED.secret_ciphertext, confirmed_at = NULL, last_used_step = -1, enrolled_at = now()`,
       [tenantId, userRef, encryptSecret(secret, keys.mfaKey)],
-    ),
+      );
+    },
     { tenantId },
   );
   return { secret: encoded, uri: `otpauth://totp/ERP:${encodeURIComponent(userRef)}?secret=${encoded}&issuer=ERP&period=30&digits=6` };
+}
+
+/** Removes a confirmed factor. The current code must be valid, so a password alone cannot switch MFA off. */
+export async function removeTotp(pool: Pool, keys: Keys, tenantId: string, userRef: string, code: string, now: Date = new Date()): Promise<void> {
+  await withTransaction(
+    pool,
+    async (client) => {
+      const { rows } = await client.query<{ secret_ciphertext: string; last_used_step: string }>("SELECT secret_ciphertext, last_used_step FROM iam_mfa_factors WHERE tenant_id = $1 AND user_ref = $2 AND confirmed_at IS NOT NULL FOR UPDATE", [tenantId, userRef]);
+      if (rows.length === 0) throw new AppError("NOT_FOUND", "no confirmed factor exists");
+      const result = verifyTotp(decryptSecret(rows[0].secret_ciphertext, keys.mfaKey), code, now.getTime(), Number(rows[0].last_used_step));
+      if (!result.ok) throw new AppError("FORBIDDEN", "the one-time code is not valid");
+      await client.query("UPDATE iam_mfa_factors SET confirmed_at = NULL, secret_ciphertext = '', last_used_step = $3 WHERE tenant_id = $1 AND user_ref = $2 AND kind = 'totp'", [tenantId, userRef, result.step]);
+    },
+    { tenantId },
+  );
 }
 
 export async function confirmTotp(pool: Pool, keys: Keys, tenantId: string, userRef: string, code: string, now: Date = new Date()): Promise<void> {

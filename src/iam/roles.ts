@@ -6,7 +6,8 @@ import { AppError } from "../core/errors";
 import type { RequestContext } from "../core/context";
 import { runUnitOfWork } from "../core/uow";
 import { withTransaction } from "../db/transactions";
-import { can, permissionKnown } from "./pdp";
+import { can, grantsFor, permissionKnown } from "./pdp";
+import { sameActor } from "./actors";
 import { CONDITION_NAMES, SCOPE_TYPES, type ScopeType, type Resource } from "./policy";
 
 export function permissionKeyProblem(key: string): string | null {
@@ -49,7 +50,11 @@ export async function createRole(pool: Pool, ctx: RequestContext, input: { code:
 export async function proposeRoleGrant(pool: Pool, ctx: RequestContext, input: { roleId: number; permissionKey: string; effect: "allow" | "deny"; conditions?: Record<string, unknown>; reason: string }): Promise<{ id: number }> {
   const problems: string[] = [];
   if (!(await withTransaction(pool, (c) => permissionKnown(c, input.permissionKey), { tenantId: ctx.tenantId }))) problems.push("the permission is not registered");
-  for (const name of Object.keys(input.conditions ?? {})) if (!(CONDITION_NAMES as readonly string[]).includes(name)) problems.push(`condition ${name} is not supported`);
+  for (const [name, value] of Object.entries(input.conditions ?? {})) {
+    if (!(CONDITION_NAMES as readonly string[]).includes(name)) problems.push(`condition ${name} is not supported`);
+    else if (name === "maxAmountPaise" && (typeof value !== "number" || !Number.isInteger(value) || value < 0)) problems.push("maxAmountPaise must be a whole number of paise");
+    else if (name === "statusIn" && (!Array.isArray(value) || value.length === 0 || !value.every((v) => typeof v === "string"))) problems.push("statusIn must be a non-empty list of statuses");
+  }
   if (input.reason.trim().length < 10) problems.push("the reason is too short");
   if (problems.length > 0) throw new AppError("VALIDATION_FAILED", problems.join("; "), problems.map((message) => ({ field: "grant", message })));
   const allowed = await can(pool, ctx, "iam.role.manage");
@@ -69,11 +74,13 @@ export async function proposeRoleGrant(pool: Pool, ctx: RequestContext, input: {
 
 export async function approveRoleGrant(pool: Pool, ctx: RequestContext, id: number, reason: string): Promise<void> {
   if (reason.trim().length < 10) throw new AppError("VALIDATION_FAILED", "the reason is too short");
+  const allowed = await can(pool, ctx, "iam.role.manage");
+  if (!allowed.allowed) throw new AppError("FORBIDDEN", allowed.reason);
   await runUnitOfWork(pool, ctx, async (uow) => {
     const found = await uow.client.query<{ created_by: string; approval_status: string; permission_key: string; effect: string }>(
       "SELECT created_by, approval_status, permission_key, effect FROM iam_role_permissions WHERE id = $1 FOR UPDATE", [id]);
     if (found.rowCount === 0) throw new AppError("NOT_FOUND", "the grant was not found");
-    if (found.rows[0].created_by === ctx.userId) throw new AppError("MAKER_CHECKER_REQUIRED", "the creator cannot approve their own grant");
+    if (await sameActor(uow.client, ctx.tenantId, found.rows[0].created_by, ctx.userId)) throw new AppError("MAKER_CHECKER_REQUIRED", "the creator cannot approve their own grant");
     if (found.rows[0].approval_status !== "pending") throw new AppError("CONFLICT", "the grant has already been decided");
     await uow.client.query("UPDATE iam_role_permissions SET approval_status = 'approved', approved_by = $2 WHERE id = $1", [id, ctx.userId]);
     await uow.audit({ action: "iam.role_grant.approved", entityType: "role_grant", entityId: String(id), detail: { permissionKey: found.rows[0].permission_key, effect: found.rows[0].effect } });
@@ -90,8 +97,6 @@ export interface AssignmentInput {
   validFrom: string;
   validTo?: string | null;
   reason: string;
-  /** Resource ids the scope refers to, so the assigner's own scope can be checked. */
-  scopeResource?: Resource;
 }
 
 /** Proposes an assignment. The assigner must hold `iam.assignment.create` over the scope they assign. */
@@ -101,12 +106,23 @@ export async function proposeAssignment(pool: Pool, ctx: RequestContext, input: 
   if ((input.scopeType === "tenant" || input.scopeType === "own") !== (input.scopeId === null || input.scopeId === undefined)) problems.push("a scope id is needed for this scope type and not for tenant or own");
   if (input.reason.trim().length < 10) problems.push("the reason is too short");
   if (problems.length > 0) throw new AppError("VALIDATION_FAILED", problems.join("; "), problems.map((message) => ({ field: "assignment", message })));
-  const resource: Resource = { ...(input.scopeResource ?? {}), ownerUserId: input.userRef };
+  // The scope is built from the target scope only. Nothing else in the request can change what is checked.
+  const resource: Resource = { ownerUserId: input.userRef };
   const scopeField: Record<string, keyof Resource> = { company: "companyId", legal_entity: "legalEntityId", branch: "branchId", department: "departmentId", project: "projectId", site: "siteId" };
   if (input.scopeType in scopeField) (resource as Record<string, unknown>)[scopeField[input.scopeType]] = input.scopeId;
   // Always checked against a resource: a tenant-wide assignment needs a tenant-wide grant, not any grant.
   const allowed = await can(pool, ctx, "iam.assignment.create", resource);
   if (!allowed.allowed) throw new AppError("FORBIDDEN", `you cannot assign a role at this scope: ${allowed.reason}`);
+  // No assignment can give more than the assigner holds: every permission the role grants must be held at this scope.
+  const roleKeys = await withTransaction(
+    pool,
+    (c) => c.query<{ permission_key: string }>("SELECT DISTINCT permission_key FROM iam_role_permissions WHERE role_id = $1 AND tenant_id = $2 AND approval_status = 'approved' AND effect = 'allow'", [input.roleId, ctx.tenantId]),
+    { tenantId: ctx.tenantId },
+  );
+  for (const { permission_key } of roleKeys.rows) {
+    const held = await can(pool, ctx, permission_key, resource);
+    if (!held.allowed) throw new AppError("FORBIDDEN", `you do not hold ${permission_key} at this scope, so you cannot assign a role that grants it`);
+  }
 
   return runUnitOfWork(pool, ctx, async (uow) => {
     const { rows } = await uow.client.query<{ id: string }>(
@@ -123,10 +139,12 @@ export async function proposeAssignment(pool: Pool, ctx: RequestContext, input: 
 
 export async function approveAssignment(pool: Pool, ctx: RequestContext, id: number, reason: string): Promise<void> {
   if (reason.trim().length < 10) throw new AppError("VALIDATION_FAILED", "the reason is too short");
+  const allowed = await can(pool, ctx, "iam.assignment.approve");
+  if (!allowed.allowed) throw new AppError("FORBIDDEN", allowed.reason);
   await runUnitOfWork(pool, ctx, async (uow) => {
     const found = await uow.client.query<{ created_by: string; approval_status: string; user_ref: string }>("SELECT created_by, approval_status, user_ref FROM iam_user_role_assignments WHERE id = $1 FOR UPDATE", [id]);
     if (found.rowCount === 0) throw new AppError("NOT_FOUND", "the assignment was not found");
-    if (found.rows[0].created_by === ctx.userId) throw new AppError("MAKER_CHECKER_REQUIRED", "the creator cannot approve their own assignment");
+    if (await sameActor(uow.client, ctx.tenantId, found.rows[0].created_by, ctx.userId)) throw new AppError("MAKER_CHECKER_REQUIRED", "the creator cannot approve their own assignment");
     if (found.rows[0].approval_status !== "pending") throw new AppError("CONFLICT", "the assignment has already been decided");
     await uow.client.query("UPDATE iam_user_role_assignments SET approval_status = 'approved', approved_by = $2 WHERE id = $1", [id, ctx.userId]);
     await uow.audit({ action: "iam.assignment.approved", entityType: "assignment", entityId: String(id), detail: { userRef: found.rows[0].user_ref } });

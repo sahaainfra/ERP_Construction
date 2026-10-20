@@ -57,7 +57,8 @@ describe.skipIf(!TEST_URL || !APP_URL)("authentication flows (Part 07 S1)", () =
     const user = randomUUID();
     await createCredentials(app, tenant, user, PASSWORD);
     for (let i = 0; i < 5; i++) await expectRefused(login(app, keys, { tenantId: tenant, userRef: user, password: "wrong passphrase here", deviceFingerprint: "d" }));
-    await expectRefused(login(app, keys, { tenantId: tenant, userRef: user, password: PASSWORD, deviceFingerprint: "d" }), "temporarily locked");
+    // A locked account answers exactly as a wrong password does: no account state is revealed.
+    await expectRefused(login(app, keys, { tenantId: tenant, userRef: user, password: PASSWORD, deviceFingerprint: "d" }), "invalid credentials");
     const later = new Date(Date.now() + 16 * 60_000);
     await login(app, keys, { tenantId: tenant, userRef: user, password: PASSWORD, deviceFingerprint: "d", now: later });
   });
@@ -80,6 +81,7 @@ describe.skipIf(!TEST_URL || !APP_URL)("authentication flows (Part 07 S1)", () =
     const session = await login(app, keys, { tenantId: tenant, userRef: user, password: PASSWORD, deviceFingerprint: "kiosk-7" });
     await revokeDevice(app, tenant, session.deviceId, "device reported lost");
     await expectRefused(verifyAccess(app, keys, { tenantId: tenant, accessToken: session.accessToken }), "ended");
+    // The password is proven first, so the device refusal may be named.
     await expectRefused(login(app, keys, { tenantId: tenant, userRef: user, password: PASSWORD, deviceFingerprint: "kiosk-7" }), "revoked");
   });
 
@@ -90,7 +92,7 @@ describe.skipIf(!TEST_URL || !APP_URL)("authentication flows (Part 07 S1)", () =
     const session = await login(app, keys, { tenantId: tenant, userRef: user, password: PASSWORD, deviceFingerprint: "office-1" });
     await withTransaction(owner, (c) => c.query("INSERT INTO iam_revocations (tenant_id, user_ref, reason, revoked_by) VALUES ($1, $2, 'Left the company', 'hr-event')", [tenant, user]), { tenantId: tenant });
     await expectRefused(verifyAccess(app, keys, { tenantId: tenant, accessToken: session.accessToken }), "revoked");
-    await expectRefused(login(app, keys, { tenantId: tenant, userRef: user, password: PASSWORD, deviceFingerprint: "office-1" }), "revoked");
+    await expectRefused(login(app, keys, { tenantId: tenant, userRef: user, password: PASSWORD, deviceFingerprint: "office-1" }), "invalid credentials");
   });
 
   it("ends an access token after its idle time, and refuses an expired token", async () => {
@@ -131,7 +133,19 @@ describe.skipIf(!TEST_URL || !APP_URL)("authentication flows (Part 07 S1)", () =
     await expectRefused(login(app, keys, { tenantId: tenant, userRef: user, password: PASSWORD, deviceFingerprint: "mfa-1", now }), "one-time code is required");
     const code = totpAt(raw, step + 2);
     await login(app, keys, { tenantId: tenant, userRef: user, password: PASSWORD, deviceFingerprint: "mfa-1", mfaCode: code, now: new Date(now.getTime() + 60_000) });
-    await expectRefused(login(app, keys, { tenantId: tenant, userRef: user, password: PASSWORD, deviceFingerprint: "mfa-1", mfaCode: code, now: new Date(now.getTime() + 60_000) }), "not valid");
+    await expectRefused(login(app, keys, { tenantId: tenant, userRef: user, password: PASSWORD, deviceFingerprint: "mfa-1", mfaCode: code, now: new Date(now.getTime() + 60_000) }), "invalid credentials");
+  });
+
+  it("counts wrong codes towards the lock, and refuses to replace a confirmed factor without a code", async () => {
+    const tenant = randomUUID();
+    const user = randomUUID();
+    await createCredentials(app, tenant, user, PASSWORD);
+    const { secret } = await enrolTotp(app, keys, tenant, user);
+    const now = new Date();
+    await confirmTotp(app, keys, tenant, user, totpAt(base32Decode(secret), Math.floor(now.getTime() / 1000 / 30)), now);
+    await expectRefused(enrolTotp(app, keys, tenant, user), "remove it with a current code");
+    for (let i = 0; i < 5; i++) await expectRefused(login(app, keys, { tenantId: tenant, userRef: user, password: PASSWORD, deviceFingerprint: "mfa-x", mfaCode: "000000", now }), "invalid credentials");
+    await expectRefused(login(app, keys, { tenantId: tenant, userRef: user, password: PASSWORD, deviceFingerprint: "mfa-x", mfaCode: totpAt(base32Decode(secret), Math.floor(now.getTime() / 1000 / 30) + 2), now }), "invalid credentials");
   });
 
   it("keeps one tenant's credentials away from another tenant", async () => {

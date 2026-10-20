@@ -34,7 +34,8 @@ export function idTokenProblems(claims: IdTokenClaims, expected: { issuer: strin
 /** Builds the authorisation URL for the code flow with PKCE (S256). */
 export function authorizeUrl(config: { authorizationEndpoint: string; clientId: string; redirectUri: string }, state: { state: string; nonce: string; challenge: string }): string {
   const url = new URL(config.authorizationEndpoint);
-  url.search = new URLSearchParams({
+  // Set each parameter, keeping any the endpoint already carries (assigning `search` would drop them).
+  const params: Record<string, string> = {
     response_type: "code",
     client_id: config.clientId,
     redirect_uri: config.redirectUri,
@@ -43,6 +44,7 @@ export function authorizeUrl(config: { authorizationEndpoint: string; clientId: 
     nonce: state.nonce,
     code_challenge: state.challenge,
     code_challenge_method: "S256",
-  }).toString();
+  };
+  for (const [key, value] of Object.entries(params)) url.searchParams.set(key, value);
   return url.toString();
 }

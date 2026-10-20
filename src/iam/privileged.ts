@@ -7,6 +7,7 @@ import type { RequestContext } from "../core/context";
 import { runUnitOfWork } from "../core/uow";
 import { withTransaction } from "../db/transactions";
 import { can } from "./pdp";
+import { sameActor } from "./actors";
 import type { Resource } from "./policy";
 
 const MAX_HOURS = 4;
@@ -38,7 +39,7 @@ export async function approveElevation(pool: Pool, ctx: RequestContext, id: numb
   return runUnitOfWork(pool, ctx, async (uow) => {
     const found = await uow.client.query<{ user_ref: string; state: string; requested_hours: number; created_by: string }>("SELECT user_ref, state, requested_hours, created_by FROM iam_elevations WHERE id = $1 FOR UPDATE", [id]);
     if (found.rowCount === 0) throw new AppError("NOT_FOUND", "the request was not found");
-    if (found.rows[0].created_by === ctx.userId) throw new AppError("MAKER_CHECKER_REQUIRED", "the requester cannot approve their own elevation");
+    if (await sameActor(uow.client, ctx.tenantId, found.rows[0].created_by, ctx.userId)) throw new AppError("MAKER_CHECKER_REQUIRED", "the requester cannot approve their own elevation");
     if (found.rows[0].state !== "requested") throw new AppError("CONFLICT", "the request has already been decided");
     const expires = new Date(Date.now() + found.rows[0].requested_hours * 3_600_000);
     await uow.client.query("UPDATE iam_elevations SET state = 'approved', approved_by = $2, approved_at = now(), expires_at = $3 WHERE id = $1", [id, ctx.userId, expires]);
@@ -64,7 +65,8 @@ export async function isElevated(pool: Pool, ctx: RequestContext, permissionKey:
     pool,
     async (client) => {
       const { rowCount } = await client.query(
-        "SELECT 1 FROM iam_elevations WHERE tenant_id = $1 AND user_ref = $2 AND permission_key = $3 AND state = 'approved' AND expires_at > $4",
+        `SELECT 1 FROM iam_elevations e WHERE e.tenant_id = $1 AND e.user_ref = $2 AND e.permission_key = $3 AND e.state = 'approved' AND e.expires_at > $4
+           AND NOT EXISTS (SELECT 1 FROM iam_revocations rv WHERE rv.tenant_id = $1 AND rv.user_ref = $2 AND rv.cleared_at IS NULL)`,
         [ctx.tenantId, ctx.userId, permissionKey, at],
       );
       return (rowCount ?? 0) > 0;
@@ -77,6 +79,8 @@ export async function isElevated(pool: Pool, ctx: RequestContext, permissionKey:
 export async function decideWithElevation(pool: Pool, ctx: RequestContext, key: string, resource?: Resource): Promise<{ allowed: boolean; via: "role" | "elevation" | "none"; reason: string }> {
   const role = await can(pool, ctx, key, resource);
   if (role.allowed) return { allowed: true, via: "role", reason: role.reason };
+  // An explicit deny is final: an elevation cannot override it.
+  if (role.denied) return { allowed: false, via: "none", reason: role.reason };
   if (await isElevated(pool, ctx, key)) return { allowed: true, via: "elevation", reason: `elevated for ${key}` };
   return { allowed: false, via: "none", reason: role.reason };
 }

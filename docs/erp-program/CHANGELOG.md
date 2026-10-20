@@ -5,6 +5,10 @@
 - CF-009: commercial money formulas use decimal.js 10.6.0 (ADR-004), rounded to paise at output. `commercial.priceVariation` golden changes from 999.9999999999995 to 1000 (re-captured; N4 change). Quantities are unchanged.
 - CF-005, CF-006, CF-012, CF-013, CF-016 remain open: each needs the named input.
 
+## 2026-10-20 — Part 07 review fixes (D-053)
+- Interim independent review found 15 high-severity defects. Fixed in code, with tests: no-record fallback, deny over elevation, revocation in the decision path, login ordering, lockout on wrong codes, MFA downgrade, permission checks on approvals, linked-account maker-checker, authority limits bound to the signer, tenant-wide deny in lists, server-side export counts with fresh step-up, assignment ceilings and clean scope.
+- Open items and the approval hold are in `modules/iam/review-2026-10-20.md` and D-053.
+
 ## 2026-10-20 — Part 07 slices S1, S4, S5 approval (D-052)
 - Owner approved S1 (on assumptions A-17, A-18), S4 and S5. The identity provider (CF-013), Argon2id, Part 08A, route handlers and the independent review remain open.
 

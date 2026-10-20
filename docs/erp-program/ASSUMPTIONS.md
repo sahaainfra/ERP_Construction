@@ -31,6 +31,8 @@ Each assumption is a working decision taken where the source material or the own
 | A-20 | The pipeline writes its audit entry after the handler. A handler that writes business data must record its own audit in the same unit of work. | The pipeline cannot share a transaction with handlers it does not own. | Each write route follows this rule (S5 onward). | Technical lead | Assumed |
 | A-21 | Revocation takes effect at once through a revoked timestamp. An end date alone is inclusive, so it cannot do that. | Revoking today must stop access now, not at midnight. | None. | Technical lead | In use |
 
+| A-22 | Services accept times (`now`, `at`, `asOf`) for testing and replay. A route must never pass a time from the client; it passes the server clock. | The independent review found that a forwarded time could bypass lockout or expiry. | Route layer (S5 onward) must follow this rule. | Technical lead | Assumed |
+
 ## Not assumed
 These items cannot be assumed, because they are statements of fact or legal confirmation by named people:
 - **Statutory rates and thresholds and their owners (CF-005).** The owners must confirm the rates in `src/domain/statutory.ts` against the sources in force.

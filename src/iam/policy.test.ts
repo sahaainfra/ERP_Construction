@@ -31,8 +31,9 @@ describe("decision (REQ-IAM-F07)", () => {
     expect(scopeCovers(own, "u1", { ownerUserId: "u2" })).toBe(false);
   });
 
-  it("without a resource, any grant counts (menu gating)", () => {
-    expect(decide([g({})], "u1", undefined, "po.approve").allowed).toBe(true);
+  it("without a resource, only a tenant-wide grant counts: a project grant never opens an action on no particular record", () => {
+    expect(decide([g({})], "u1", undefined, "po.approve").allowed).toBe(false);
+    expect(decide([g({ scopeType: "tenant", scopeId: null })], "u1", undefined, "po.approve").allowed).toBe(true);
   });
 });
 
@@ -54,6 +55,10 @@ describe("data scope (REQ-IAM-F08)", () => {
   it("lists all ids for a tenant-wide allow, minus denied ids", () => {
     const grants = [g({ scopeType: "tenant", scopeId: null }), g({ effect: "deny", scopeId: "P9" })];
     expect(scopeIds(grants, "project")).toEqual({ all: true, ids: [], excluded: ["P9"] });
+  });
+
+  it("lists nothing when a tenant-wide deny applies to the key", () => {
+    expect(scopeIds([g({ scopeType: "tenant", scopeId: null }), g({ effect: "deny", scopeType: "tenant", scopeId: null })], "project")).toEqual({ all: false, ids: [], excluded: [] });
   });
 
   it("lists only the allowed project ids when there is no tenant-wide allow", () => {

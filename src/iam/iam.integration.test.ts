@@ -12,6 +12,7 @@ import { can, dataScope } from "./pdp";
 import { approveAssignment, approveRoleGrant, createRole, proposeAssignment, proposeRoleGrant, registerPermissions } from "./roles";
 import { approveLimit, mayApprove, proposeLimit } from "./authority";
 import { maskFields } from "./masking";
+import { IAM_PERMISSIONS } from "./actors";
 
 const TEST_URL = process.env.TEST_DATABASE_URL;
 const APP_URL = process.env.TEST_APP_DATABASE_URL;
@@ -45,6 +46,7 @@ describe.skipIf(!TEST_URL || !APP_URL)("permission engine (Part 07 S2)", () => {
     app = createPool(APP_URL!, { application_name: "erp-iamtest-app" });
     await resetForTests(owner);
     await migrateUp(owner, loadMigrations(dir));
+    await registerPermissions(app, IAM_PERMISSIONS);
     await registerPermissions(app, [
       { key: "procurement.po.approve", module: "procurement", description: "Approve purchase orders", stage: "APPROVE" },
       { key: "procurement.po.create", module: "procurement", description: "Create purchase orders", stage: "PLAN" },
@@ -90,11 +92,11 @@ describe.skipIf(!TEST_URL || !APP_URL)("permission engine (Part 07 S2)", () => {
   it("makes a role grant effective only after a second person approves it", async () => {
     const tenant = randomUUID();
     const admin = contextFor(tenant);
-    await bootstrapAdmin(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create"]);
+    await bootstrapAdmin(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create", "procurement.po.create", "procurement.po.approve"]);
     const role = await createRole(app, admin, { code: "buyer", name: "Buyer" });
     const grant = await proposeRoleGrant(app, admin, { roleId: role.id, permissionKey: "procurement.po.approve", effect: "allow", reason: REASON });
     const checker = contextFor(tenant);
-    await bootstrapAdmin(tenant, checker.userId, ["iam.role.manage"]);
+    await bootstrapAdmin(tenant, checker.userId, ["iam.role.manage", "iam.assignment.approve"]);
     await expectRefused(approveRoleGrant(app, admin, grant.id, "Approving my own grant"), "MAKER_CHECKER_REQUIRED");
     await approveRoleGrant(app, checker, grant.id, "Checked against the purchasing policy");
     const user = contextFor(tenant);
@@ -108,18 +110,18 @@ describe.skipIf(!TEST_URL || !APP_URL)("permission engine (Part 07 S2)", () => {
     // Denies are scoped by the assignment that carries them: a deny role assigned at project P-PUNE blocks only that project.
     const tenant = randomUUID();
     const admin = contextFor(tenant);
-    await bootstrapAdmin(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create"]);
+    await bootstrapAdmin(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create", "procurement.po.create", "procurement.po.approve"]);
     const approverRole = await createRole(app, admin, { code: "approver", name: "Approver" });
     const freezeRole = await createRole(app, admin, { code: "pune_freeze", name: "Pune approval freeze" });
     const allow = await proposeRoleGrant(app, admin, { roleId: approverRole.id, permissionKey: "procurement.po.approve", effect: "allow", reason: REASON });
     const deny = await proposeRoleGrant(app, admin, { roleId: freezeRole.id, permissionKey: "procurement.po.approve", effect: "deny", reason: "No approvals on the Pune project" });
     const checker = contextFor(tenant);
-    await bootstrapAdmin(tenant, checker.userId, ["iam.role.manage"]);
+    await bootstrapAdmin(tenant, checker.userId, ["iam.role.manage", "iam.assignment.approve"]);
     await approveRoleGrant(app, checker, allow.id, "Checked against the purchasing policy");
     await approveRoleGrant(app, checker, deny.id, "Checked against the segregation rules");
     const user = contextFor(tenant);
     const a = await proposeAssignment(app, admin, { userRef: user.userId, roleId: approverRole.id, scopeType: "tenant", validFrom: "2026-01-01", reason: REASON });
-    const d = await proposeAssignment(app, admin, { userRef: user.userId, roleId: freezeRole.id, scopeType: "project", scopeId: "P-PUNE", validFrom: "2026-01-01", reason: REASON, scopeResource: { projectId: "P-PUNE" } });
+    const d = await proposeAssignment(app, admin, { userRef: user.userId, roleId: freezeRole.id, scopeType: "project", scopeId: "P-PUNE", validFrom: "2026-01-01", reason: REASON });
     await approveAssignment(app, checker, a.id, "Checked against the joiner record");
     await approveAssignment(app, checker, d.id, "Checked against the joiner record");
     expect(await can(app, user, "procurement.po.approve", { projectId: "P-PUNE" })).toMatchObject({ allowed: false, reason: expect.stringContaining("explicitly denied") });
@@ -143,18 +145,18 @@ describe.skipIf(!TEST_URL || !APP_URL)("permission engine (Part 07 S2)", () => {
     );
     const role = await createRole(app, admin, { code: "clerk", name: "Clerk" });
     await expectRefused(proposeAssignment(app, limited, { userRef: randomUUID(), roleId: role.id, scopeType: "tenant", validFrom: "2026-01-01", reason: REASON }), "FORBIDDEN");
-    const ok = await proposeAssignment(app, limited, { userRef: randomUUID(), roleId: role.id, scopeType: "project", scopeId: "P1", validFrom: "2026-01-01", reason: REASON, scopeResource: { projectId: "P1" } });
+    const ok = await proposeAssignment(app, limited, { userRef: randomUUID(), roleId: role.id, scopeType: "project", scopeId: "P1", validFrom: "2026-01-01", reason: REASON });
     expect(ok.id).toBeGreaterThan(0);
   });
 
   it("applies an amount condition to an approval", async () => {
     const tenant = randomUUID();
     const admin = contextFor(tenant);
-    await bootstrapAdmin(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create"]);
+    await bootstrapAdmin(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create", "procurement.po.create", "procurement.po.approve"]);
     const role = await createRole(app, admin, { code: "po_approver", name: "PO approver" });
     const grant = await proposeRoleGrant(app, admin, { roleId: role.id, permissionKey: "procurement.po.approve", effect: "allow", conditions: { maxAmountPaise: 10_000_000 }, reason: REASON });
     const checker = contextFor(tenant);
-    await bootstrapAdmin(tenant, checker.userId, ["iam.role.manage"]);
+    await bootstrapAdmin(tenant, checker.userId, ["iam.role.manage", "iam.assignment.approve"]);
     await approveRoleGrant(app, checker, grant.id, "Checked against the purchasing policy");
     const user = contextFor(tenant);
     const a = await proposeAssignment(app, admin, { userRef: user.userId, roleId: role.id, scopeType: "tenant", validFrom: "2026-01-01", reason: REASON });
@@ -166,15 +168,15 @@ describe.skipIf(!TEST_URL || !APP_URL)("permission engine (Part 07 S2)", () => {
   it("gives a list only the projects the person may see", async () => {
     const tenant = randomUUID();
     const admin = contextFor(tenant);
-    await bootstrapAdmin(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create"]);
+    await bootstrapAdmin(tenant, admin.userId, ["iam.role.manage", "iam.assignment.create", "procurement.po.create", "procurement.po.approve"]);
     const role = await createRole(app, admin, { code: "site_viewer", name: "Site viewer" });
     const checker = contextFor(tenant);
-    await bootstrapAdmin(tenant, checker.userId, ["iam.role.manage"]);
+    await bootstrapAdmin(tenant, checker.userId, ["iam.role.manage", "iam.assignment.approve"]);
     const g1 = await proposeRoleGrant(app, admin, { roleId: role.id, permissionKey: "procurement.po.create", effect: "allow", reason: REASON });
     await approveRoleGrant(app, checker, g1.id, "Checked against the purchasing policy");
     const user = contextFor(tenant);
-    const p1 = await proposeAssignment(app, admin, { userRef: user.userId, roleId: role.id, scopeType: "project", scopeId: "P1", validFrom: "2026-01-01", reason: REASON, scopeResource: { projectId: "P1" } });
-    const p2 = await proposeAssignment(app, admin, { userRef: user.userId, roleId: role.id, scopeType: "project", scopeId: "P2", validFrom: "2026-01-01", reason: REASON, scopeResource: { projectId: "P2" } });
+    const p1 = await proposeAssignment(app, admin, { userRef: user.userId, roleId: role.id, scopeType: "project", scopeId: "P1", validFrom: "2026-01-01", reason: REASON });
+    const p2 = await proposeAssignment(app, admin, { userRef: user.userId, roleId: role.id, scopeType: "project", scopeId: "P2", validFrom: "2026-01-01", reason: REASON });
     await approveAssignment(app, checker, p1.id, "Checked against the joiner record");
     await approveAssignment(app, checker, p2.id, "Checked against the joiner record");
     const scope = await dataScope(app, user, "procurement.po.create");
@@ -193,15 +195,16 @@ describe.skipIf(!TEST_URL || !APP_URL)("permission engine (Part 07 S2)", () => {
   it("refuses an approval with no limit, and applies the most specific limit", async () => {
     const tenant = randomUUID();
     const admin = contextFor(tenant);
-    await bootstrapAdmin(tenant, admin.userId, ["iam.role.manage"]);
+    await bootstrapAdmin(tenant, admin.userId, ["iam.role.manage", "iam.limit.manage"]);
     const approver = contextFor(tenant);
+    await bootstrapAdmin(tenant, approver.userId, ["iam.limit.approve"]);
     const general = await proposeLimit(app, admin, { userRef: approver.userId, docType: "purchase_order", maxAmountPaise: 5_000_000, validFrom: "2026-01-01", reason: REASON });
     await approveLimit(app, approver, general.id, "Checked against the delegation of authority");
-    expect(await mayApprove(app, approver, { userRef: approver.userId, docType: "work_order", amountPaise: 1, at: "2026-10-20" })).toEqual({ allowed: false, limitPaise: null });
-    expect((await mayApprove(app, approver, { userRef: approver.userId, docType: "purchase_order", amountPaise: 4_000_000, at: "2026-10-20" })).allowed).toBe(true);
+    expect(await mayApprove(app, approver, { docType: "work_order", amountPaise: 1, at: "2026-10-20" })).toEqual({ allowed: false, limitPaise: null });
+    expect((await mayApprove(app, approver, { docType: "purchase_order", amountPaise: 4_000_000, at: "2026-10-20" })).allowed).toBe(true);
     const specific = await proposeLimit(app, admin, { userRef: approver.userId, docType: "purchase_order", projectId: null, category: "cement", maxAmountPaise: 1_000_000, validFrom: "2026-01-01", reason: REASON });
     await approveLimit(app, approver, specific.id, "Checked against the delegation of authority");
-    expect((await mayApprove(app, approver, { userRef: approver.userId, docType: "purchase_order", category: "cement", amountPaise: 2_000_000, at: "2026-10-20" })).limitPaise).toBe(1_000_000);
+    expect((await mayApprove(app, approver, { docType: "purchase_order", category: "cement", amountPaise: 2_000_000, at: "2026-10-20" })).limitPaise).toBe(1_000_000);
   });
 
   it("keeps one tenant's grants away from another tenant", async () => {
