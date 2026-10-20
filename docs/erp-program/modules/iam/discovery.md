@@ -12,7 +12,7 @@ Module `iam`. Part 07 — Identity, Access Control, Segregation of Duties & Zero
 |---|---|---|
 | S1 | Authentication engine (Argon2id or scrypt, throttling, reset), OIDC/PKCE, MFA (TOTP, WebAuthn), sessions and devices | Not built. Needs an identity provider decision (CF-013) and session infrastructure; not started |
 | S2 | Permission registry, roles, role grants (maker-checker), scoped assignments (maker-checker, own-scope check), policy decision `can()`, data scope, field masks, authority limits | **Built and APPROVED** (D-048); `src/iam/`, migration `202610191700`; 21 database tests, 12 pure |
-| S3 | SoD rule engine, exceptions, detective scans | **Built** (`src/iam/sod.ts`, migration `202610191800`); 8 database tests; approval pending the owner (D-049) |
+| S3 | SoD rule engine, exceptions, detective scans | **Built and APPROVED** (D-049 build, D-050 approval); `src/iam/sod.ts`, migration `202610191800`; 8 database tests |
 | S4 | Privileged access, joiner/mover/leaver, access reviews, export controls | Not started |
 | S5 | Zero-trust request pipeline, route registry (CP-IAM-05), shadow mode and switch-over | Not started. Routes need S1 authentication |
 
