@@ -82,6 +82,10 @@ describe("client helpers (REQ-CORE-F18)", () => {
 });
 
 describe("log redaction (REQ-CORE-F06)", () => {
+  it("removes sensitive words but keeps keys that merely contain them", () => {
+    const MARK = "[redacted]";
+    expect(redact({ companyId: "C1", span: 2, expandedRows: 3, passwordHash: 1, apiKey: 2, panNumber: 3, bankName: 4 })).toEqual({ companyId: "C1", span: 2, expandedRows: 3, passwordHash: MARK, apiKey: MARK, panNumber: MARK, bankName: MARK });
+  });
   it("removes secret-like and personal-identifier keys at any depth and keeps other values", () => {
     const out = redact({ user: "u1", password: "x", nested: { apiKey: "k", phone: "9999", amount: 10 }, list: [{ email: "a@b.c", ok: true }] });
     expect(out).toEqual({ user: "u1", password: "[redacted]", nested: { apiKey: "[redacted]", phone: "[redacted]", amount: 10 }, list: [{ email: "[redacted]", ok: true }] });

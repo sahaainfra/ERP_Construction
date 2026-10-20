@@ -6,7 +6,26 @@ import { currentCorrelation } from "../obs/correlation";
 
 export type Level = "debug" | "info" | "warn" | "error";
 const ORDER: Record<Level, number> = { debug: 10, info: 20, warn: 30, error: 40 };
-const SENSITIVE_KEY = /pass(word)?|secret|token|authorization|cookie|api[_-]?key|pan|aadhaar|aadhar|account|salary|bank|phone|email/i;
+const SENSITIVE_TOKENS = new Set(["password", "passwd", "pass", "secret", "token", "authorization", "cookie", "apikey", "pan", "aadhaar", "aadhar", "otp", "cvv", "account", "bank", "ifsc", "salary", "phone", "email"]);
+
+/**
+ * True when a key names a sensitive value. The key is split into words (camelCase, underscores, hyphens) and each word is
+ * matched exactly, so `companyId`, `span` or `expandedRows` are kept while `passwordHash`, `apiKey` or `panNumber` are removed.
+ */
+/** Paths of the keys in a value that name sensitive data, for example `a.b.passwordHash`. Used to refuse an event before it is stored. */
+export function sensitivePaths(value: unknown, path = "", depth = 0): string[] {
+  if (depth > 6 || !value || typeof value !== "object") return [];
+  if (Array.isArray(value)) return value.flatMap((v, i) => sensitivePaths(v, `${path}[${i}]`, depth + 1));
+  return Object.entries(value).flatMap(([k, v]) => {
+    const here = path ? `${path}.${k}` : k;
+    return isSensitiveKey(k) ? [here] : sensitivePaths(v, here, depth + 1);
+  });
+}
+
+export function isSensitiveKey(key: string): boolean {
+  const words = key.replace(/([a-z0-9])([A-Z])/g, "$1 $2").toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+  return words.some((w) => SENSITIVE_TOKENS.has(w)) || words.join("").includes("apikey");
+}
 
 export function redact(value: unknown, depth = 0): unknown {
   if (depth > 6) return "[depth-limit]";
@@ -14,7 +33,7 @@ export function redact(value: unknown, depth = 0): unknown {
   if (Array.isArray(value)) return value.map((v) => redact(v, depth + 1));
   if (value && typeof value === "object") {
     const out: Record<string, unknown> = {};
-    for (const [k, v] of Object.entries(value)) out[k] = SENSITIVE_KEY.test(k) ? "[redacted]" : redact(v, depth + 1);
+    for (const [k, v] of Object.entries(value)) out[k] = isSensitiveKey(k) ? "[redacted]" : redact(v, depth + 1);
     return out;
   }
   return value;

@@ -44,7 +44,7 @@ export async function runUnitOfWork<T>(pool: Pool, ctx: RequestContext, work: (u
           );
         },
         emit(event) {
-          return enqueueEvent(client, { ...event, tenantId: event.tenantId ?? ctx.tenantId });
+          return enqueueEvent(client, { ...event, tenantId: event.tenantId ?? ctx.tenantId, correlationId: ctx.correlationId, causationId: event.causationId ?? ctx.causationId });
         },
       };
       return work(uow);

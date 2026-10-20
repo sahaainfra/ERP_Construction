@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-10-20 — Part 10 slice S1 (D-064)
+- Added migration `202610192300_evbus_envelope_inbox`: outbox envelope columns and the consumer inbox `evt_inbox`.
+- Added `src/evbus/` (envelope, inbox, broker with PostgreSQL adapter, relay). `enqueueEvent` refuses sensitive values; `uow.emit` passes the correlation ids.
+- Fixed (Part 09 defect): logger key redaction matched substrings (`companyId`, `span` were masked). Now matches whole words.
+
 ## 2026-10-20 — Part 10 approved (D-063)
 - Owner approved Part 10 for the phases in the discovery plan. Assumptions A-46 to A-56 recorded. The plan's §2 decisions remain open; S1 proceeds on the documented assumptions for the broker and the real-time transport.
 

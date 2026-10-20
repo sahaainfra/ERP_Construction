@@ -82,3 +82,5 @@ Note on the baseline down script: it drops `sys.migration_runs`, so the revert o
 | 202610192200_auth_users | auth_id_series | table, RLS | Gap-free User ID sequence per company | Yes | No | auth |
 | 202610192200_auth_users | auth_users | table, RLS | Users, User IDs, account states, validity dates | Yes | No | auth |
 | 202610192200_auth_users | auth_password_history | table, append-only, RLS | Previous password hashes (last five are checked) | Yes | No | auth |
+| 202610192300_evbus_envelope_inbox | sys.outbox (columns aggregate_key, correlation_id, causation_id) | table alteration, additive | Event envelope fields on the outbox | Yes | No | evbus |
+| 202610192300_evbus_envelope_inbox | evt_inbox | table, RLS, append-only | Consumer inbox: one row per consumer and event | Yes | No | evbus |

@@ -1,0 +1,20 @@
+req_id,requirement,status,evidence,note
+REQ-EVBUS-F01,Event envelope,partial,src/evbus/envelope.ts; src/evbus/evbus.test.ts; db/migrations/202610192300_evbus_envelope_inbox.up.sql,"AC-5 fields built from the outbox row. Links (permission-checked URLs) and PII flags in the registry are not built (S2)"
+REQ-EVBUS-F02,Outbox relay with lag and ordering,partial,src/evbus/relay.ts; src/db/outbox.ts; src/evbus/evbus.integration.test.ts,"Ordered relay with lag histogram. Scheduler that runs it is wired in S2. Ordering is per batch by id; per-aggregate ordering holds"
+REQ-EVBUS-F03,Inbox and idempotent consumers,partial,src/evbus/inbox.ts; src/evbus/evbus.integration.test.ts,"Business effect and inbox row in one transaction; redelivery has no second effect; tested"
+REQ-EVBUS-F04,Broker abstraction,partial,src/evbus/broker.ts,"Interface and PostgreSQL adapter. Redis or BullMQ adapter waits for Redis (A-46, CF-012)"
+REQ-EVBUS-F05,Schema registry,not started,,Phase 2 (S2); ajv ADR pending (§2.3)
+REQ-EVBUS-F06,Retries, DLQ and replay,partial,src/evbus/evbus.integration.test.ts,"Failed handler is retried and applied once (tested). DLQ, dry-run replay and approvals are S2"
+REQ-EVBUS-F07,Webhooks,not started,,Phase 2 (S2)
+REQ-EVBUS-F08,Seed catalogue,not started,,Catalogue entries follow with each consumer; no seed events yet
+REQ-EVBUS-F09,Cross-module boundary rule,partial,src/evbus/evbus.test.ts (CP-EVBUS-01 static rule),"Only the outbox and the unit of work write events; cross-module table access is tracked by Part 01 and not re-checked here"
+REQ-EVBUS-F10,Socket authentication,not started,,Phase 3 (S3)
+REQ-EVBUS-F11,Room model,not started,,Phase 3 (S3)
+REQ-EVBUS-F12,Missed-event replay,not started,,Phase 3 (S3)
+REQ-EVBUS-F13,Presence and edit warning,not started,,Phase 3 (S3)
+REQ-EVBUS-F14,Propagation map and latency SLO,not started,,Phase 4 (S4)
+REQ-EVBUS-F15,notify() engine,not started,,Phase 5 (S5)
+REQ-EVBUS-F16,Templates,not started,,Phase 5 (S5)
+REQ-EVBUS-F17,Notification centre,not started,,Phase 5 (S5)
+REQ-EVBUS-F18,Preferences,not started,,Phase 5 (S5)
+REQ-EVBUS-F19,WorkChat real-time,deferred,,Depends on Parts 25 and 25A (not approved)
