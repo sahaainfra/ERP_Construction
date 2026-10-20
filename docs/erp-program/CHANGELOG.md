@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-20 — Part 11 approved (D-065)
+- Owner approved Part 11 for the phases in the discovery plan. Assumptions A-57 to A-68 recorded. The plan's §2 decisions remain open; no slice is built yet.
+
 ## 2026-10-20 — Part 10 slice S1 (D-064)
 - Added migration `202610192300_evbus_envelope_inbox`: outbox envelope columns and the consumer inbox `evt_inbox`.
 - Added `src/evbus/` (envelope, inbox, broker with PostgreSQL adapter, relay). `enqueueEvent` refuses sensitive values; `uow.emit` passes the correlation ids.
