@@ -43,7 +43,7 @@ const progressLines = [
       "08A": "APPROVED S1 — owner 2026-10-20 (D-060); slices S2 to S6 open; independent review open",
       "08": "APPROVED — owner 2026-10-20 (D-058) for slices S1 and S2; S3–S5 open; independent review open",
       "09": "APPROVED — owner 2026-10-20 (D-061) for the plan; S1 BUILT (D-062), approval pending; S2 to S5 not started; CTO SLO targets and independent review open",
-      "10": "DRAFTED — discovery and plan (no code); awaiting owner approval; slices S1 to S5 not started",
+      "10": "APPROVED — owner 2026-10-20 (D-063) for the plan; slices S1 to S5 not started; §2 decisions, CTO SLOs and independent review open",
       "07": "APPROVED — owner 2026-10-20 (D-054) with conditions: medium and low items open; human independent review open (Part 00 §5.8); identity provider unnamed (CF-013)",
       "05": "APPROVED — owner 2026-10-19 (D-037); Redis, object storage and remaining items deferred (CF-027, CF-028)",
     };

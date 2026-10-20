@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-20 — Part 10 approved (D-063)
+- Owner approved Part 10 for the phases in the discovery plan. Assumptions A-46 to A-56 recorded. The plan's §2 decisions remain open; S1 proceeds on the documented assumptions for the broker and the real-time transport.
+
 ## 2026-10-20 — Part 09 slice S1 (D-062)
 - Added `src/obs/`: value redaction (`redact.ts`), correlation scope (`correlation.ts`), W3C trace context and spans (`trace.ts`), in-process RED metrics (`metrics.ts`), route telemetry (`telemetry.ts`).
 - `src/core/logger.ts` masks secret-like values in strings and adds the correlation and trace ids of the running work.
