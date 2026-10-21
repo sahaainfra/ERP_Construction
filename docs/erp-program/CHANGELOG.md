@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 17 slice S1 approved (D-109)
+- Owner approved Part 17 S1. S2 to S5 and the open owner decisions remain.
+
 ## 2026-10-21 — Part 17 slice S1 built (D-108)
 - Added the control-point registry, the check library with the restricted CUSTOM language, the OBSERVE-only evaluation and the read-only gate status, with migration 202610193500_protocol_engine and rollback. 39 new tests. WARN and ENFORCE, exceptions and the HTTP routes come later.
 
