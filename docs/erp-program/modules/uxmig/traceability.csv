@@ -1,0 +1,15 @@
+req_id,requirement,status,evidence,note
+REQ-UXMIG-F01,Screen inventory and classification,partial,"src/uxmig/scan.ts; src/uxmig/classify.ts; docs/erp-program/modules/uxmig/inventory.json","Scanner and classifier built. The live ERP screens are not in this repository (§2.1); only the home route is inventoried"
+REQ-UXMIG-F02,Migration waves,not started,,Needs the screen inventory (§2.1) and the owner's wave owners (§2.4)
+REQ-UXMIG-F03,Template conversion,not started,,Waits for the screens
+REQ-UXMIG-F04,Component consolidation,partial,"src/uxmig/duplicates.ts","Duplicate report built with the TypeScript compiler API. Zero local variants in this repository"
+REQ-UXMIG-F05,Tokens only,not started,,Waits for the screens; the literal rule already exists (Part 12)
+REQ-UXMIG-F06,Responsive,not started,,Waits for the screens
+REQ-UXMIG-F07,Accessibility,not started,,Waits for the screens
+REQ-UXMIG-F08,Functional parity tests,partial,"src/uxmig/parity.ts; src/uxmig/uxmig.test.ts; src/uxmig/golden/home.json","Comparison rules and golden check on the home route. Live golden outputs not supplied (§2.2)"
+REQ-UXMIG-F09,Safe switch-over,partial,"src/uxmig/flags.ts; src/uxmig/redirects.ts","Flag default off and route registry built. Server flag store and audit wait for the session layer (A-87)"
+REQ-UXMIG-F10,Registration,not started,,Waits for the screens
+REQ-UXMIG-F11,States,not started,,Waits for the screens
+REQ-UXMIG-F12,Legacy retirement,not started,,Waits for pilots and approval
+REQ-UXMIG-F13,Tracker,partial,"src/uxmig/tracker.ts; docs/erp-program/modules/uxmig/tracker.csv","Stages and CSV generator built; one row (home) at inventoried"
+REQ-UXMIG-F14,Field-critical first,not started,,Waits for the screens and the session layer

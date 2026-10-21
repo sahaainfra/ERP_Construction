@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 15 slice S1 built (D-093)
+- Added the migration framework: scanner, classifier, duplicate report, tracker, feature flags, route registry, parity rules and the golden check on the home route. `npm run uxmig:scan`. 16 tests. The inventory covers one route until the live ERP screens are supplied.
+
 ## 2026-10-21 — Part 15 plan approved (D-092)
 - Owner approved the Part 15 plan and assumptions A-137 to A-144. The §2 owner decisions are open; the live ERP screen source (§2.1) blocks the inventory. S1 not started.
 
