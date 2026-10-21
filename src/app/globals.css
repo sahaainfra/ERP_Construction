@@ -707,3 +707,221 @@ a {
 .erp-breadcrumb a {
   color: var(--erp-color-text-link);
 }
+
+/* ---- Field app components (Part 14 S1). Touch targets are at least 44 px; sizes come from the token scale. ---- */
+.erp-button,
+.erp-chip,
+.erp-button-quiet {
+  min-block-size: max(44px, var(--erp-control-height));
+  min-inline-size: max(44px, var(--erp-control-height));
+}
+
+.erp-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--erp-space-4);
+  border: 1px solid var(--erp-color-border-control);
+  border-radius: var(--erp-radius-md);
+  background: var(--erp-color-brand-primary);
+  color: var(--erp-color-text-on-primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.erp-button:focus-visible,
+.erp-chip:focus-visible,
+.erp-button-quiet:focus-visible {
+  outline: 2px solid var(--erp-color-border-focus);
+  outline-offset: 2px;
+}
+
+.erp-cardlist {
+  display: grid;
+  gap: var(--erp-space-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.erp-card-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--erp-space-2);
+  padding: var(--erp-space-3);
+  border: 1px solid var(--erp-color-border-subtle);
+  border-radius: var(--erp-radius-md);
+  background: var(--erp-color-bg-surface);
+  color: var(--erp-color-text-primary);
+}
+
+.erp-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--erp-space-2);
+}
+
+.erp-card-title {
+  font-weight: 600;
+  color: var(--erp-color-text-primary);
+  text-decoration: none;
+}
+
+.erp-card-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--erp-space-2);
+  margin: 0;
+}
+
+.erp-card-fields dt {
+  color: var(--erp-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.erp-card-fields dd {
+  margin: 0;
+}
+
+.erp-chips {
+  position: sticky;
+  top: 0;
+  z-index: var(--erp-z-sticky);
+  display: flex;
+  gap: var(--erp-space-2);
+  overflow-x: auto;
+  padding-block: var(--erp-space-2);
+  background: var(--erp-color-bg-page);
+}
+
+.erp-chip {
+  padding-inline: var(--erp-space-3);
+  border: 1px solid var(--erp-color-border-control);
+  border-radius: var(--erp-radius-pill);
+  background: var(--erp-color-bg-surface);
+  color: var(--erp-color-text-primary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.erp-chip[aria-pressed="true"] {
+  background: var(--erp-color-bg-selected);
+  border-color: var(--erp-color-brand-primary);
+  font-weight: 600;
+}
+
+.erp-quantity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--erp-space-1);
+  color: var(--erp-color-text-primary);
+}
+
+.erp-quantity-row {
+  display: flex;
+  align-items: center;
+  gap: var(--erp-space-2);
+}
+
+.erp-quantity input {
+  min-block-size: max(44px, var(--erp-control-height));
+  min-inline-size: 0;
+  flex: 1;
+  padding-inline: var(--erp-space-3);
+  border: 1px solid var(--erp-color-border-control);
+  border-radius: var(--erp-radius-sm);
+  background: var(--erp-color-bg-surface);
+  color: var(--erp-color-text-primary);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.125rem;
+}
+
+.erp-quantity input[aria-invalid="true"] {
+  border-color: var(--erp-color-status-error-solid);
+}
+
+.erp-quantity-unit {
+  color: var(--erp-color-text-secondary);
+  min-inline-size: 3rem;
+}
+
+.erp-masterdetail {
+  display: grid;
+  gap: var(--erp-space-4);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.erp-capture-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--erp-space-2);
+  padding: var(--erp-space-3);
+  border: 1px solid var(--erp-color-border-subtle);
+  border-radius: var(--erp-radius-md);
+  background: var(--erp-color-bg-surface);
+  color: var(--erp-color-text-primary);
+}
+
+.erp-capture-block input:not([type="file"]) {
+  min-block-size: max(44px, var(--erp-control-height));
+  padding-inline: var(--erp-space-3);
+  border: 1px solid var(--erp-color-border-control);
+  border-radius: var(--erp-radius-sm);
+  background: var(--erp-color-bg-surface);
+  color: var(--erp-color-text-primary);
+}
+
+.erp-fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--erp-space-2);
+  padding: var(--erp-space-3);
+  border: 1px solid var(--erp-color-border-subtle);
+  border-radius: var(--erp-radius-md);
+  color: var(--erp-color-text-primary);
+}
+
+.erp-fieldset label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--erp-space-1);
+}
+
+.erp-signature {
+  inline-size: 100%;
+  block-size: 140px;
+  touch-action: none;
+  border: 1px dashed var(--erp-color-border-control);
+  border-radius: var(--erp-radius-md);
+  background: var(--erp-color-bg-surface);
+  color: var(--erp-color-text-primary);
+}
+
+@media (min-width: 600px) {
+  .erp-cardlist {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  .erp-masterdetail {
+    grid-template-columns: minmax(16rem, 1fr) minmax(0, 2fr);
+    align-items: start;
+  }
+
+  .erp-masterdetail[data-has-detail="false"] .erp-detail {
+    display: flex;
+  }
+
+  .erp-masterdetail .erp-detail {
+    position: sticky;
+    top: var(--erp-space-4);
+  }
+}
+
+@media (max-width: 899px) {
+  .erp-masterdetail[data-has-detail="true"] .erp-master {
+    display: none;
+  }
+}

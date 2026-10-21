@@ -8,6 +8,7 @@ import { ConflictState, IntegrationFailureState, JobFailureState, OfflineState, 
 import { StatusChip } from "../../src/design/StatusChip";
 import { Project360Frame, SiteFrame, ControlTowerFrame, DepartmentFrame, HierarchyBreadcrumb } from "../../src/design/ui/frames";
 import { NO_FILTERS } from "../../src/dash/filters";
+import { CardList, FilterChips, QuantityField, MasterDetail, CameraCapture, GeoCapture, BarcodeCapture, SignaturePad, VoiceNote } from "../../src/design/ui/field";
 
 const button = (label: string) => h("button", { type: "button" }, label);
 const para = (text: string, key?: string) => h("p", { key }, text);
@@ -81,6 +82,30 @@ export const cases: { name: string; markup: () => string; expect: string }[] = [
     name: "hierarchy breadcrumb",
     markup: () => renderToStaticMarkup(h(HierarchyBreadcrumb, { crumbs: [{ label: "Acme Constructions", route: null }, { label: "P-204", route: "/projects/204" }, { label: "S-20", route: null }] })),
     expect: "P-204",
+  },
+  {
+    name: "field card list and filters",
+    markup: () => renderToStaticMarkup(frag(
+      h(FilterChips, { label: "Filter deliveries", chips: [{ id: "open", label: "Open", active: true }, { id: "late", label: "Late", active: false }], onToggle: () => undefined }),
+      h(CardList, { label: "Deliveries", items: [{ id: "g1", title: "GRN-0042", status: h("span", { className: "erp-count" }, "Posted"), fields: [{ label: "Item", value: "TMT 16 mm" }, { label: "Qty", value: "120 kg" }, { label: "Site", value: "S-20" }] }] }),
+    )),
+    expect: "GRN-0042",
+  },
+  {
+    name: "field quantity and master detail",
+    markup: () => renderToStaticMarkup(frag(h(QuantityField, { id: "qty", label: "Quantity received", unit: "kg", value: "120.5", onChange: () => undefined }), h(MasterDetail, { master: para("List of pours"), detail: null, detailLabel: "Pour details" }))),
+    expect: "Choose an item",
+  },
+  {
+    name: "field capture components with fallbacks",
+    markup: () => renderToStaticMarkup(frag(
+      h(CameraCapture, { label: "Take photos", onFiles: () => undefined }),
+      h(GeoCapture, { available: false, onRecord: () => undefined }),
+      h(BarcodeCapture, { detectorAvailable: false, onCode: () => undefined }),
+      h(SignaturePad, { label: "Sign for the delivery", onChange: () => undefined }),
+      h(VoiceNote, { available: false, label: "Record note", onText: () => undefined }),
+    )),
+    expect: "Scanning is not available",
   },
 ];
 

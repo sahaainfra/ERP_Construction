@@ -1,0 +1,19 @@
+req_id,requirement,status,evidence,note
+REQ-FIELD-F01,Shell variants,partial,src/field/logic.ts; src/field/field.test.ts,"Five-slot bottom bar rules per role. Wiring into the shell and tablet and desktop variants wait for the session layer (A-123)"
+REQ-FIELD-F02,Responsive patterns,partial,src/design/ui/field.tsx; src/app/globals.css; e2e/fixtures/render-cases.tsx,"Card lists, filter chips, quantity fields, master–detail; accessibility at three widths. Stepper and sticky primary action on forms are not yet assembled into a form"
+REQ-FIELD-F03,Capture components,partial,src/design/ui/field.tsx; src/field/logic.ts; src/field/field.test.ts,"Photo, location, barcode, signature and speech built with fallbacks. Annotation tools, NFC read and the canvas compression step are not built or not exercised by tests"
+REQ-FIELD-F04,Field home per role,not started,,Phase 2 (S2)
+REQ-FIELD-F05,PWA packaging,not started,,Phase 2 (S2)
+REQ-FIELD-F06,Kiosk mode,not started,,Phase 2 (S2); session layer
+REQ-FIELD-F07,Encrypted store and snapshot,not started,,Phase 3 (S3)
+REQ-FIELD-F08,Command queue,not started,,Phase 3 (S3)
+REQ-FIELD-F09,Offline validation and signed authorisations,not started,,Phase 3 (S3); signing decision (§2.2)
+REQ-FIELD-F10,Media pipeline,not started,,Phase 4 (S4); storage decision (§2.3)
+REQ-FIELD-F11,Sync engine,not started,,Phase 4 (S4)
+REQ-FIELD-F12,Conflict framework,not started,,Phase 4 (S4)
+REQ-FIELD-F13,Status model,not started,,Phase 4 (S4)
+REQ-FIELD-F14,Snapshot freshness,not started,,Phase 3 (S3); ages decision (§2.6)
+REQ-FIELD-F15,Device binding and revocation,not started,,Phase 5 (S5); session layer
+REQ-FIELD-F16,Offline-capability registry,not started,,Phase 5 (S5)
+REQ-FIELD-F17,Diagnostics,not started,,Phase 5 (S5)
+REQ-FIELD-F18,WorkChat on the field app,deferred,,Parts 25 and 25A not approved
