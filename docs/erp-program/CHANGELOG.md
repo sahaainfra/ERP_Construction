@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 16 plan approved (D-096)
+- Owner approved the Part 16 plan and assumptions A-146 to A-154. The §2 owner decisions are open, including Part 10 S1 approval and the session layer. S1 not started.
+
 ## 2026-10-21 — Part 15 slice S1 approved (D-094)
 - Owner approved Part 15 S1. S2 to S5 wait for the live ERP screen source and the owner's answers in modules/uxmig/discovery.md §2.
 

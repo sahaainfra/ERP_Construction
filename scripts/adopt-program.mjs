@@ -49,7 +49,7 @@ const progressLines = [
       "13": "APPROVED for slices S1 to S5 — owner 2026-10-21 (D-079); screens wait for the session layer; §2 decisions and volume measurement open",
       "14": "APPROVED for S1 — owner 2026-10-21 (D-082); S2 APPROVED — owner 2026-10-21 (D-084); FINAL APPROVAL recorded — owner 2026-10-21 (D-091); S1 to S5 approved (D-082, D-084, D-086, D-088, D-090); independent review OUTSTANDING (Part 00 §5.8) — to be done before production release; server parts, storage, reports and the online-only list remain open; independent human review pending (mandatory before final approval)",
       "15": "PLAN APPROVED (D-092); S1 APPROVED — owner 2026-10-21 (D-094), framework only; S2 BLOCKED: live ERP screen export not yet received (D-095); BLOCKED on the live ERP screen source for the inventory and waves (modules/uxmig/discovery.md §2.1); this repository has one route",
-      "16": "DISCOVERY AND PLAN WRITTEN — no code; awaiting owner approval; Part 10 S1 approval and the session layer needed (modules/wf/discovery.md §2)",
+      "16": "PLAN APPROVED — owner 2026-10-21 (D-096); S1 not started; Part 10 S1 approval and the session layer still needed (modules/wf/discovery.md §2)",
       "07": "APPROVED — owner 2026-10-20 (D-054) with conditions: medium and low items open; human independent review open (Part 00 §5.8); identity provider unnamed (CF-013)",
       "05": "APPROVED — owner 2026-10-19 (D-037); Redis, object storage and remaining items deferred (CF-027, CF-028)",
     };
