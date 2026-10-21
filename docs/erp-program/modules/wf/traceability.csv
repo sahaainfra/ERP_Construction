@@ -1,15 +1,15 @@
 req_id,requirement,status,evidence,note
 REQ-WF-F01,State-machine templates,partial,"src/wf/machine.ts; src/wf/machine.test.ts; db/migrations/202610193000_wf_engine.up.sql","Machine checks (every branch ends, no unreachable state) and the engine. Guards, side effects, field locks and AC-11 mapping not built"
 REQ-WF-F02,Workflow designer,not started,,Designer screen waits for the session layer and the UI slice
-REQ-WF-F03,Decision tables,not started,,S2
-REQ-WF-F04,DoA matrix,not started,,S2 (uses iam/authority.ts)
-REQ-WF-F05,Approver resolution,not started,,S2 (uses iam/sod.ts). S1 assigns people explicitly
+REQ-WF-F03,Decision tables,partial,"src/wf/decision.ts; src/wf/store.ts; src/wf/s2.test.ts; src/wf/s2.integration.test.ts; db/migrations/202610193100_wf_rules.up.sql","Evaluator, validity and coverage checks (gaps and overlaps, sampled at boundaries), maker-checker activation after simulation. Seed tables not built (§2.3 to §2.5)"
+REQ-WF-F04,DoA matrix,partial,"src/wf/doa.ts; src/iam/authority.ts; src/wf/s2.test.ts","Cumulative evaluation and DR-13 finding built, reading stored instances. Limits use the existing Part 07 table. Effective-dated matrix seed waits for the owner's limits (§2.3)"
+REQ-WF-F05,Approver resolution,partial,"src/wf/resolve.ts; src/wf/s2.integration.test.ts","Role holders filtered by authority and enforced SoD conflicts, smallest sufficient authority chosen, unresolved never approves. Project-team roles and reporting lines not built. Not yet called by the engine (callers pass people)"
 REQ-WF-F06,Actions,partial,"src/wf/engine.ts; src/wf/wf.integration.test.ts","Submit, approve, reject, return, resubmit and cancel built with reason rules. Recall, reassign, comment, step-up MFA and conditions deferred (S3 and Part 18)"
 REQ-WF-F07,Delegation,not started,,S3
 REQ-WF-F08,SLA and escalation,not started,,S3 (calendar and Part 18)
 REQ-WF-F09,Amendments,not started,,S3
 REQ-WF-F10,Emergency approvals,not started,,S3
-REQ-WF-F11,Simulation,not started,,S2
+REQ-WF-F11,Simulation,partial,"src/wf/simulate.ts; src/wf/store.ts; src/wf/s2.test.ts","Re-routing over stored snapshots lists changed documents. Recording a simulation gates activation. Snapshots need instances to carry their context (now stored)"
 REQ-WF-F12,My Inbox,not started,,S4 (session layer)
 REQ-WF-F13,Evidence panel,not started,,S5
 REQ-WF-F14,Workflow widget,not started,,S4

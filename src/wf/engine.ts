@@ -26,6 +26,10 @@ export interface StartInput {
   amount?: number;
   /** The person for each step. Approver resolution (Part 16 S2) replaces this map. */
   assignees: Record<string, string>;
+  /** Facts the routing and simulation read (for example project, category). Stored with the instance. */
+  context?: Record<string, string | number>;
+  /** Vendor, material and project joined into the key cumulative evaluation groups by (A-149). */
+  splitKey?: string;
 }
 
 export interface ActInput {
@@ -63,9 +67,9 @@ export async function startWorkflow(pool: Pool, ctx: RequestContext, input: Star
     const snapshot = takeAmountSnapshot(input.amount);
     const inserted = await c
       .query<{ id: string }>(
-        `INSERT INTO wf_instances (tenant_id, doc_type, doc_id, definition_version, state, amount_snapshot, submitted_by)
-         VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
-        [ctx.tenantId, input.docType, input.docId, def.rows[0].version, machine.initial, snapshot, input.submittedBy],
+        `INSERT INTO wf_instances (tenant_id, doc_type, doc_id, definition_version, state, amount_snapshot, submitted_by, context_json, split_key)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`,
+        [ctx.tenantId, input.docType, input.docId, def.rows[0].version, machine.initial, snapshot, input.submittedBy, JSON.stringify(input.context ?? {}), input.splitKey ?? null],
       )
       .catch((e: { code?: string }) => {
         if (e.code === "23505") throw new AppError("CONFLICT", "a workflow is already open for this document");

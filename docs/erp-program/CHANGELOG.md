@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 16 slice S2 built (D-099)
+- Added decision tables with coverage checks, cumulative evaluation and DR-13, approver resolution with SoD, simulation, maker-checker activation gated by simulation, and migration 202610193100_wf_rules. 21 new tests. Seed data and the engine's use of the resolver wait for the owner and the session layer.
+
 ## 2026-10-21 — Part 16 slice S1 approved (D-098)
 - Owner approved Part 16 S1. S2 to S5 and the open owner decisions remain.
 
