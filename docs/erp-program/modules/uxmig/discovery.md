@@ -82,3 +82,24 @@ Use the Part 15 specification and this discovery. Start from §2: do not build s
 3. Do not migrate a screen, change a route, or turn on a flag, until its parity report is accepted and the owner has approved the wave.
 4. Keep the live application's data and behaviour unchanged. Any desired functional change is a separate requirement for the owning Part.
 5. Stop and report at each approval point. Ask only for what §2 names.
+
+## 7. S2 target-template proposal (assumptions only, no screens inspected)
+
+Proposed before the screen export arrives, so the S2 wave can start quickly once it does. Each mapping is an assumption (A-145) to confirm against the real screens. Where a real screen differs, the screen's behaviour wins and this table changes.
+
+| Field-critical screen | Assumed role | Assumed template | Part 14 patterns | Assumed classification |
+|---|---|---|---|---|
+| DPR (daily progress report) | Site engineer | ObjectPage (record) with MobileCapture for entry | CardList, QuantityField, MasterDetail on tablet | refactor to template |
+| Attendance (punch and daily register) | Time keeper | ListReport | CardList, FilterChips | refactor to template |
+| Material request and issue | Site engineer, store keeper | Wizard for new requests, ObjectPage for records | QuantityField, sticky primary action | refactor to template |
+| GRN (goods receipt) | Store keeper | Wizard | QuantityField, BarcodeCapture with manual fallback | refactor to template |
+| Approvals | Approver | Worklist | CardList, ApprovalPanel | restyle |
+| Inspections | QA/QC | ObjectPage with checklist | MasterDetail, SignaturePad, CameraCapture | refactor to template |
+| Tasks | Supervisor | Worklist | CardList, FilterChips | restyle |
+
+Assumptions for this table:
+- **A-145 Target mapping.** Each field-critical screen moves to the template above, using the Part 14 field components already built and tested (`src/design/ui/field.tsx`). A screen whose real structure differs keeps its behaviour and is re-mapped after the export is read.
+- The roles listed are the Part 14 field roles (`FIELD_ROLES` in `src/field/logic.ts`). They are assumed, not confirmed by the live system (§2.7).
+- Approvals with financial impact stay online-only (A-135), so their migrated screen must not offer offline submission.
+
+Status: proposal only. Owner confirmation is needed before the S2 build uses it.
