@@ -1,0 +1,15 @@
+[
+  {
+    "key": "ff.core.sample",
+    "owner": "Technical lead",
+    "module_code": "core",
+    "defaults_by_env": {
+      "development": false,
+      "test": false,
+      "staging": false,
+      "production": false
+    },
+    "kill_switch": true,
+    "description": "Reference module (Part 05 REQ-CORE-F17). Never enabled in production."
+  }
+]

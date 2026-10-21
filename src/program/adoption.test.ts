@@ -50,6 +50,6 @@ describe("adoption files (Part 00 §14)", () => {
       .map(splitCsv)
       .find((r) => r[0] === "00");
     expect(row?.[4]).toBe("ADOPT");
-    expect(row?.[7]).toContain("awaiting owner signature");
+    expect(row?.[7]).toContain("owner approved");
   });
 });

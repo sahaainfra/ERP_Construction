@@ -113,3 +113,31 @@ describe("BOQ deviation", () => {
     expect(split).toEqual({ withinBandQty: 60, excessAboveQty: 0, excessBelowQty: 15 });
   });
 });
+
+describe("money is exact to paise (ADR-004, AC-7)", () => {
+  it("returns exactly 1000 for the golden price-variation case, not 999.9999999999995", () => {
+    const value = priceVariation({
+      variableValue: 1000,
+      components: [{ share: 0.5, baseIndex: 100, currentIndex: 110 }, { share: 0.25, baseIndex: 200, currentIndex: 220 }],
+    });
+    expect(value).toBe(75);
+    expect(priceVariation({ variableValue: 1000, components: [{ share: 1, baseIndex: 100, currentIndex: 200 }] })).toBe(1000);
+  });
+
+  it("rounds a money result to paise, half up", () => {
+    expect(retentionDeduction({ billValue: 10.005, retainedToDate: 0, contractValue: 1000 })).toBe(0.5);
+    expect(retentionDeduction({ billValue: 0.1, retainedToDate: 0, contractValue: 1000, retentionPct: 25 })).toBe(0.03);
+  });
+
+  it("gives at most two decimal places for every money function", () => {
+    const values = [
+      mobilisationAdvanceRecovery({ advance: 1000, contractValue: 3000, startPct: 10, endPct: 60, cumulativeWorkBefore: 100, workInBill: 777 }),
+      securedAdvanceLimit({ quantity: 3, invoiceRate: 10.1, sorRate: 9.9 }),
+      securedAdvanceRecovery({ advanceAmount: 100, materialQuantity: 3, consumedQuantity: 1, outstanding: 100 }),
+      retentionDeduction({ billValue: 333.33, retainedToDate: 0, contractValue: 10000 }),
+      liquidatedDamages({ contractValue: 12345.67, ratePerUnit: 0.0005, delayUnits: 3, capFraction: 0.1 }),
+      earlyCompletionBonus({ ratePerDay: 33.33, daysEarly: 3, cap: 1000 }),
+    ];
+    for (const v of values) expect(Math.round(v * 100) / 100).toBe(v);
+  });
+});

@@ -1,0 +1,16 @@
+req_id,requirement,status,evidence,note
+REQ-DASH-F01,Widget registry and runtime,partial,src/dash/types.ts; src/dash/registry.ts; src/dash/runtime.ts; src/dash/dash.test.ts,"Contract, start-up validation, parallel loading with timeout and isolated errors. Data API routes wait for the session layer"
+REQ-DASH-F02,Role spaces and personal workspace,partial,src/dash/spaces.ts; db/migrations/202610192700_dash_spaces.up.sql; src/dash/dash.integration.test.ts,"Personal, role and default spaces with permission and liveness filters. Designer and publishing are S2; screens wait for the session layer"
+REQ-DASH-F03,Common widgets,partial,src/dash/widgets.ts,"My projects and sites, Open security alerts, My recent sign-ins built. Approvals, tasks, gates, exceptions, calendar and documents wait for their Parts"
+REQ-DASH-F04,Dashboard designer,partial,src/dash/designer.ts; src/dash/designer.integration.test.ts,"Propose, maker-checker publish with the dash.space.published event, persona preview. Designer screen and routes wait for the session layer"
+REQ-DASH-F05,Global filters,partial,src/dash/filters.ts; src/dash/s2.test.ts; src/dash/designer.integration.test.ts,"URL parsing and scope check. Filter bar on screens waits for the session layer"
+REQ-DASH-F06,Project 360 and site frames,partial,src/design/ui/frames.tsx; e2e/fixtures/render-cases.tsx,"Project 360, site, department and control tower frames; accessibility checked in three themes. Content from owning Parts; screens wait for the session layer"
+REQ-DASH-F07,Search indexer,partial,src/search/index.ts; src/search/search.integration.test.ts,"Reconciliation from organisation tables; personal fields excluded. Event-driven updates wait for the owning Parts"
+REQ-DASH-F08,Search query service,partial,src/search/query.ts; src/search/search.integration.test.ts; src/search/search.test.ts,"Scope, classes and people permission in the query; prefixes; approved synonyms. Facets and totals consistent. Search screen and routes wait for the session layer"
+REQ-DASH-F09,Command palette,partial,src/search/usage.ts,"Command actions filtered by module, route and permission. Context actions and the palette screen are not built"
+REQ-DASH-F10,Recent, favourites and pinned,partial,src/search/usage.ts; src/search/search.integration.test.ts,"Recent (last 50) and favourites (50). Pinned uses the preference store (Part 12 S2)"
+REQ-DASH-F11,Drill registry,partial,src/dash/drill.ts; src/dash/s4.test.ts,"Registry built from the widgets; conformance check per figure. Drill-conformance over reports and search trace nodes waits for those Parts"
+REQ-DASH-F12,Hierarchy navigator,partial,src/dash/drill.ts; src/design/ui/frames.tsx (HierarchyBreadcrumb); src/dash/s4.test.ts,"Breadcrumb for company, project and site; WBS, activity and BOQ levels not built"
+REQ-DASH-F13,Where-used links,partial,src/dash/drill.ts; src/dash/s4.integration.test.ts,"Project and person links, shown only when non-empty and permitted. Masters of later Parts not yet covered"
+REQ-DASH-F14,Activity timeline,partial,src/dash/timeline.ts; src/dash/s5.integration.test.ts,"Read-only view of the audit chain for records and projects; restricted activity rule. PDF export (Part 76), timeline tab on screens and trace links to other Parts not built"
+REQ-DASH-F15,WorkChat search provider,deferred,,Part 25A not approved

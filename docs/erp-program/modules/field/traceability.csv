@@ -1,0 +1,19 @@
+req_id,requirement,status,evidence,note
+REQ-FIELD-F01,Shell variants,partial,src/field/logic.ts; src/field/field.test.ts,"Five-slot bottom bar rules per role. Wiring into the shell and tablet and desktop variants wait for the session layer (A-123)"
+REQ-FIELD-F02,Responsive patterns,partial,src/design/ui/field.tsx; src/app/globals.css; e2e/fixtures/render-cases.tsx,"Card lists, filter chips, quantity fields, master–detail; accessibility at three widths. Stepper and sticky primary action on forms are not yet assembled into a form"
+REQ-FIELD-F03,Capture components,partial,src/design/ui/field.tsx; src/field/logic.ts; src/field/field.test.ts,"Photo, location, barcode, signature and speech built with fallbacks. Annotation tools, NFC read and the canvas compression step are not built or not exercised by tests"
+REQ-FIELD-F04,Field home per role,not started,,Phase 2 (S2)
+REQ-FIELD-F05,PWA packaging,partial,"public/sw.js; public/offline.html; src/app/manifest.ts; src/design/ui/pwa.tsx; src/field/logic.ts; src/field/pwa.test.ts; e2e/field-pwa.spec.ts","Manifest, icon, install and update notices, minimum-version rule and cache policy built (S2). Offline navigation fallback is proven in sandbox tests only; real-device check outstanding; minimum-version source waits (A-127); approved with S2 (D-084)"
+REQ-FIELD-F06,Kiosk mode,not started,,Phase 2 (S2); session layer
+REQ-FIELD-F07,Encrypted store and snapshot,partial,"src/field/vault.ts; src/field/snapshot.ts; src/field/offline.test.ts","Encrypted vault, key lifecycle and freshness rule built. Server snapshot endpoint, delta refresh and IndexedDB adapter not built (session layer, A-87)"
+REQ-FIELD-F08,Command queue,partial,"src/field/commands.ts; src/field/offline.test.ts","Queue, UUID idempotency and stale-base rule built. Server command processor and its table not built (session layer)"
+REQ-FIELD-F09,Offline validation and signed authorisations,partial,"src/field/snapshot.ts; src/field/offline.test.ts","Ed25519 verifier built. Issuance and key custody await owner decision (§2.2); offline rule sharing with the server is pending"
+REQ-FIELD-F10,Media pipeline,partial,"src/field/media.ts; src/field/sync.test.ts","Chunked resumable upload with hash checks against a test adapter. Production storage waits for the owner (§2.3)"
+REQ-FIELD-F11,Sync engine,partial,"src/field/sync.ts; src/field/sync.test.ts","Pass with per-item results, backoff, attempt limits, Wi-Fi-only media and 72-hour tolerance. Playwright 72-hour scenario not built (needs screens and session)"
+REQ-FIELD-F12,Conflict framework,partial,"src/field/conflicts.ts; src/design/ui/field.tsx; e2e/fixtures/render-cases.tsx","Rule registry, person choice, amendment for locked records, comparison screen. Server conflict storage pending (session layer)"
+REQ-FIELD-F13,Status model,partial,"src/field/status.ts; src/field/sync.test.ts","Record and device states built. Status centre screen not built"
+REQ-FIELD-F14,Snapshot freshness,not started,,Phase 3 (S3); ages decision (§2.6)
+REQ-FIELD-F15,Device binding and revocation,partial,"src/field/device.ts; src/field/s5.test.ts","Device-side rules and rejection report built. Server registry and binding on sign-in wait for the session layer (A-87)"
+REQ-FIELD-F16,Offline-capability registry,partial,"src/field/capabilities.ts; src/field/s5.test.ts","Registry and online-only refusal built. Owner confirms the list (§2.6, A-135)"
+REQ-FIELD-F17,Diagnostics,partial,"src/field/diagnostics.ts; src/field/s5.test.ts","Consent-gated redacted export and telemetry built. Upload with consent and sync health reports not built"
+REQ-FIELD-F18,WorkChat on the field app,deferred,,Parts 25 and 25A not approved

@@ -1,0 +1,24 @@
+{
+  "module": "cicd",
+  "note": "Each dimension is PASS with an existing evidence file, FAIL, or N/A with a reason of at least 20 characters. Checked by npm run erp:audit -- cicd.",
+  "entries": [
+    { "dimension": "AUD-1 functional", "result": "N/A", "reason": "The pipeline has no business functionality; business features arrive in Parts 06 to 86." },
+    { "dimension": "AUD-2 UI/UX consistency", "result": "PASS", "evidence": "e2e/home.spec.ts" },
+    { "dimension": "AUD-3 theme/dashboard", "result": "PASS", "evidence": "e2e/home.spec.ts" },
+    { "dimension": "AUD-4 navigation", "result": "N/A", "reason": "One live navigation entry; navigation registry tests are written with the next module (Part 12 extension)." },
+    { "dimension": "AUD-5 database", "result": "PASS", "evidence": "src/db/database.integration.test.ts" },
+    { "dimension": "AUD-6 API/events", "result": "PASS", "evidence": "src/program/quality.test.ts" },
+    { "dimension": "AUD-7 permissions/SoD", "result": "N/A", "reason": "The permission registry arrives with Part 07; generated permission tests are not yet possible." },
+    { "dimension": "AUD-8 workflow & controls", "result": "N/A", "reason": "Workflow and protocol engines arrive with Parts 16 and 17; their matrices are not yet possible." },
+    { "dimension": "AUD-9 validations", "result": "N/A", "reason": "Business validations arrive with the modules; migration validation is covered under AUD-5." },
+    { "dimension": "AUD-10 reports", "result": "N/A", "reason": "No report exists yet; report regression starts with Part 76." },
+    { "dimension": "AUD-11 notifications", "result": "N/A", "reason": "The notification engine arrives with Part 10; no notification is sent yet." },
+    { "dimension": "AUD-12 integrations & adapters", "result": "N/A", "reason": "No external connector exists; connectors are built with Part 11 under ADR-005." },
+    { "dimension": "AUD-13 responsive/offline", "result": "N/A", "reason": "Responsive layout is checked at three breakpoints in e2e/home.spec.ts; the offline engine arrives with Part 14." },
+    { "dimension": "AUD-14 security", "result": "N/A", "reason": "No authentication exists yet (Parts 07 and 08A). The secret scan and the no-detail 503 are checked; the rest waits for those Parts." },
+    { "dimension": "AUD-15 performance", "result": "PASS", "evidence": "scripts/perf/health-smoke.ts" },
+    { "dimension": "AUD-16 error handling", "result": "PASS", "evidence": "src/program/quality.test.ts" },
+    { "dimension": "AUD-17 regression", "result": "PASS", "evidence": "docs/erp-program/GOLDEN_OUTPUTS/baseline.json" },
+    { "dimension": "AUD-18 build/deploy/rollback", "result": "N/A", "reason": "The build runs in CI (.github/workflows/ci.yml). Deployment and rollback need infrastructure that is not yet chosen (CF-012)." }
+  ]
+}

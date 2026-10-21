@@ -32,7 +32,7 @@
     "brand": {
       "primary":      { "light": "#1D4F91", "dark": "#2F6FC6", "high-contrast": "#0040A0" },
       "primary-text": { "light": "#1D4F91", "dark": "#8DBDF3", "high-contrast": "#0040A0" },
-      "accent":       { "light": "#F2A900", "dark": "#F2B53A", "high-contrast": "#FFD400" }
+      "accent":       { "light": "#B88000", "dark": "#F2B53A", "high-contrast": "#B88000" }
     },
     "status": {
       "success": {
@@ -43,7 +43,7 @@
       "warning": {
         "fg":      { "light": "#8A4B00", "dark": "#F2B54A", "high-contrast": "#000000" },
         "bg":      { "light": "#FFF3DC", "dark": "#33250A", "high-contrast": "#FFFFFF" },
-        "solid":   { "light": "#E59A00", "dark": "#E59A00", "high-contrast": "#E59A00" }
+        "solid":   { "light": "#AD7500", "dark": "#E59A00", "high-contrast": "#AD7500" }
       },
       "error": {
         "fg":      { "light": "#A3241B", "dark": "#F48A80", "high-contrast": "#000000" },

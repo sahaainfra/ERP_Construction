@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Templates are committed; real env files are not.
+!.env.example
+!.env.test.example
+
+# Local database dumps (may contain data). Never committed.
+backups/
+sbom.cdx.json
+test-results/
+playwright-report/
+coverage/

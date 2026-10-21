@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Icon } from "@/design/icons";
-import { visibleGroups } from "@/design/navigation";
+import { navigationFor, type NavEntry } from "@/design/navigation";
 import {
   applyTheme,
   DEFAULT_PREFS,
@@ -15,7 +15,11 @@ import {
   type Theme,
 } from "@/design/preferences";
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+/**
+ * The application shell. `permitted` is the set of permission keys the signed-in user holds, computed on the server (A-76); with
+ * none supplied, only entries that need no permission are shown.
+ */
+export function AppShell({ children, permitted = [] }: { children: React.ReactNode; permitted?: string[] }) {
   const [prefs, setPrefs] = useState<DisplayPrefs>(DEFAULT_PREFS);
 
   // Load the viewer's saved choices after mount so server and client markup match.
@@ -30,8 +34,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     writePrefs(merged);
   }
 
-  const groups = visibleGroups();
+  const nav = navigationFor(new Set(permitted));
   const pathname = usePathname();
+  const allOpen = nav.groups.flatMap((g) => g.entries);
+  // Pinned entries keep the viewer's order and show only while the viewer may still open them.
+  const pinned = prefs.pinned.map((route) => allOpen.find((e) => e.route === route)).filter((e): e is NavEntry => e !== undefined);
+  const linkFor = (entry: NavEntry) => (
+    <Link
+      href={entry.route}
+      className="erp-nav-link"
+      title={entry.label}
+      aria-current={pathname === entry.route ? "page" : undefined}
+    >
+      <span className="erp-nav-label">{entry.label}</span>
+    </Link>
+  );
 
   return (
     <div className="erp-app">
@@ -89,7 +106,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Icon name="erp.shell.nav" size={20} />
           </button>
 
-          {groups.map(({ group, entries }) => (
+          {pinned.length > 0 && (
+            <section className="erp-nav-group" aria-label="Pinned">
+              <h2 className="erp-nav-group-title">
+                <Icon name="erp.shell.nav" size={20} />
+                <span className="erp-nav-label">Pinned</span>
+              </h2>
+              <ul>
+                {pinned.map((entry) => (
+                  <li key={`pinned-${entry.id}`}>{linkFor(entry)}</li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {nav.groups.map(({ group, entries }) => (
             <section key={group.id} className="erp-nav-group">
               <h2 className="erp-nav-group-title">
                 <Icon name={group.icon} size={20} />
@@ -97,16 +128,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </h2>
               <ul>
                 {entries.map((entry) => (
-                  <li key={entry.id}>
-                    <Link
-                      href={entry.route}
-                      className="erp-nav-link"
-                      title={entry.label}
-                      aria-current={pathname === entry.route ? "page" : undefined}
-                    >
-                      <span className="erp-nav-label">{entry.label}</span>
-                    </Link>
-                  </li>
+                  <li key={entry.id}>{linkFor(entry)}</li>
                 ))}
               </ul>
             </section>
@@ -117,6 +139,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {children}
         </main>
       </div>
+
+      {nav.bottom.length > 0 && (
+        <nav className="erp-bottomnav" aria-label="Primary">
+          {nav.bottom.map((entry) => (
+            <Link
+              key={entry.id}
+              href={entry.route}
+              className="erp-bottomnav-link"
+              aria-current={pathname === entry.route ? "page" : undefined}
+            >
+              <Icon name={entry.icon} size={20} />
+              <span>{entry.label}</span>
+            </Link>
+          ))}
+        </nav>
+      )}
     </div>
   );
 }

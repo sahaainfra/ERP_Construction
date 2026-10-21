@@ -1,0 +1,12 @@
+{
+  "route": "/",
+  "module": "home",
+  "file": "src/app/page.tsx",
+  "localComponents": [
+    "HomePage"
+  ],
+  "literalCount": 0,
+  "template": null,
+  "duplicateVariants": 0,
+  "classification": "refactor_to_template"
+}

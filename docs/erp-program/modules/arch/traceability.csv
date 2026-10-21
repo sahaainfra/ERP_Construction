@@ -1,0 +1,18 @@
+req_id,requirement,status,evidence,note
+REQ-ARCH-F01,Architecture views,done,docs/erp-program/ARCHITECTURE.md,Context and container views are targets; only the shell exists today
+REQ-ARCH-F02,Architectural style (ADR-001),done,docs/erp-program/adr/ADR-001.md,PROPOSED
+REQ-ARCH-F03,Module boundary rules enforced in CI,partial,src/program/architecture.ts; scripts/erp-program/architecture-check.ts; .github/workflows/ci.yml,Rules enforced for existing folders; module folder rule applies when the first module exists
+REQ-ARCH-F04,Tenancy and isolation (ADR-002),done,docs/erp-program/adr/ADR-002.md,PROPOSED; isolation test waits for Part 03
+REQ-ARCH-F05,Data architecture (ADR-003),done,docs/erp-program/adr/ADR-003.md,PROPOSED
+REQ-ARCH-F06,Database fitness decisions (ADR-004 and extensions),partial,docs/erp-program/adr/ADR-004.md,Money replacement decided; other fitness items wait for a database
+REQ-ARCH-F07,Integration architecture (ADR-005),done,docs/erp-program/adr/ADR-005.md,PROPOSED
+REQ-ARCH-F08,Event architecture (ADR-006),done,docs/erp-program/adr/ADR-006.md,PROPOSED
+REQ-ARCH-F09,Front-end architecture (ADR-007),done,docs/erp-program/adr/ADR-007.md,PROPOSED
+REQ-ARCH-F10,Mobile and offline architecture (ADR-008),done,docs/erp-program/adr/ADR-008.md,PROPOSED
+REQ-ARCH-F11,Security architecture (ADR-009),done,docs/erp-program/adr/ADR-009.md,PROPOSED; residency open (CF-013)
+REQ-ARCH-F12,Analytics and AI architecture (ADR-010),done,docs/erp-program/adr/ADR-010.md,PROPOSED
+REQ-ARCH-F13,Infrastructure and environments (ADR-011),partial,docs/erp-program/ENVIRONMENTS.md,Blueprint only; IaC blocked by CF-012
+REQ-ARCH-F14,Build-vs-buy register,done,docs/erp-program/BUILD_VS_BUY.md,Licence, price and residency facts not verified
+REQ-ARCH-F15,Technology radar,done,docs/erp-program/TECH_RADAR.md,Versions verified against npm; some support windows not verified
+REQ-ARCH-F16,Replacement roadmap,done,docs/erp-program/ARCHITECTURE.md (section 11),Two items
+REQ-ARCH-F17,Architecture conformance,partial,.github/workflows/ci.yml; npm run arch:check,Boundary and dependency gates blocking; API diff, migration lint, bundle budget and performance smoke wait for Parts 03, 04, 09

@@ -1,5 +1,13 @@
 // Commercial term formulas from Part 00 Annex B3. Every percentage, cap and index is a parameter:
 // the annex states these are seed values, configured per contract and effective-dated.
+// Money is computed in decimal arithmetic (ADR-004, AC-7). Intermediate values are exact; the result is rounded to
+// paise (two decimal places, half up) once, at the output. Quantities are not money and stay as numbers.
+import Decimal from "decimal.js";
+
+const D = (value: number | Decimal) => new Decimal(value);
+
+/** Rounds a money amount to paise at the policy point. */
+const money = (amount: Decimal): number => amount.toDecimalPlaces(2, Decimal.ROUND_HALF_UP).toNumber();
 
 const assertPct = (name: string, value: number) => {
   if (value < 0 || value > 100) throw new RangeError(`${name} must be between 0 and 100, got ${value}`);
@@ -24,11 +32,11 @@ export function mobilisationAdvanceRecovery(input: {
   assertPct("startPct", input.startPct);
   assertPct("endPct", input.endPct);
   if (input.startPct >= input.endPct) throw new RangeError("startPct must be less than endPct");
-  const windowStart = (input.startPct / 100) * input.contractValue;
-  const windowEnd = (input.endPct / 100) * input.contractValue;
-  const cumulativeAfter = input.cumulativeWorkBefore + input.workInBill;
-  const overlap = Math.max(0, Math.min(cumulativeAfter, windowEnd) - Math.max(input.cumulativeWorkBefore, windowStart));
-  return (input.advance * overlap) / (windowEnd - windowStart);
+  const windowStart = D(input.startPct).div(100).times(input.contractValue);
+  const windowEnd = D(input.endPct).div(100).times(input.contractValue);
+  const cumulativeAfter = D(input.cumulativeWorkBefore).plus(input.workInBill);
+  const overlap = Decimal.max(0, Decimal.min(cumulativeAfter, windowEnd).minus(Decimal.max(input.cumulativeWorkBefore, windowStart)));
+  return money(D(input.advance).times(overlap).div(windowEnd.minus(windowStart)));
 }
 
 /** Secured advance limit on materials = P % × min(invoice rate, SOR rate) × quantity. Seed P = 75. */
@@ -40,7 +48,7 @@ export function securedAdvanceLimit(input: {
 }): number {
   const pct = input.advancePct ?? 75;
   assertPct("advancePct", pct);
-  return (pct / 100) * Math.min(input.invoiceRate, input.sorRate) * input.quantity;
+  return money(D(pct).div(100).times(Decimal.min(input.invoiceRate, input.sorRate)).times(input.quantity));
 }
 
 /**
@@ -54,8 +62,8 @@ export function securedAdvanceRecovery(input: {
   outstanding: number;
 }): number {
   if (input.materialQuantity <= 0) return 0;
-  const perUnit = input.advanceAmount / input.materialQuantity;
-  return Math.min(perUnit * input.consumedQuantity, input.outstanding);
+  const perUnit = D(input.advanceAmount).div(input.materialQuantity);
+  return money(Decimal.min(perUnit.times(input.consumedQuantity), input.outstanding));
 }
 
 /**
@@ -71,11 +79,11 @@ export function retentionDeduction(input: {
 }): number {
   const pct = input.retentionPct ?? 5;
   assertPct("retentionPct", pct);
-  const perBill = (pct / 100) * input.billValue;
-  if (input.capPct === undefined) return perBill;
+  const perBill = D(pct).div(100).times(input.billValue);
+  if (input.capPct === undefined) return money(perBill);
   assertPct("capPct", input.capPct);
-  const headroom = (input.capPct / 100) * input.contractValue - input.retainedToDate;
-  return Math.max(0, Math.min(perBill, headroom));
+  const headroom = D(input.capPct).div(100).times(input.contractValue).minus(input.retainedToDate);
+  return money(Decimal.max(0, Decimal.min(perBill, headroom)));
 }
 
 /**
@@ -88,15 +96,16 @@ export function priceVariation(input: {
   variableValue: number;
   components: { share: number; baseIndex: number; currentIndex: number }[];
 }): number {
-  const totalShare = input.components.reduce((sum, c) => sum + c.share, 0);
-  if (input.components.some((c) => c.share < 0) || totalShare > 1) {
+  const totalShare = input.components.reduce((sum, c) => sum.plus(c.share), D(0));
+  if (input.components.some((c) => c.share < 0) || totalShare.greaterThan(1)) {
     throw new RangeError("Component shares must be non-negative and sum to 1 or less");
   }
   const indexed = input.components.reduce((sum, c) => {
     if (c.baseIndex <= 0) throw new RangeError("baseIndex must be positive");
-    return sum + c.share * ((c.currentIndex - c.baseIndex) / c.baseIndex);
-  }, 0);
-  return input.variableValue * indexed;
+    const base = D(c.baseIndex);
+    return sum.plus(D(c.share).times(D(c.currentIndex).minus(base).div(base)));
+  }, D(0));
+  return money(D(input.variableValue).times(indexed));
 }
 
 /** Delay net of extension of time granted: delay still chargeable, never negative. */
@@ -113,13 +122,13 @@ export function liquidatedDamages(input: {
   delayUnits: number;
   capFraction: number; // e.g. 0.1 for 10 %
 }): number {
-  const uncapped = input.contractValue * input.ratePerUnit * Math.max(0, input.delayUnits);
-  return Math.min(uncapped, input.contractValue * input.capFraction);
+  const uncapped = D(input.contractValue).times(input.ratePerUnit).times(Math.max(0, input.delayUnits));
+  return money(Decimal.min(uncapped, D(input.contractValue).times(input.capFraction)));
 }
 
 /** Early-completion bonus = rate per day × days early, capped. */
 export function earlyCompletionBonus(input: { ratePerDay: number; daysEarly: number; cap: number }): number {
-  return Math.min(input.ratePerDay * Math.max(0, input.daysEarly), input.cap);
+  return money(Decimal.min(D(input.ratePerDay).times(Math.max(0, input.daysEarly)), input.cap));
 }
 
 /**
