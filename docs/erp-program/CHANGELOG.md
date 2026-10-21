@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 14 slice S2 built (D-083)
+- Added the web app manifest, icon, install prompt and update banner, the minimum-version rule (`versionPolicy`), the service worker (`public/sw.js`, cache policy A-126), the offline page, and the field PWA tests and browser checks.
+- Gates 9 of 9. Accessibility 306 of 306. Browser checks for the manifest, worker and registration 9 of 9.
+- Kiosk login, field home and push wait for the session layer or the owner's decision. S2 approval pending the owner.
+
 ## 2026-10-21 — Part 14 slice S1 approved (D-082)
 - Owner approved Part 14 S1. S2 to S5 and the independent human review remain open.
 

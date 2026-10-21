@@ -121,3 +121,25 @@ export function strokesToPath(strokes: { x: number; y: number }[][]): string {
     .map((s) => `M${s.map((p) => `${round(p.x, 1)} ${round(p.y, 1)}`).join(" L")}`)
     .join(" ");
 }
+
+/**
+ * The minimum-version rule (REQ-FIELD-F05). A device on an older build must update before it works. Versions are compared numerically
+ * part by part (1.10.0 is newer than 1.9.0). A malformed version is treated as too old, so a broken build cannot slip past the rule.
+ */
+export function versionPolicy(current: string, minimum: string): "ok" | "update-required" {
+  const parse = (v: string): number[] | null => {
+    if (!/^\d+(\.\d+){0,2}$/.test(v)) return null;
+    const parts = v.split(".").map(Number);
+    while (parts.length < 3) parts.push(0);
+    return parts;
+  };
+  const c = parse(current);
+  const m = parse(minimum);
+  if (!m) throw new RangeError("the minimum version is not valid");
+  if (!c) return "update-required";
+  for (let i = 0; i < 3; i++) {
+    if (c[i] > m[i]) return "ok";
+    if (c[i] < m[i]) return "update-required";
+  }
+  return "ok";
+}
