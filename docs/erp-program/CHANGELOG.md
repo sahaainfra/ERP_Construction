@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 14 final approval recorded, independent review outstanding (D-091)
+- The owner approved Part 14 finally. The independent human review required by Part 00 §5.8 is not done and is recorded as outstanding.
+
 ## 2026-10-21 — Part 14 slices S4 and S5 built and approved (D-087 to D-090)
 - S4: sync pass, backoff, media upload against the test adapter, conflict framework and screen, status model. 19 sync tests; accessibility 315 of 315.
 - S5: device binding and revocation rules, offline-capability registry with the online-only list, consent-gated redacted diagnostics. 12 tests.
