@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 13 slice S3 (D-076)
+- Added migration `202610192800_srch_search` and `src/search/` (index, query service, usage, command actions). Search p95 measured at 21.7 ms on 20,000 rows (extrapolation only; A-111).
+ 
 ## 2026-10-21 — Part 13 slice S2 (D-075)
 - Added `src/dash/designer.ts` (propose, maker-checker publish with event, persona preview) and `src/dash/filters.ts` (URL filters, allocation checks).
 - Added frames to `src/design/ui/frames.tsx`: Project 360, site, department, control tower. Accessibility cases added (87 passed at desktop width).

@@ -93,3 +93,8 @@ Note on the baseline down script: it drops `sys.migration_runs`, so the revert o
 | 202610192600_ds_user_preferences | ui_user_preferences | table, RLS | Per-user theme, density, collapsed flag and pinned routes (max 10) | Yes | No | ds |
 | 202610192700_dash_spaces | ui_role_spaces | table, RLS | Versioned role spaces (widget codes per role; one active per role) | Yes | No | dash |
 | 202610192700_dash_spaces | ui_user_space_overrides | table, RLS | A person's own widget arrangement | Yes | No | dash |
+| 202610192800_dash_search | srch_documents | table, RLS, GIN index | Search index: searchable text and access tags; no personal fields | Yes | No | dash |
+| 202610192800_dash_search | srch_synonyms | table, RLS | Synonyms, used once approved | Yes | No | dash |
+| 202610192800_dash_search | srch_zero_results | table, RLS | Zero-result queries (truncated, no user) | Yes | No | dash |
+| 202610192800_dash_search | usr_recent | table, RLS | Recent items, last 50 per person | Yes | No | dash |
+| 202610192800_dash_search | usr_favourites | table, RLS | Favourites, up to 50 per person | Yes | No | dash |
