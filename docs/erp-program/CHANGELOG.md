@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 14 slice S1 approved (D-082)
+- Owner approved Part 14 S1. S2 to S5 and the independent human review remain open.
+
 ## 2026-10-21 — Part 14 slice S1 (D-081)
 - Added `src/field/logic.ts` (shell slots, compression, GPS, watermark, capture fallbacks, scan parsing, signature paths) and `src/design/ui/field.tsx` (field components). Accessibility: 297 of 297 at three widths and three themes.
 
