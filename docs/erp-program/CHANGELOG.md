@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 16 slice S3 built (D-101)
+- Added working-day SLA timers with reminders and return at expiry, one-hop delegation, recall and admin reassignment, amendments with computed changes, and emergency approvals with regularisation. Migration 202610193200_wf_sla_delegation with rollback. Comments, holidays and escalation ladders wait for S4, the owner and Part 18.
+
 ## 2026-10-21 — Part 16 slice S2 approved (D-100)
 - Owner approved Part 16 S2. S3 to S5 and the open owner decisions remain.
 

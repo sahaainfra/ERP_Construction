@@ -1,10 +1,10 @@
 // State machines (Part 16 REQ-WF-F01; A-147). Pure rules: a definition is a set of states and transitions. Each step state waits for one
 // person; each terminal state ends the workflow. A definition is checked before it can be activated, so every branch ends.
-export const ACTIONS = ["submit", "approve", "reject", "return", "resubmit", "cancel"] as const;
+export const ACTIONS = ["submit", "approve", "reject", "return", "resubmit", "cancel", "recall"] as const;
 export type Action = (typeof ACTIONS)[number];
 
 export type StateDef =
-  | { kind: "step"; step: string }
+  | { kind: "step"; step: string; /** Working days allowed for this step. Without it the step has no SLA timer. */ slaWorkingDays?: number }
   | { kind: "terminal"; outcome: "approved" | "rejected" | "returned" | "cancelled" };
 
 export interface Transition {
