@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 14 slice S2 approved (D-084)
+- Owner approved Part 14 S2. S3 to S5 and the independent human review remain open.
+
 ## 2026-10-21 — Part 14 slice S2 built (D-083)
 - Added the web app manifest, icon, install prompt and update banner, the minimum-version rule (`versionPolicy`), the service worker (`public/sw.js`, cache policy A-126), the offline page, and the field PWA tests and browser checks.
 - Gates 9 of 9. Accessibility 306 of 306. Browser checks for the manifest, worker and registration 9 of 9.
