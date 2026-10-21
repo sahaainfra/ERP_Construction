@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 17 plan approved (D-107)
+- Owner approved the Part 17 plan and assumptions A-161 to A-170. The §2 owner decisions are open, including the upstream approvals and the session layer. S1 not started.
+
 ## 2026-10-21 — Part 16 slice S5 approved (D-106)
 - Owner approved Part 16 S5. All Part 16 slices are approved; final approval waits for the open items and the independent human review.
 
