@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 13 slice S2 (D-075)
+- Added `src/dash/designer.ts` (propose, maker-checker publish with event, persona preview) and `src/dash/filters.ts` (URL filters, allocation checks).
+- Added frames to `src/design/ui/frames.tsx`: Project 360, site, department, control tower. Accessibility cases added (87 passed at desktop width).
+
 ## 2026-10-20 — Part 13 slice S1 (D-074)
 - Added `src/dash/`: widget contract, registry, runtime (parallel, isolated, timed), three widgets with real data, and spaces (personal, role, default).
 - Added migration `202610192700_dash_spaces`. Screens and routes wait for the session layer.

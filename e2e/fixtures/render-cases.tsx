@@ -6,6 +6,8 @@ import { ObjectPage, ListReport, Wizard, SettingsPage, PublicAuthPage, Launchpad
 import { Banner, AuditTimeline, ApprovalPanel, AttachmentPanel, Skeleton } from "../../src/design/ui/core";
 import { ConflictState, IntegrationFailureState, JobFailureState, OfflineState, ValidationSummary, LoadingState } from "../../src/design/ui/states";
 import { StatusChip } from "../../src/design/StatusChip";
+import { Project360Frame, SiteFrame, ControlTowerFrame, DepartmentFrame } from "../../src/design/ui/frames";
+import { NO_FILTERS } from "../../src/dash/filters";
 
 const button = (label: string) => h("button", { type: "button" }, label);
 const para = (text: string, key?: string) => h("p", { key }, text);
@@ -50,6 +52,31 @@ export const cases: { name: string; markup: () => string; expect: string }[] = [
   { name: "offline state", markup: () => renderToStaticMarkup(h(OfflineState, { savedNote: "Your entry is kept on this device." })), expect: "kept on this device" },
   { name: "banner and loading", markup: () => renderToStaticMarkup(frag(h(Banner, { tone: "warning", children: "Data as of 09:40" }), h(LoadingState), h(Skeleton, { lines: 2 }))), expect: "Data as of 09:40" },
   { name: "timeline, approvals, attachments", markup: () => renderToStaticMarkup(frag(h(AuditTimeline, { items: [{ at: "2026-10-20 09:00", who: "Asha Rao", what: "submitted", reason: "Ready for review" }] }), h(ApprovalPanel, { steps: [{ role: "Project director", state: "waiting" }] }), h(AttachmentPanel, { files: [{ name: "boq.pdf", size: "220 KB" }] }))), expect: "Ready for review" },
+  {
+    name: "project 360 frame",
+    markup: () => renderToStaticMarkup(h(Project360Frame, { code: "P-204", name: "Riverside bridge", status: "active", filters: { ...NO_FILTERS, projectId: 204 }, sections: [{ id: "plan", label: "Plan", content: para("Milestones due in November") }, { id: "labour", label: "Labour", content: null }] })),
+    expect: "Milestones due in November",
+  },
+  {
+    name: "site frame",
+    markup: () => renderToStaticMarkup(h(SiteFrame, { name: "Batching plant A", projectCode: "P-204", filters: NO_FILTERS, sections: { Plan: para("Site plan for week 44"), Chat: null } })),
+    expect: "Site plan for week 44",
+  },
+  {
+    name: "department frame",
+    markup: () => renderToStaticMarkup(h(DepartmentFrame, { name: "Stores", filters: NO_FILTERS, sections: [{ id: "stock", label: "Stock", content: para("Cement stock by yard") }] })),
+    expect: "Cement stock by yard",
+  },
+  {
+    name: "control tower with every region",
+    markup: () => renderToStaticMarkup(h(ControlTowerFrame, { title: "Site control tower", kpiStrip: para("Progress 62%"), exceptions: para("2 open NCRs"), trend: para("Trend over 30 days"), drillTable: para("Activity rows") })),
+    expect: "2 open NCRs",
+  },
+  {
+    name: "control tower with only the detail",
+    markup: () => renderToStaticMarkup(h(ControlTowerFrame, { title: "Site control tower", drillTable: para("Detail rows only") })),
+    expect: "Detail rows only",
+  },
 ];
 
 
