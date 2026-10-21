@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 14 slices S4 and S5 built and approved (D-087 to D-090)
+- S4: sync pass, backoff, media upload against the test adapter, conflict framework and screen, status model. 19 sync tests; accessibility 315 of 315.
+- S5: device binding and revocation rules, offline-capability registry with the online-only list, consent-gated redacted diagnostics. 12 tests.
+- The owner approved S4 and S5 in the running session. Final approval of Part 14 waits for the independent human review (Part 00 §5.8). The server registry, production media storage, the online-only list confirmation and the reports remain open.
+
 ## 2026-10-21 — Part 14 slice S3 approved (D-086)
 - Owner approved Part 14 S3. S4 and S5, the open owner decisions and the independent review remain open.
 

@@ -1,7 +1,7 @@
 // Command queue and base-version rule (Part 14 REQ-FIELD-F08; A-119). Pure rules: the browser keeps the queue in the encrypted vault, and
 // the server applies the same base-version check before it accepts a command. A command is applied once, by its UUID.
 
-export type CommandStatus = "queued" | "sent" | "accepted" | "rejected";
+export type CommandStatus = "queued" | "sent" | "accepted" | "rejected" | "conflict" | "failed";
 
 export interface Command {
   /** UUID, generated on the device. The server processes each UUID at most once. */
@@ -16,6 +16,8 @@ export interface Command {
   status: CommandStatus;
   /** Reason given by the server for a rejection, shown to the person. */
   reason?: string;
+  /** Times the sync engine has tried and failed to send this command. */
+  attempts?: number;
 }
 
 export function createCommand(
@@ -36,7 +38,11 @@ export function nextToSend(queue: Command[]): Command | undefined {
   return queue.find((c) => c.status === "queued");
 }
 
-export function settle(queue: Command[], id: string, outcome: { status: "accepted" } | { status: "rejected"; reason: string }): Command[] {
+export function settle(
+  queue: Command[],
+  id: string,
+  outcome: { status: "accepted" } | { status: "rejected" | "conflict" | "failed"; reason?: string; attempts?: number },
+): Command[] {
   return queue.map((c) => (c.id === id ? { ...c, ...outcome } : c));
 }
 

@@ -10,6 +10,7 @@ import { Project360Frame, SiteFrame, ControlTowerFrame, DepartmentFrame, Hierarc
 import { NO_FILTERS } from "../../src/dash/filters";
 import { CardList, FilterChips, QuantityField, MasterDetail, CameraCapture, GeoCapture, BarcodeCapture, SignaturePad, VoiceNote } from "../../src/design/ui/field";
 import { InstallNotice, UpdateNotice, UpdateRequiredScreen } from "../../src/design/ui/pwa";
+import { ConflictCompare } from "../../src/design/ui/field";
 
 const button = (label: string) => h("button", { type: "button" }, label);
 const para = (text: string, key?: string) => h("p", { key }, text);
@@ -112,6 +113,23 @@ export const cases: { name: string; markup: () => string; expect: string }[] = [
     name: "install, update and version notices",
     markup: () => renderToStaticMarkup(frag(h(InstallNotice, { onInstall: () => undefined, onDismiss: () => undefined }), h(UpdateNotice, { onUpdate: () => undefined }), h(UpdateRequiredScreen, { current: "1.0.0", minimum: "1.2.0" }))),
     expect: "Update required",
+  },
+  {
+    name: "conflict comparison on a locked and an open record",
+    markup: () =>
+      renderToStaticMarkup(
+        frag(
+          h(ConflictCompare, {
+            entityLabel: "DPR-9",
+            server: [{ label: "Status", value: "Approved" }, { label: "Quantity", value: "40 cum" }],
+            local: [{ label: "Status", value: "Draft" }, { label: "Quantity", value: "42 cum" }],
+            locked: true,
+            onKeepServer: () => undefined,
+            onKeepMine: () => undefined,
+          }),
+        ),
+      ),
+    expect: "Request an amendment",
   },
 ];
 

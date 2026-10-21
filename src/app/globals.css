@@ -925,3 +925,45 @@ a {
     display: none;
   }
 }
+
+/* Conflict comparison (Part 14 REQ-FIELD-F12). One column on phones, two side by side from 820 px. */
+.erp-compare {
+  display: grid;
+  gap: var(--erp-space-4);
+  grid-template-columns: 1fr;
+}
+
+.erp-compare-side {
+  border: 1px solid var(--erp-color-border-subtle);
+  border-radius: var(--erp-radius-md);
+  background: var(--erp-color-bg-surface);
+  padding: var(--erp-space-4);
+}
+
+.erp-compare-side dl {
+  display: grid;
+  gap: var(--erp-space-2);
+  margin: var(--erp-space-3) 0 0;
+}
+
+.erp-compare-side dt {
+  color: var(--erp-color-text-secondary);
+}
+
+.erp-compare-side dd {
+  margin: 0;
+  color: var(--erp-color-text-primary);
+}
+
+.erp-compare-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--erp-space-3);
+  margin-top: var(--erp-space-4);
+}
+
+@media (min-width: 820px) {
+  .erp-compare {
+    grid-template-columns: 1fr 1fr;
+  }
+}

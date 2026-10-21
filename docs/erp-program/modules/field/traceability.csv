@@ -8,12 +8,12 @@ REQ-FIELD-F06,Kiosk mode,not started,,Phase 2 (S2); session layer
 REQ-FIELD-F07,Encrypted store and snapshot,partial,"src/field/vault.ts; src/field/snapshot.ts; src/field/offline.test.ts","Encrypted vault, key lifecycle and freshness rule built. Server snapshot endpoint, delta refresh and IndexedDB adapter not built (session layer, A-87)"
 REQ-FIELD-F08,Command queue,partial,"src/field/commands.ts; src/field/offline.test.ts","Queue, UUID idempotency and stale-base rule built. Server command processor and its table not built (session layer)"
 REQ-FIELD-F09,Offline validation and signed authorisations,partial,"src/field/snapshot.ts; src/field/offline.test.ts","Ed25519 verifier built. Issuance and key custody await owner decision (§2.2); offline rule sharing with the server is pending"
-REQ-FIELD-F10,Media pipeline,not started,,Phase 4 (S4); storage decision (§2.3)
-REQ-FIELD-F11,Sync engine,not started,,Phase 4 (S4)
-REQ-FIELD-F12,Conflict framework,not started,,Phase 4 (S4)
-REQ-FIELD-F13,Status model,not started,,Phase 4 (S4)
+REQ-FIELD-F10,Media pipeline,partial,"src/field/media.ts; src/field/sync.test.ts","Chunked resumable upload with hash checks against a test adapter. Production storage waits for the owner (§2.3)"
+REQ-FIELD-F11,Sync engine,partial,"src/field/sync.ts; src/field/sync.test.ts","Pass with per-item results, backoff, attempt limits, Wi-Fi-only media and 72-hour tolerance. Playwright 72-hour scenario not built (needs screens and session)"
+REQ-FIELD-F12,Conflict framework,partial,"src/field/conflicts.ts; src/design/ui/field.tsx; e2e/fixtures/render-cases.tsx","Rule registry, person choice, amendment for locked records, comparison screen. Server conflict storage pending (session layer)"
+REQ-FIELD-F13,Status model,partial,"src/field/status.ts; src/field/sync.test.ts","Record and device states built. Status centre screen not built"
 REQ-FIELD-F14,Snapshot freshness,not started,,Phase 3 (S3); ages decision (§2.6)
-REQ-FIELD-F15,Device binding and revocation,not started,,Phase 5 (S5); session layer
-REQ-FIELD-F16,Offline-capability registry,not started,,Phase 5 (S5)
-REQ-FIELD-F17,Diagnostics,not started,,Phase 5 (S5)
+REQ-FIELD-F15,Device binding and revocation,partial,"src/field/device.ts; src/field/s5.test.ts","Device-side rules and rejection report built. Server registry and binding on sign-in wait for the session layer (A-87)"
+REQ-FIELD-F16,Offline-capability registry,partial,"src/field/capabilities.ts; src/field/s5.test.ts","Registry and online-only refusal built. Owner confirms the list (§2.6, A-135)"
+REQ-FIELD-F17,Diagnostics,partial,"src/field/diagnostics.ts; src/field/s5.test.ts","Consent-gated redacted export and telemetry built. Upload with consent and sync health reports not built"
 REQ-FIELD-F18,WorkChat on the field app,deferred,,Parts 25 and 25A not approved

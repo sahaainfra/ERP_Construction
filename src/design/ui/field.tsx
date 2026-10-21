@@ -253,3 +253,51 @@ export function VoiceNote({ available, label, lang = "en-IN", onText }: { availa
     </div>
   );
 }
+
+/**
+ * The conflict screen (REQ-FIELD-F12). The server version and the person's version sit side by side, and nothing is chosen for them.
+ * A locked record offers an amendment request in place of "keep mine" (A-120).
+ */
+export function ConflictCompare({
+  entityLabel,
+  server,
+  local,
+  locked,
+  onKeepServer,
+  onKeepMine,
+}: {
+  entityLabel: string;
+  server: { label: string; value: string }[];
+  local: { label: string; value: string }[];
+  locked: boolean;
+  onKeepServer: () => void;
+  onKeepMine: () => void;
+}) {
+  const side = (title: string, rows: { label: string; value: string }[]) => (
+    <section className="erp-compare-side" aria-label={title}>
+      <h2>{title}</h2>
+      <dl>
+        {rows.map((r) => (
+          <div key={r.label}>
+            <dt>{r.label}</dt>
+            <dd>{r.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  );
+  return (
+    <div>
+      <p>{`${entityLabel} changed on the server while you were offline. Choose which version to keep.`}</p>
+      <div className="erp-compare">
+        {side("Server version (current)", server)}
+        {side("Your version", local)}
+      </div>
+      <div className="erp-compare-actions">
+        <button type="button" className="erp-button" onClick={onKeepServer}>Keep the server version</button>
+        <button type="button" className="erp-button" onClick={onKeepMine}>{locked ? "Request an amendment" : "Keep my version"}</button>
+      </div>
+      {locked ? <p>This record is locked, so your version cannot replace it. It becomes an amendment request for approval.</p> : null}
+    </div>
+  );
+}
