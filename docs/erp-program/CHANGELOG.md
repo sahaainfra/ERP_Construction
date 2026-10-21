@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 14 slice S3 built (D-085)
+- Added the encrypted vault, the command queue and stale-base rule, the freshness and scope rules, and the Ed25519 snapshot check, with 17 tests. The server endpoints, the IndexedDB adapter and key custody wait for the session layer and owner decisions. S3 approval pending the owner.
+
 ## 2026-10-21 — Part 14 slice S2 approved (D-084)
 - Owner approved Part 14 S2. S3 to S5 and the independent human review remain open.
 

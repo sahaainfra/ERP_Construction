@@ -5,9 +5,9 @@ REQ-FIELD-F03,Capture components,partial,src/design/ui/field.tsx; src/field/logi
 REQ-FIELD-F04,Field home per role,not started,,Phase 2 (S2)
 REQ-FIELD-F05,PWA packaging,partial,"public/sw.js; public/offline.html; src/app/manifest.ts; src/design/ui/pwa.tsx; src/field/logic.ts; src/field/pwa.test.ts; e2e/field-pwa.spec.ts","Manifest, icon, install and update notices, minimum-version rule and cache policy built (S2). Offline navigation fallback is proven in sandbox tests only; real-device check outstanding; minimum-version source waits (A-127); approved with S2 (D-084)"
 REQ-FIELD-F06,Kiosk mode,not started,,Phase 2 (S2); session layer
-REQ-FIELD-F07,Encrypted store and snapshot,not started,,Phase 3 (S3)
-REQ-FIELD-F08,Command queue,not started,,Phase 3 (S3)
-REQ-FIELD-F09,Offline validation and signed authorisations,not started,,Phase 3 (S3); signing decision (§2.2)
+REQ-FIELD-F07,Encrypted store and snapshot,partial,"src/field/vault.ts; src/field/snapshot.ts; src/field/offline.test.ts","Encrypted vault, key lifecycle and freshness rule built. Server snapshot endpoint, delta refresh and IndexedDB adapter not built (session layer, A-87)"
+REQ-FIELD-F08,Command queue,partial,"src/field/commands.ts; src/field/offline.test.ts","Queue, UUID idempotency and stale-base rule built. Server command processor and its table not built (session layer)"
+REQ-FIELD-F09,Offline validation and signed authorisations,partial,"src/field/snapshot.ts; src/field/offline.test.ts","Ed25519 verifier built. Issuance and key custody await owner decision (§2.2); offline rule sharing with the server is pending"
 REQ-FIELD-F10,Media pipeline,not started,,Phase 4 (S4); storage decision (§2.3)
 REQ-FIELD-F11,Sync engine,not started,,Phase 4 (S4)
 REQ-FIELD-F12,Conflict framework,not started,,Phase 4 (S4)
