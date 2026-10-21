@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 16 slice S1 approved (D-098)
+- Owner approved Part 16 S1. S2 to S5 and the open owner decisions remain.
+
 ## 2026-10-21 — Part 16 slice S1 built (D-097)
 - Added the workflow engine (state machine checks, submit, approve, reject, return, resubmit, cancel), the no-session rules, the read-only legacy mirror, migration 202610193000_wf_engine with rollback, and 23 tests. Recall, reassign, comment and the seed definitions are deferred.
 
