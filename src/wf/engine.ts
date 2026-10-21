@@ -9,8 +9,10 @@ import { writeAudit } from "../secgov/audit";
 import { addWorkingDays } from "./calendar";
 import { activeDelegator, assertDelegatedAction, checkDelegationInput } from "./delegation";
 import { changesOf, type FieldChange } from "./amend";
+import { SPLIT_WINDOW_DAYS, toPaise } from "./doa";
 import { nextState, validateMachine, type Action, type Machine } from "./machine";
 import { assertNotSelfApproval, assertReason, takeAmountSnapshot } from "./rules";
+import { buildEvidence, storeSnapshot } from "./evidence";
 
 const TASK_STATUS: Record<Action, string> = { submit: "approved", resubmit: "approved", approve: "approved", reject: "rejected", return: "returned", cancel: "cancelled", recall: "cancelled" };
 const AUDIT_ACTION: Record<Action, string> = {
@@ -270,6 +272,20 @@ async function applyAction(uow: UnitOfWork, ctx: RequestContext, input: ActInput
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
     [ctx.tenantId, input.instanceId, taskId, input.action, input.actor, i.state_version, versionAfter, input.comment ?? null, input.reasonCode ?? null, input.idempotencyKey, onBehalfOf],
   );
+
+  if (input.action === "approve" || input.action === "reject") {
+    // The panel the approver saw is stored with the decision (CP-WF-05). If it cannot be stored, the decision does not happen.
+    const prior = await c.query<{ total: string }>(
+      `SELECT COALESCE(SUM(p.amount_snapshot), 0)::text AS total FROM wf_instances i
+         JOIN wf_instances p ON p.tenant_id = i.tenant_id AND p.split_key = i.split_key AND p.id <> i.id
+          AND p.submitted_at BETWEEN i.submitted_at - interval '${SPLIT_WINDOW_DAYS} days' AND i.submitted_at
+        WHERE i.tenant_id = $1 AND i.id = $2 AND i.split_key IS NOT NULL`,
+      [ctx.tenantId, input.instanceId],
+    );
+    const history = await c.query<{ action: string; actor: string; at: Date }>("SELECT action, actor, at FROM wf_action_log WHERE tenant_id = $1 AND instance_id = $2 ORDER BY state_version_after", [ctx.tenantId, input.instanceId]);
+    const view = buildEvidence({ docType: i.doc_type, amountPaise: i.amount_snapshot === null ? null : toPaise(Number(i.amount_snapshot)), priorPaise: toPaise(Number(prior.rows[0]?.total ?? 0)), history: history.rows.map((h) => ({ action: h.action, actor: h.actor, at: h.at.toISOString() })) });
+    await storeSnapshot(c, ctx.tenantId, { instanceId: input.instanceId, taskId, action: input.action, actor: input.actor, view });
+  }
 
   const aggregateKey = `${i.doc_type}:${i.doc_id}`;
   await uow.emit({ eventType: "wf.task.completed", payload: { instanceId: input.instanceId, taskId, action: input.action, onBehalfOf }, aggregateKey });

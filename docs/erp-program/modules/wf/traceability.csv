@@ -11,10 +11,10 @@ REQ-WF-F09,Amendments,partial,"src/wf/amend.ts; src/wf/engine.ts; src/wf/s3.inte
 REQ-WF-F10,Emergency approvals,partial,"src/wf/engine.ts; src/wf/sla.ts; src/wf/s3.integration.test.ts","Execute-first start with a required regularisation deadline; regularisation by someone other than the submitter; overdue list for CP-WF-07. Escalation to L3 waits for Part 18"
 REQ-WF-F11,Simulation,partial,"src/wf/simulate.ts; src/wf/store.ts; src/wf/s2.test.ts","Re-routing over stored snapshots lists changed documents. Recording a simulation gates activation. Snapshots need instances to carry their context (now stored)"
 REQ-WF-F12,My Inbox,partial,"src/wf/read.ts; src/wf/inbox.ts; src/wf/s4.integration.test.ts","Inbox data for own and delegated steps with SLA, emergency, conflict and split flags; unavailable sources shown; bulk rule (off until the owner sets a limit). 500 items read within 1 s in the test. Screen, split view, filters and MFA prompts wait for the session layer and UI"
-REQ-WF-F13,Evidence panel,not started,,S5
+REQ-WF-F13,Approval evidence panel,partial,"src/wf/evidence.ts; src/wf/s5.test.ts; src/wf/s5.integration.test.ts; db/migrations/202610193400_wf_evidence.up.sql","Panel with every declared source, unavailable sources shown with their reason, and the cumulative figure. Snapshot stored in the decision's transaction. Sources from Parts 44, 46, 47, 65 and 17 not built; permission-gated sections wait for the session layer; AI interpretation not built (Part 79)"
 REQ-WF-F14,Workflow widget,partial,"src/wf/read.ts; src/wf/s4.integration.test.ts","Widget data rendered from the stored definition: state, path, pending steps, history, comments and allowed actions. Component waits for the object pages"
 REQ-WF-F15,Developer API and hooks,partial,"src/wf/engine.ts","startWorkflow and actOnWorkflow with transition events. HTTP API and hooks wait for the session layer"
 REQ-WF-F16,Legacy adapter,partial,"src/wf/legacy.ts; src/wf/machine.test.ts","Read-only mirror mapping built. Live legacy statuses not supplied (§2.4)"
 REQ-WF-F17,Seed definitions,not started,,Waits for the owner's chains and limits (§2.3 to §2.5)
-REQ-WF-F18,Approval history block,not started,,S5 with prints
+REQ-WF-F18,Approval history block,partial,"src/wf/read.ts","History is available to the widget and the panel. The print block itself waits for Part 20 print templates"
 REQ-WF-F19,Action API for external surfaces,not started,,Waits for the session layer (§2.2)

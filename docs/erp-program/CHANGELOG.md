@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 16 slice S5 built (D-105)
+- Added the approval evidence panel with unavailable sources shown and the decision snapshot stored with each approval or rejection (migration 202610193400_wf_evidence). 7 new tests. Source adapters, permission-gated sections, the AI interpretation and the print block wait for other parts and the session layer.
+
 ## 2026-10-21 — Part 16 slice S4 approved on the data side (D-104)
 - Owner approved Part 16 S4 (data side). Screens and the open owner decisions remain. S5 not started.
 
