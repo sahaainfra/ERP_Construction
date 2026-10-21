@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 15 plan approved (D-092)
+- Owner approved the Part 15 plan and assumptions A-137 to A-144. The §2 owner decisions are open; the live ERP screen source (§2.1) blocks the inventory. S1 not started.
+
 ## 2026-10-21 — Part 14 final approval recorded, independent review outstanding (D-091)
 - The owner approved Part 14 finally. The independent human review required by Part 00 §5.8 is not done and is recorded as outstanding.
 
