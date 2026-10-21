@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 16 slice S5 approved (D-106)
+- Owner approved Part 16 S5. All Part 16 slices are approved; final approval waits for the open items and the independent human review.
+
 ## 2026-10-21 — Part 16 slice S5 built (D-105)
 - Added the approval evidence panel with unavailable sources shown and the decision snapshot stored with each approval or rejection (migration 202610193400_wf_evidence). 7 new tests. Source adapters, permission-gated sections, the AI interpretation and the print block wait for other parts and the session layer.
 
