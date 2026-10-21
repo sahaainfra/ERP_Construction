@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 13 slice S5 (D-078)
+- Added `src/dash/timeline.ts`: record and project timelines read from the audit chain, with restricted activity for other people's changes.
+ 
 ## 2026-10-21 — Part 13 slice S4 (D-077)
 - Added `src/dash/drill.ts` (drill registry, conformance, breadcrumb, where-used) and the breadcrumb component. A where-used count that ran outside the tenant transaction was found and fixed before commit.
 

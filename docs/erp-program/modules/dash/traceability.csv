@@ -12,5 +12,5 @@ REQ-DASH-F10,Recent, favourites and pinned,partial,src/search/usage.ts; src/sear
 REQ-DASH-F11,Drill registry,partial,src/dash/drill.ts; src/dash/s4.test.ts,"Registry built from the widgets; conformance check per figure. Drill-conformance over reports and search trace nodes waits for those Parts"
 REQ-DASH-F12,Hierarchy navigator,partial,src/dash/drill.ts; src/design/ui/frames.tsx (HierarchyBreadcrumb); src/dash/s4.test.ts,"Breadcrumb for company, project and site; WBS, activity and BOQ levels not built"
 REQ-DASH-F13,Where-used links,partial,src/dash/drill.ts; src/dash/s4.integration.test.ts,"Project and person links, shown only when non-empty and permitted. Masters of later Parts not yet covered"
-REQ-DASH-F14,Activity timeline,not started,,Phase 5 (S5)
+REQ-DASH-F14,Activity timeline,partial,src/dash/timeline.ts; src/dash/s5.integration.test.ts,"Read-only view of the audit chain for records and projects; restricted activity rule. PDF export (Part 76), timeline tab on screens and trace links to other Parts not built"
 REQ-DASH-F15,WorkChat search provider,deferred,,Part 25A not approved
