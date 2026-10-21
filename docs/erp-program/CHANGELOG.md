@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 13 approved for slices S1 to S5 (D-079)
+- Owner approved Part 13 for the slices built. Screens, the open §2 decisions and volume measurement remain open.
+
 ## 2026-10-21 — Part 13 slice S5 (D-078)
 - Added `src/dash/timeline.ts`: record and project timelines read from the audit chain, with restricted activity for other people's changes.
  
