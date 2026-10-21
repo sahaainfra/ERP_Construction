@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 14 plan approved (D-080)
+- Owner approved the Part 14 plan. Assumptions A-113 to A-122 recorded. The §2 decisions remain open, and the independent human review (Part 00 §5.8) is still required. No slice is built yet.
+
 ## 2026-10-21 — Part 13 approved for slices S1 to S5 (D-079)
 - Owner approved Part 13 for the slices built. Screens, the open §2 decisions and volume measurement remain open.
 
