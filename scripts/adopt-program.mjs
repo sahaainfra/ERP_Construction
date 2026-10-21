@@ -47,7 +47,7 @@ const progressLines = [
       "11": "APPROVED — owner 2026-10-20 (D-065) for the plan; S1 BUILT (D-066), approval pending; S2 to S5 not started; §2 decisions and independent review open",
       "12": "APPROVED for slices S1 to S3 — owner 2026-10-20 (D-072); S4 and S5 not started; §2 decisions and Annex A open",
       "13": "APPROVED for slices S1 to S5 — owner 2026-10-21 (D-079); screens wait for the session layer; §2 decisions and volume measurement open",
-      "14": "APPROVED for S1 — owner 2026-10-21 (D-082); S2 APPROVED — owner 2026-10-21 (D-084); S3 BUILT on the device side, approval pending the owner (D-085); S4 and S5 not started; independent human review pending (mandatory before final approval)",
+      "14": "APPROVED for S1 — owner 2026-10-21 (D-082); S2 APPROVED — owner 2026-10-21 (D-084); S3 APPROVED — owner 2026-10-21 (D-086); S4 and S5 not started; independent human review pending (mandatory before final approval)",
       "07": "APPROVED — owner 2026-10-20 (D-054) with conditions: medium and low items open; human independent review open (Part 00 §5.8); identity provider unnamed (CF-013)",
       "05": "APPROVED — owner 2026-10-19 (D-037); Redis, object storage and remaining items deferred (CF-027, CF-028)",
     };
