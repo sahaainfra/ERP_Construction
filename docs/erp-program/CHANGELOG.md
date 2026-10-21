@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 17 slice S2 built (D-110)
+- Added exceptions with matrix routing and capped consumption, the emergency path with regularisation, and versioned maker-checker configuration for thresholds, evidence rules, reason codes and the exception matrix (migration 202610193600_protocol_exceptions, with rollback). 16 tests. Screens, endpoints, the pattern signal and the seeds wait.
+
 ## 2026-10-21 — Part 17 slice S1 approved (D-109)
 - Owner approved Part 17 S1. S2 to S5 and the open owner decisions remain.
 
