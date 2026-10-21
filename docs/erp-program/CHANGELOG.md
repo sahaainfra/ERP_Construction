@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 16 slice S4 built on the data side (D-103)
+- Added comments that leave the version alone, My Inbox data with flags and unavailable sources, the bulk approval rule, and workflow widget data. Migration 202610193300_wf_inbox with rollback. Screens, endpoints and permission checks wait for the session layer.
+
 ## 2026-10-21 — Part 16 slice S3 approved (D-102)
 - Owner approved Part 16 S3. S4 and S5 and the open owner decisions remain.
 

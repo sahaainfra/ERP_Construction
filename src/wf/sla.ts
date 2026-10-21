@@ -8,6 +8,11 @@ import { withTransaction } from "../db/transactions";
 import { returnOnExpiry } from "./engine";
 import { slaState } from "./calendar";
 
+/** The SLA state of a task at a given time, for display. Tasks with no timer show "none" (see read.ts). */
+export function calendarSla(createdAt: Date, dueAt: Date, now: Date): "running" | "reminder_50" | "reminder_90" | "expired" {
+  return slaState(createdAt, dueAt, now);
+}
+
 export interface SweepResult {
   reminders: number;
   returned: number;
