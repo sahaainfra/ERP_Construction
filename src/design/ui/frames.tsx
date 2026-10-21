@@ -94,3 +94,22 @@ export function ControlTowerFrame({ title, kpiStrip, exceptions, trend, drillTab
     </section>
   );
 }
+
+/** The hierarchy breadcrumb (REQ-DASH-F12). Levels not built yet are shown as text, with no link. */
+export function HierarchyBreadcrumb({ crumbs }: { crumbs: { label: string; route: string | null }[] }) {
+  if (crumbs.length === 0) return null;
+  return (
+    <nav aria-label="Breadcrumb" className="erp-breadcrumb">
+      <ol>
+        {crumbs.map((c, i) => {
+          const last = i === crumbs.length - 1;
+          return (
+            <li key={`${c.label}-${i}`}>
+              {c.route && !last ? <a href={c.route}>{c.label}</a> : <span aria-current={last ? "page" : undefined}>{c.label}</span>}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+}

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-10-21 — Part 13 slice S4 (D-077)
+- Added `src/dash/drill.ts` (drill registry, conformance, breadcrumb, where-used) and the breadcrumb component. A where-used count that ran outside the tenant transaction was found and fixed before commit.
+
 ## 2026-10-21 — Part 13 slice S3 (D-076)
 - Added migration `202610192800_srch_search` and `src/search/` (index, query service, usage, command actions). Search p95 measured at 21.7 ms on 20,000 rows (extrapolation only; A-111).
  

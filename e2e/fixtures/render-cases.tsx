@@ -6,7 +6,7 @@ import { ObjectPage, ListReport, Wizard, SettingsPage, PublicAuthPage, Launchpad
 import { Banner, AuditTimeline, ApprovalPanel, AttachmentPanel, Skeleton } from "../../src/design/ui/core";
 import { ConflictState, IntegrationFailureState, JobFailureState, OfflineState, ValidationSummary, LoadingState } from "../../src/design/ui/states";
 import { StatusChip } from "../../src/design/StatusChip";
-import { Project360Frame, SiteFrame, ControlTowerFrame, DepartmentFrame } from "../../src/design/ui/frames";
+import { Project360Frame, SiteFrame, ControlTowerFrame, DepartmentFrame, HierarchyBreadcrumb } from "../../src/design/ui/frames";
 import { NO_FILTERS } from "../../src/dash/filters";
 
 const button = (label: string) => h("button", { type: "button" }, label);
@@ -76,6 +76,11 @@ export const cases: { name: string; markup: () => string; expect: string }[] = [
     name: "control tower with only the detail",
     markup: () => renderToStaticMarkup(h(ControlTowerFrame, { title: "Site control tower", drillTable: para("Detail rows only") })),
     expect: "Detail rows only",
+  },
+  {
+    name: "hierarchy breadcrumb",
+    markup: () => renderToStaticMarkup(h(HierarchyBreadcrumb, { crumbs: [{ label: "Acme Constructions", route: null }, { label: "P-204", route: "/projects/204" }, { label: "S-20", route: null }] })),
+    expect: "P-204",
   },
 ];
 

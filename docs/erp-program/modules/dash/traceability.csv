@@ -9,8 +9,8 @@ REQ-DASH-F07,Search indexer,partial,src/search/index.ts; src/search/search.integ
 REQ-DASH-F08,Search query service,partial,src/search/query.ts; src/search/search.integration.test.ts; src/search/search.test.ts,"Scope, classes and people permission in the query; prefixes; approved synonyms. Facets and totals consistent. Search screen and routes wait for the session layer"
 REQ-DASH-F09,Command palette,partial,src/search/usage.ts,"Command actions filtered by module, route and permission. Context actions and the palette screen are not built"
 REQ-DASH-F10,Recent, favourites and pinned,partial,src/search/usage.ts; src/search/search.integration.test.ts,"Recent (last 50) and favourites (50). Pinned uses the preference store (Part 12 S2)"
-REQ-DASH-F11,Drill registry,not started,,Phase 4 (S4)
-REQ-DASH-F12,Hierarchy navigator,not started,,Phase 4 (S4)
-REQ-DASH-F13,Where-used links,not started,,Phase 4 (S4)
+REQ-DASH-F11,Drill registry,partial,src/dash/drill.ts; src/dash/s4.test.ts,"Registry built from the widgets; conformance check per figure. Drill-conformance over reports and search trace nodes waits for those Parts"
+REQ-DASH-F12,Hierarchy navigator,partial,src/dash/drill.ts; src/design/ui/frames.tsx (HierarchyBreadcrumb); src/dash/s4.test.ts,"Breadcrumb for company, project and site; WBS, activity and BOQ levels not built"
+REQ-DASH-F13,Where-used links,partial,src/dash/drill.ts; src/dash/s4.integration.test.ts,"Project and person links, shown only when non-empty and permitted. Masters of later Parts not yet covered"
 REQ-DASH-F14,Activity timeline,not started,,Phase 5 (S5)
 REQ-DASH-F15,WorkChat search provider,deferred,,Part 25A not approved

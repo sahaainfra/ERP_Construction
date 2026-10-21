@@ -686,3 +686,24 @@ a {
   justify-content: center;
   padding-block: var(--erp-space-5);
 }
+
+.erp-breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--erp-space-2);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: var(--erp-color-text-secondary);
+  font-size: 0.875rem;
+}
+
+.erp-breadcrumb li + li::before {
+  content: "›";
+  padding-inline-end: var(--erp-space-2);
+  color: var(--erp-color-text-muted);
+}
+
+.erp-breadcrumb a {
+  color: var(--erp-color-text-link);
+}
